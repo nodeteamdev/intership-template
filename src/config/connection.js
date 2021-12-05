@@ -5,8 +5,8 @@ const MONGODB_DB_MAIN = 'users_db';
 const MONGO_URI = `${MONGODB_URI}${MONGODB_DB_MAIN}`;
 
 const connectOptions = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 };
 
 module.exports = mongoose.createConnection(MONGO_URI, connectOptions);

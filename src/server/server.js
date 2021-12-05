@@ -19,8 +19,8 @@ middleware.init(app);
 routes.init(app);
 
 /**
- * @description sets port 3000 to default or unless otherwise specified in the environment
+ * @description sets port 3030 to default or unless otherwise specified in the environment
  */
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 3030);
 
 module.exports = app;
