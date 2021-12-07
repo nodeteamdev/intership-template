@@ -1,7 +1,9 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const UserModel = require('../User/model');
 const UserValidation = require('../User/validation');
 const ValidationError = require('../../error/ValidationError');
+const config = require('../../config/env');
 
 /**
  * @function
@@ -10,7 +12,7 @@ const ValidationError = require('../../error/ValidationError');
  * @param {express.NextFunction} next
  * @returns {Promise < void >}
  */
-async function create(req, res, next) {
+async function signUp(req, res, next) {
   try {
     const { error } = UserValidation.create(req.body);
 
@@ -55,6 +57,63 @@ async function create(req, res, next) {
   }
 }
 
+/**
+ * @function
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
+ * @returns {Promise < void >}
+ */
+async function signIn(req, res, next) {
+  try {
+    // const { error } = UserValidation.create(req.body);
+
+    // if (error) {
+    //   throw new ValidationError(error.details);
+    // }
+
+    const candidate = await UserModel.findOne({ email: req.body.email });
+
+    if (candidate) {
+      // Check password
+      const passwordResult = bcrypt.compareSync(req.body.password, candidate.password);
+
+      if (passwordResult) {
+        // Generate token
+        const token = jwt.sign({
+          email: candidate.email,
+          userId: candidate._id,
+        }, config.jwt, { expiresIn: 60 * 60 });
+
+        return res.status(200).json({
+          token,
+        });
+      } return res.status(419).json({ message: 'Password or email incorrect.' });
+    }
+    // User not found. Error
+    return res.status(404).json({
+      data: {
+        message: 'User with that email not found.',
+      },
+    });
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      return res.status(422).json({
+        message: error.name,
+        details: error.message,
+      });
+    }
+
+    res.status(500).json({
+      message: error.name,
+      details: error.message,
+    });
+
+    return next(error);
+  }
+}
+
 module.exports = {
-  create,
+  signUp,
+  signIn,
 };

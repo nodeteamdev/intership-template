@@ -16,7 +16,17 @@ const router = Router();
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.post('/registrations', AuthComponent.create);
+router.post('/registrations', AuthComponent.signUp);
+
+/**
+ * Route serving sign in
+ * @name /v1/auth/signin
+ * @function
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware
+ */
+router.post('/signin', AuthComponent.signIn);
 
 // /**
 //  * Route serving sign in.
