@@ -12,5 +12,8 @@ module.exports = {
     },
     rules: {
         indent: ['error', 4],
+        'no-unused-vars': 'warn',
+        'no-fallthrough': 'warn',
     },
 };
+

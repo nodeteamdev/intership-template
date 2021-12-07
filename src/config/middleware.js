@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable import/no-extraneous-dependencies */
 const bodyParser = require('body-parser');
 const compression = require('compression');
 const cookieParser = require('cookie-parser');

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const mongoose = require('mongoose');
 
 const MONGODB_URI = 'mongodb://localhost:27017/';

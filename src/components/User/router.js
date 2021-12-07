@@ -1,6 +1,7 @@
-const { Router } = require('express');
+const { Router, request, response } = require('express');
 const UserComponent = require('.');
-
+// eslint-disable-next-line import/extensions
+const authMiddleware = require('../../config/authMiddleware.js');
 /**
  * Express router to mount user related functions on.
  * @type {Express.Router}
@@ -16,7 +17,7 @@ const router = Router();
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/', UserComponent.findAll);
+router.get('/', authMiddleware.verifyToken, UserComponent.findAll);
 
 /**
  * Route serving a user
@@ -26,7 +27,7 @@ router.get('/', UserComponent.findAll);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/:id', UserComponent.findById);
+router.get('/:id', authMiddleware.verifyToken, UserComponent.findById);
 
 /**
  * Route serving a new user
@@ -36,7 +37,7 @@ router.get('/:id', UserComponent.findById);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.post('/', UserComponent.create);
+router.post('/', authMiddleware.verifyToken, UserComponent.create);
 
 /**
  * Route serving a new user
@@ -46,7 +47,7 @@ router.post('/', UserComponent.create);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.put('/', UserComponent.updateById);
+router.put('/', authMiddleware.verifyToken, UserComponent.updateById);
 
 /**
  * Route serving a new user
@@ -56,6 +57,18 @@ router.put('/', UserComponent.updateById);
  * @param {string} path -Express path
  * @param {callback} middleware - Express middleware
  */
-router.delete('/', UserComponent.deleteById);
+router.delete('/', authMiddleware.verifyToken, UserComponent.deleteById);
+
+// My code ////////////////////////
+/**
+ * Route for user login
+ * @name /v1/users/login
+ * @function
+ * @inner
+ * @param {string} path -Express path
+ * @param {callback}  - Express middleware
+ */
+router.post('/login', UserComponent.loginUser);
+// My code ////////////////////////
 
 module.exports = router;
