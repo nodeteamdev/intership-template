@@ -21,6 +21,7 @@ class UserValidation extends Validation {
 
   /**
      * @param {String} profile.email
+     * @param {String} profile.password
      * @param {String} profile.fullName
      * @returns
      * @memberof UserValidation
@@ -29,10 +30,10 @@ class UserValidation extends Validation {
     return this.Joi
       .object({
         email: this.Joi.string().email(),
+        password: this.Joi
+          .string(),
         fullName: this.Joi
           .string()
-          .min(1)
-          .max(30)
           .required(),
       })
       .validate(profile);
@@ -50,8 +51,6 @@ class UserValidation extends Validation {
         id: this.Joi.objectId(),
         fullName: this.Joi
           .string()
-          .min(1)
-          .max(30)
           .required(),
       })
       .validate(data);
