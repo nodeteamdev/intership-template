@@ -6,11 +6,11 @@ const helmet = require('helmet');
 
 module.exports = {
   /**
-     * @function
-     * @description express middleware
-     * @param {express.Application} app
-     * @returns void
-     */
+   * @function
+   * @description express middleware
+   * @param {express.Application} app
+   * @returns void
+   */
   init(app) {
     app.use(express.urlencoded({
       extended: false,
