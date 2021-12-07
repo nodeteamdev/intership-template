@@ -86,7 +86,7 @@ async function signIn(req, res, next) {
         }, config.jwt, { expiresIn: 60 * 60 });
 
         return res.status(200).json({
-          token,
+          token: `Bearer ${token}`,
         });
       } return res.status(419).json({ message: 'Password or email incorrect.' });
     }
