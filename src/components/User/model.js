@@ -1,8 +1,15 @@
-const { Schema } = require('mongoose');
-const connections = require('../../config/connection');
+const { Schema, model } = require('mongoose');
 
 const UserSchema = new Schema(
   {
+    firstName: {
+      type: String,
+      trim: true,
+    },
+    lastName: {
+      type: String,
+      trim: true,
+    },
     email: {
       type: String,
       required: true,
@@ -11,15 +18,8 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
-    fullname: {
-      type: String,
-      trim: true,
-    },
   },
-  {
-    collection: 'usermodel',
-    versionKey: false,
-  },
+  { timestamps: true },
 );
 
-module.exports = connections.model('UserModel', UserSchema);
+module.exports = model('User', UserSchema);

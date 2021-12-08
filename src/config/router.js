@@ -24,8 +24,8 @@ module.exports = {
     app.use('/v1/users', UserRouter);
 
     /**
-     * Forwards any requests to the /v1/auth URI to AuthRouter.
-     * @name /v1/auth
+     * Forwards any requests to the /v1/users URI to UserRouter.
+     * @name /v1/users
      * @function
      * @inner
      * @param {string} path - Express path
