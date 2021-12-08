@@ -26,16 +26,16 @@ router.post('/signin', AuthComponent.signIn);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
- router.post('/refresh-tokens', AuthComponent.refreshTokens);
+router.post('/refresh-tokens', AuthComponent.refreshTokens);
 
-// /**
-//  * Route serving sign up
-//  * @name /v1/auth/signup
-//  * @function
-//  * @inner
-//  * @param {string} path - Express path
-//  * @param {callback} middleware - Express middleware.
-//  */
-// router.post('/signup', AuthComponent.signUp);
+/**
+ * Route serving sign up
+ * @name /v1/auth/signup
+ * @function
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
+router.post('/signup', AuthComponent.signUp);
 
 module.exports = router;

@@ -1,8 +1,10 @@
-const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const AuthService = require('./service');
 const AuthHelper = require('./helper');
+const UserValidation = require('../User/validation');
+const UserService = require('../User/service');
+const ValidationError = require('../../error/ValidationError');
 const { secret } = require('../../config/env').JWT;
 
 const updateTokens = async (userId) => {
@@ -16,24 +18,43 @@ const updateTokens = async (userId) => {
 
   return newestTokens;
 };
-// /**
-//  * @function
-//  * @param {express.Request} req
-//  * @param {express.Response} res
-//  * @param {express.NextFunction} next
-//  * @returns {Promise < void >}
-//  */
-// const signUp = async (req, res, next) => {
-//   try {
+/**
+ * @function
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
+ * @returns {Promise < void >}
+ */
+const signUp = async (req, res, next) => {
+  try {
+    const { error } = UserValidation.create(req.body);
 
-//   } catch (error) {
-//     res.status(500).json({
-//       message: error.name,
-//       details: error.message,
-//     });
-//     next(error);
-//   }
-// };
+    if (error) {
+      throw new ValidationError(error.details);
+    }
+
+    const isUser = await AuthService.findByEmail(req.body.email);
+    if (isUser === null) {
+      const userData = {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        password: bcrypt.hashSync(req.body.password, 10),
+      };
+
+      const user = await UserService.create(userData);
+      res.status(200).json({ data: user });
+    } else {
+      res.status(400).json({ message: 'Email already exists!' });
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: error.name,
+      details: error.message,
+    });
+    next(error);
+  }
+};
 
 /**
  * @function
@@ -97,5 +118,6 @@ const refreshTokens = async (req, res) => {
 
 module.exports = {
   signIn,
+  signUp,
   refreshTokens,
 };
