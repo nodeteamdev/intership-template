@@ -9,19 +9,20 @@ function onError(error) {
   }
 
   switch (error.code) {
-    case 'EACCES': {
-      console.error('Port requires elevated privileges');
-      process.exit(1);
-    }
-    case 'EADDRINUSE': {
-      console.error('Port is already in use');
-      process.exit(1);
-    }
-    default: {
-      throw error;
-    }
+  case 'EACCES': {
+    console.error('Port requires elevated privileges');
+    process.exit(1);
+  }
+  case 'EADDRINUSE': {
+    console.error('Port is already in use');
+    process.exit(1);
+  }
+  default: {
+    throw error;
+  }
   }
 }
+
 /**
  * @function
  * @inner

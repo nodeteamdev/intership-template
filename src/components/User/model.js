@@ -1,10 +1,10 @@
-const { Schema } = require('mongoose');
-const connections = require('../../config/connection');
+const { Schema, model } = require('mongoose');
 
 const UserSchema = new Schema(
   {
     email: {
       type: String,
+      unique: true,
       required: true,
     },
     password: {
@@ -22,4 +22,17 @@ const UserSchema = new Schema(
   },
 );
 
-module.exports = connections.model('UserModel', UserSchema);
+const TokenSchema = new Schema(
+  {
+    user: { type: Schema.Types.ObjectId, ref: 'UserModel' },
+    refreshToken: { type: String, required: true },
+  },
+);
+
+const UserModel = model('UserModel', UserSchema);
+const TokenModel = model('TokenModel', TokenSchema);
+
+module.exports = {
+  UserModel,
+  TokenModel,
+};

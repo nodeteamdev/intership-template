@@ -1,51 +1,41 @@
 const { Router } = require('express');
-const AuthComponent = require('./index');
+const AuthComponent = require('.');
 
 /**
- * Express router to mount auth related functions on.
+ * Express router to mount user related functions on.
  * @type {Express.Router}
  * @const
  */
 const router = Router();
 
 /**
- * Route serving a new user
- * @name /v1/auth/registrations
+ * Route serving user registrations
+ * @name /v1/auth/signup
  * @function
  * @inner
  * @param {string} path - Express path
- * @param {callback} middleware - Express middleware
+ * @param {callback} middleware - Express middleware.
  */
-router.post('/registrations', AuthComponent.signUp);
+router.post('/signup', AuthComponent.signUp);
 
 /**
- * Route serving sign in
+ * Route serving user login
  * @name /v1/auth/signin
  * @function
  * @inner
  * @param {string} path - Express path
- * @param {callback} middleware - Express middleware
+ * @param {callback} middleware - Express middleware.
  */
 router.post('/signin', AuthComponent.signIn);
 
-// /**
-//  * Route serving sign in.
-//  * @name /v1/auth/signin
-//  * @function
-//  * @inner
-//  * @param {string} path - Express path
-//  * @param {callback} middleware - Express middleware.
-//  */
-// router.post('/signin', AuthComponent.signIn);
-
-// /**
-//  * Route serving sign out.
-//  * @name /v1/auth/signout
-//  * @function
-//  * @inner
-//  * @param {string} path - Express path
-//  * @param {callback} middleware - Express middleware.
-//  */
-// router.get('/signout', AuthComponent.signOut);
+/**
+ * Route serving refresh-token
+ * @name /v1/auth/refresh
+ * @function
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
+router.post('/refresh', AuthComponent.refresh);
 
 module.exports = router;

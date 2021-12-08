@@ -7,25 +7,12 @@ const Validation = require('../validation');
  */
 class UserValidation extends Validation {
   /**
-     * @param {String} data.id - objectId
-     * @returns
-     * @memberof UserValidation
-     */
-  findById(data) {
-    return this.Joi
-      .object({
-        id: this.Joi.objectId(),
-      })
-      .validate(data);
-  }
-
-  /**
-     * @param {String} profile.email
-     * @param {String} profile.password
-     * @param {String} profile.fullName
-     * @returns
-     * @memberof UserValidation
-     */
+   * @param {String} profile.email
+   * @param {String} profile.password
+   * @param {String} profile.fullName
+   * @returns
+   * @memberof UserValidation
+   */
   create(profile) {
     return this.Joi
       .object({
@@ -37,6 +24,32 @@ class UserValidation extends Validation {
           .required(),
       })
       .validate(profile);
+  }
+
+  /**
+   * @param {String} data.id - objectId
+   * @returns
+   * @memberof UserValidation
+   */
+  findById(data) {
+    return this.Joi
+      .object({
+        id: this.Joi.objectId(),
+      })
+      .validate(data);
+  }
+
+  /**
+   * @param {String} data.email - email
+   * @returns
+   * @memberof UserValidation
+   */
+  findByEmail(data) {
+    return this.Joi
+      .object({
+        email: this.Joi.string().email(),
+      })
+      .validate(data);
   }
 
   /**
