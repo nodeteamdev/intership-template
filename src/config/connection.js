@@ -13,6 +13,10 @@ const connectDB = () => {
     useUnifiedTopology: true,
   };
   mongoose.connect(MONGO_URI, options);
+
+  require('../components/User/model');
+  require('../components/Auth/token-model');
+
   return mongoose.connection;
 };
 

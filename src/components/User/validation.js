@@ -21,7 +21,8 @@ class UserValidation extends Validation {
 
   /**
    * @param {String} profile.email
-   * @param {String} profile.fullName
+   * @param {String} profile.firstName
+   * @param {String} profile.lastName [optional]
    * @returns
    * @memberof UserValidation
    */
@@ -29,18 +30,28 @@ class UserValidation extends Validation {
     return this.Joi
       .object({
         email: this.Joi.string().email(),
-        fullName: this.Joi
+        password: this.Joi
+          .string()
+          .min(6)
+          .max(30)
+          .required(),
+        firstName: this.Joi
           .string()
           .min(1)
           .max(30)
           .required(),
+        lastName: this.Joi
+          .string()
+          .min(1)
+          .max(36),
       })
       .validate(profile);
   }
 
   /**
    * @param {String} data.id - objectId
-   * @param {String} data.fullName
+   * @param {String} data.firstName
+   * @param {String} data.lastName
    * @returns
    * @memberof UserValidation
    */
@@ -48,11 +59,14 @@ class UserValidation extends Validation {
     return this.Joi
       .object({
         id: this.Joi.objectId(),
-        fullName: this.Joi
+        firstName: this.Joi
           .string()
           .min(1)
-          .max(30)
-          .required(),
+          .max(30),
+        lastName: this.Joi
+          .string()
+          .min(1)
+          .max(36),
       })
       .validate(data);
   }

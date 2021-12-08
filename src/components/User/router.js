@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const UserComponent = require('.');
+const AuthMiddleware = require('../Auth/middleware');
 
 /**
  * Express router to mount user related functions on.
@@ -16,7 +17,7 @@ const router = Router();
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/', UserComponent.findAll);
+router.get('/', AuthMiddleware, UserComponent.findAll);
 
 /**
  * Route serving a user
@@ -26,7 +27,7 @@ router.get('/', UserComponent.findAll);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/:id', UserComponent.findById);
+router.get('/:id', AuthMiddleware, UserComponent.findById);
 
 /**
  * Route serving a new user
@@ -46,7 +47,7 @@ router.post('/', UserComponent.create);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.put('/', UserComponent.updateById);
+router.put('/', AuthMiddleware, UserComponent.updateById);
 
 /**
  * Route serving a new user
@@ -56,6 +57,6 @@ router.put('/', UserComponent.updateById);
  * @param {string} path -Express path
  * @param {callback} middleware - Express middleware
  */
-router.delete('/', UserComponent.deleteById);
+router.delete('/', AuthMiddleware, UserComponent.deleteById);
 
 module.exports = router;

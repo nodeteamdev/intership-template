@@ -2,7 +2,11 @@ const { Schema, model } = require('mongoose');
 
 const UserSchema = new Schema(
   {
-    fullName: {
+    firstName: {
+      type: String,
+      trim: true,
+    },
+    lastName: {
       type: String,
       trim: true,
     },
@@ -10,11 +14,12 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
+    password: {
+      type: String,
+      required: true,
+    },
   },
-  {
-    collection: 'usermodel',
-    versionKey: false,
-  },
+  { timestamps: true },
 );
 
-module.exports = model('UserModel', UserSchema);
+module.exports = model('User', UserSchema);

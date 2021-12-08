@@ -39,8 +39,15 @@ function onListening() {
  * @function
  * @inner
  * @param {http.Server} server
+ * @param {mongoose.connection} db
  */
-function bind(server) {
+function bind(server, db) {
+  db.on('error', console.error.bind(console, 'connection error:'));
+  db.on('disconnected', () => { console.warn(' -> lost connection'); });
+  db.on('reconnect', () => { console.log('-> reconnected'); });
+  db.on('connected', () => {
+    console.info('Mongo connected!');
+  });
   server.on('error', (error) => this.onError.bind(server)(error));
   server.on('listening', this.onListening.bind(server));
 }
