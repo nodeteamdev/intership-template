@@ -1,4 +1,4 @@
-const { UserModel } = require('./model');
+const UserModel = require('./model');
 
 /**
  * @exports
@@ -8,18 +8,7 @@ const { UserModel } = require('./model');
  * @returns Promise<UserModel[]>
  */
 function findAll() {
-  return UserModel.find().exec();
-}
-
-/**
- * @exports
- * @method create
- * @param {object} profile
- * @summary create a new user
- * @returns {Promise<UserModel>}
- */
-function create(profile) {
-  return UserModel.create(profile);
+  return UserModel.find({}).exec();
 }
 
 /**
@@ -31,6 +20,17 @@ function create(profile) {
  */
 function findById(id) {
   return UserModel.findById(id).exec();
+}
+
+/**
+ * @exports
+ * @method create
+ * @param {object} profile
+ * @summary create a new user
+ * @returns {Promise<UserModel>}
+ */
+function create(profile) {
+  return UserModel.create(profile);
 }
 
 /**
@@ -59,8 +59,8 @@ function deleteById(_id) {
 
 module.exports = {
   findAll,
-  create,
   findById,
+  create,
   updateById,
   deleteById,
 };

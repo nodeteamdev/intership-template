@@ -36,6 +36,16 @@ router.get('/:id', UserComponent.findById);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
+router.post('/', UserComponent.create);
+
+/**
+ * Route serving a new user
+ * @name /v1/users
+ * @function
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware
+ */
 router.put('/', UserComponent.updateById);
 
 /**
