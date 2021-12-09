@@ -2,6 +2,7 @@
 const express = require('express');
 const http = require('http');
 const UserRouter = require('../components/User/router');
+const AuthRouter = require('../components/auth/router');
 
 module.exports = {
     /**
@@ -12,7 +13,9 @@ module.exports = {
      */
     init(app) {
         const router = express.Router();
-
+        // My Code //
+        app.use('/v1/auth', AuthRouter);
+        // My Code //
         /**
          * Forwards any requests to the /v1/users URI to UserRouter.
          * @name /v1/users

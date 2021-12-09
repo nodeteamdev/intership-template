@@ -1,7 +1,8 @@
 const { Router, request, response } = require('express');
 const UserComponent = require('.');
 // eslint-disable-next-line import/extensions
-const authMiddleware = require('../../config/authMiddleware.js');
+// const authMiddleware = require('../../config/authMiddleware.js');
+const authMiddleware = require('./authMiddleware');
 /**
  * Express router to mount user related functions on.
  * @type {Express.Router}

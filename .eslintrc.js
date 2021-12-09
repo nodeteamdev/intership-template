@@ -14,6 +14,7 @@ module.exports = {
         indent: ['error', 4],
         'no-unused-vars': 'warn',
         'no-fallthrough': 'warn',
+        'func-names': 'warn',
+        'no-shadow': 'warn',
     },
 };
-
