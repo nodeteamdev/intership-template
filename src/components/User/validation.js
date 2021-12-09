@@ -34,6 +34,11 @@ class UserValidation extends Validation {
                     .min(1)
                     .max(30)
                     .required(),
+                password: this.Joi
+                    .string()
+                    .min(4)
+                    .max(30)
+                    .required(),
             })
             .validate(profile);
     }

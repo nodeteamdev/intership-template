@@ -11,6 +11,14 @@ const UserSchema = new Schema(
             type: String,
             required: true,
         },
+        password: {
+            type: String,
+            required: true,
+        },
+        accessToken: {
+            type: String,
+            required: false,
+        },
     },
     {
         collection: 'usermodel',
