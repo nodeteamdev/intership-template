@@ -1,7 +1,4 @@
-/* eslint-disable consistent-return */
-/* eslint-disable func-names */
 const { Schema } = require('mongoose');
-// eslint-disable-next-line import/no-unresolved
 const bcrypt = require('bcrypt');
 const connections = require('../../config/connection');
 
@@ -43,15 +40,18 @@ UserSchema.pre('save', function (next) {
             if (err) return next(err);
             // override the cleartext password with the hashed one
             user.password = hash;
-            next();
+            return undefined;
         });
+        return undefined;
     });
+    return undefined;
 });
 
 UserSchema.methods.comparePassword = function (candidatePassword, cb) {
     bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
         if (err) return cb(err);
         cb(null, isMatch);
+        return undefined;
     });
 };
 

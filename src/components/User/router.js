@@ -1,4 +1,4 @@
-const { Router, request, response } = require('express');
+const { Router } = require('express');
 const UserComponent = require('.');
 // eslint-disable-next-line import/extensions
 // const authMiddleware = require('../../config/authMiddleware.js');
@@ -18,6 +18,7 @@ const router = Router();
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
+// router.get('/', authMiddleware.verifyToken, (req, res) => { res.json(user); });
 router.get('/', authMiddleware.verifyToken, UserComponent.findAll);
 
 /**
@@ -69,7 +70,7 @@ router.delete('/', authMiddleware.verifyToken, UserComponent.deleteById);
  * @param {string} path -Express path
  * @param {callback}  - Express middleware
  */
-router.post('/login', UserComponent.loginUser);
+// router.post('/login', UserComponent.loginUser);
 // My code ////////////////////////
 
 module.exports = router;

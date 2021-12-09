@@ -1,9 +1,6 @@
-/* eslint-disable import/no-unresolved */
-/* eslint-disable consistent-return */
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const AuthService = require('./service');
-// const UserValidation = require('../User/validation');
 const AuthValidation = require('./validation');
 const ValidationError = require('../../error/ValidationError');
 const userModel = require('../User/model');
@@ -31,7 +28,6 @@ async function signUp(req, res, next) {
             data: user,
         });
     } catch (error) {
-        console.log('Not sign up!');
         if (error instanceof ValidationError) {
             return res.status(422).json({
                 message: error.name,
@@ -67,22 +63,15 @@ async function signIn(req, res, next) {
         const user = await userModel.findOne({ email });
         const validPassword = bcrypt.compareSync(password, user.password);
 
-        if (validPassword) {
-            console.log('Pass is correct');
-        } else {
-            console.log('Wroing password in auth/index.js');
-            res.send('Wrong password');
+        if (!validPassword) {
+            res.status(403).json({ message: 'Wrong password' });
         }
 
-        console.log({ email, password });
-        // jwt.sign({ email, password }, 'secretkey', { expiresIn: '1m' }, (_error, token) => {
-        //     res.json({ token });
-        // });
         const accessToken = jwt.sign({ email, password }, 'secretkey', { expiresIn: '1m' });
         const refreshToken = jwt.sign({ email, password }, 'RefreshSecretkey', { expiresIn: '10h' });
         refreshTokens.push(refreshToken);
 
-        res.json({ accessToken, refreshToken });
+        return res.json({ accessToken, refreshToken });
     } catch (error) {
         if (error instanceof ValidationError) {
             return res.status(422).json({
@@ -107,15 +96,15 @@ async function signIn(req, res, next) {
  * @param {express.NextFunction} next
  * @returns {Promise<void>}
  */
-async function refreshToken(req, res, next) {
+async function refreshAccessToken(req, res, next) {
     try {
         const refToken = req.body.refreshToken;
-        if (refToken == null) return res.send('Empty token');
-        if (!refreshTokens.includes(refToken)) return res.send('Not Super good');
+        if (refToken == null) return res.sendStatus(403).json({ message: 'Empty token' });
+        if (!refreshTokens.includes(refToken)) return res.sendStatus(403).json({ message: 'Token is not valid' });
         jwt.verify(refToken, 'RefreshSecretkey', (err, email) => {
             if (err) return res.sendStatus(403);
             const accessToken = jwt.sign({ email }, 'secretkey', { expiresIn: '1m' });
-            res.json({ accessToken });
+            return res.json({ accessToken });
         });
     } catch (error) {
         if (error instanceof ValidationError) {
@@ -132,10 +121,11 @@ async function refreshToken(req, res, next) {
 
         return next(error);
     }
+    return undefined;
 }
 
 module.exports = {
     signUp,
     signIn,
-    refreshToken,
+    refreshAccessToken,
 };

@@ -1,7 +1,5 @@
-const { Router, request, response } = require('express');
+const { Router } = require('express');
 const AuthUserComponent = require('.');
-// eslint-disable-next-line import/extensions
-const authMiddleware = require('../User/authMiddleware');
 /**
  * Express router to mount user related functions on.
  * @type {Express.Router}
@@ -37,6 +35,6 @@ router.post('/signIn', AuthUserComponent.signIn);
  * @param {string} path -Express path
  * @param {callback}  - Express middleware
  */
-router.post('/refreshToken', AuthUserComponent.refreshToken);
+router.post('/refreshToken', AuthUserComponent.refreshAccessToken);
 
 module.exports = router;
