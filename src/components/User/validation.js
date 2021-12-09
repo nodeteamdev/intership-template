@@ -75,7 +75,6 @@ class UserValidation extends Validation {
             .validate(data);
     }
 
-    // My code ////////////////////////
     /**
      * @param {String} profile.email
      * @param {String} profile.fullName
@@ -91,15 +90,9 @@ class UserValidation extends Validation {
                     .min(4)
                     .max(10)
                     .required(),
-                // fullName: this.Joi
-                //     .string()
-                //     .min(1)
-                //     .max(30)
-                //     .required(),
             })
             .validate(profile);
     }
-    // My code ////////////////////////
 }
 
 module.exports = new UserValidation();

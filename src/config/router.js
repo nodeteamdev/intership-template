@@ -13,9 +13,16 @@ module.exports = {
      */
     init(app) {
         const router = express.Router();
-        // My Code //
+        /**
+         * Forwards any requests to the /v1/users URI to UserRouter.
+         * @name /v1/auth
+         * @function
+         * @inner
+         * @param {string} path - Express path
+         * @param {callback} middleware - Express middleware.
+         */
         app.use('/v1/auth', AuthRouter);
-        // My Code //
+
         /**
          * Forwards any requests to the /v1/users URI to UserRouter.
          * @name /v1/users
