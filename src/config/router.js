@@ -1,6 +1,7 @@
 const express = require('express');
 const http = require('http');
 const UserRouter = require('../components/User/router');
+const AuthRouter = require('../components/Auth/router');
 
 module.exports = {
     /**
@@ -22,13 +23,15 @@ module.exports = {
          */
         app.use('/v1/users', UserRouter);
 
+        app.use('/v1/auth', AuthRouter);
+
         /**
          * @description No results returned mean the object is not found
          * @function
          * @inner
          * @param {callback} middleware - Express middleware.
          */
-        app.use((req, res, next) => {
+        app.use((req, res) => {
             res.status(404).send(http.STATUS_CODES[404]);
         });
 

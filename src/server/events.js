@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * @function
  * @param  {NodeJS.ErrnoException} error
@@ -12,9 +13,11 @@ function onError(error) {
     case 'EACCES':
         console.error('Port requires elevated privileges');
         process.exit(1);
+        break;
     case 'EADDRINUSE':
         console.error('Port is already in use');
         process.exit(1);
+        break;
     default:
         throw error;
     }
@@ -36,13 +39,13 @@ function onListening() {
  * @inner
  * @param {http.Server} server
  */
-function bind(server) {
-    server.on('error', (error) => this.onError.bind(server)(error));
+function binding(server) {
+    server.on('error', (error) => this.onError.call(server, error));
     server.on('listening', this.onListening.bind(server));
 }
 
 module.exports = {
     onError,
     onListening,
-    bind,
+    bind: binding,
 };
