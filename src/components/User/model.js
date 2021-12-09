@@ -16,10 +16,6 @@ const UserSchema = new Schema(
             type: String,
             required: true,
         },
-        accesTken: {
-            type: String,
-            required: false,
-        },
     },
     {
         collection: 'usermodel',

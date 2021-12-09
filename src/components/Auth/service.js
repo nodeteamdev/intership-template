@@ -12,12 +12,11 @@ async function register(data) {
     const newUser = new User(user);
     const saveUser = await newUser.save();
     const { password, ...userwiThoutPassword } = saveUser.toJSON();
-    console.log(saveUser);
     return userwiThoutPassword;
 }
 
 async function login(data) {
-    const user = await User.findOne({ fullName: data.fullName });
+    const user = await User.findById(data._id);
 
     if (!user) {
         throw new Error('Login is incorrect');
@@ -33,16 +32,32 @@ async function login(data) {
     }, accessKey, { expiresIn: '1h' });
 
     const refreshKey = process.env.REFRESH_KEY;
-    const refreshToken = jwt.sign({
+    const token = jwt.sign({
         userId: user._id,
-    }, refreshKey, { expiresIn: '120' });
+    }, refreshKey, { expiresIn: 60 * 1000 * 60 * 24 * 7 });
 
-    await User.findByIdAndUpdate(user._id, { accessToken, refreshToken });
+    await User.findByIdAndUpdate(user._id, { accessToken, refreshToken: token });
 
-    return { accessToken, refreshToken };
+    return { accessToken, refreshToken: token };
+}
+async function refreshToken(userId) {
+    console.log(userId);
+    const user = await User.findById(userId);
+
+    if (!user) {
+        throw new Error('User not found');
+    }
+    const accessKey = process.env.ACCESS_KEY;
+    const accessToken = jwt.sign({ userId }, accessKey, { expiresIn: '1h' });
+
+    const refreshKey = process.env.REFRESH_KEY;
+    const token = jwt.sign({ userId }, refreshKey, { expiresIn: '120' });
+
+    return { accessToken, refreshToken: token };
 }
 
 module.exports = {
     register,
     login,
+    refreshToken,
 };
