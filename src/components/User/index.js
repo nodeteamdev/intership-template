@@ -1,6 +1,11 @@
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+
 const UserService = require('./service');
 const UserValidation = require('./validation');
 const ValidationError = require('../../error/ValidationError');
+
+
 
 /**
  * @function
@@ -78,7 +83,21 @@ async function create(req, res, next) {
             throw new ValidationError(error.details);
         }
 
-        const user = await UserService.create(req.body);
+        const encryptedPassword = await bcrypt.hash(req.body.password, 10);
+
+        const user = await UserService.create({ ...req.body, password: encryptedPassword });
+
+        const token = jwt.sign(
+            { 
+                user_id: user._id, 
+            },
+                'secret-token-key',
+            {
+                expiresIn: "1h",
+            }
+        );
+
+        user.token = token;
 
         return res.status(200).json({
             data: user,

@@ -1,5 +1,9 @@
 const { Router } = require('express');
 const UserComponent = require('.');
+const jwt = require('jsonwebtoken');
+
+
+const UserModel = require('./model');
 
 /**
  * Express router to mount user related functions on.
@@ -36,7 +40,10 @@ router.get('/:id', UserComponent.findById);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.post('/', UserComponent.create);
+router.post('/registration', UserComponent.create);
+
+//router.post('/login', UserComponent.login);
+
 
 /**
  * Route serving a new user
