@@ -26,19 +26,19 @@ const updateTokens = async (userId) => {
  */
 const signUp = async (req, res, next) => {
   try {
-    const { error } = UserValidation.create(req.body);
+    const { error, value } = UserValidation.create(req.body);
 
     if (error) {
       throw new ValidationError(error.details);
     }
 
-    const isUser = await AuthService.findByEmail(req.body.email);
+    const isUser = await AuthService.findByEmail(value.email);
     if (isUser === null) {
       const userData = {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        password: bcrypt.hashSync(req.body.password, 10),
+        firstName: value.firstName,
+        lastName: value.lastName,
+        email: value.email,
+        password: bcrypt.hashSync(value.password, 10),
       };
 
       const user = await UserService.create(userData);
