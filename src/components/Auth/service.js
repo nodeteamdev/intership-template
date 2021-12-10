@@ -9,8 +9,7 @@ async function register(data) {
         password: data.password,
     };
 
-    const newUser = new User(user);
-    const saveUser = await newUser.save();
+    const saveUser = await new User(user).save();
     const { password, ...userwiThoutPassword } = saveUser.toJSON();
     return userwiThoutPassword;
 }
@@ -26,32 +25,28 @@ async function login(data) {
     if (!isPasswordCorrect) {
         throw new Error('Password is incorrect');
     }
-    const accessKey = process.env.ACCESS_KEY;
     const accessToken = jwt.sign({
         userId: user._id,
-    }, accessKey, { expiresIn: '1h' });
+    }, process.env.ACCESS_KEY, { expiresIn: '1h' });
 
-    const refreshKey = process.env.REFRESH_KEY;
     const token = jwt.sign({
         userId: user._id,
-    }, refreshKey, { expiresIn: 60 * 1000 * 60 * 24 * 7 });
+    }, process.env.REFRESH_KEY, { expiresIn: 60 * 1000 * 60 * 24 * 7 });
 
     await User.findByIdAndUpdate(user._id, { accessToken, refreshToken: token });
 
     return { accessToken, refreshToken: token };
 }
 async function refreshToken(userId) {
-    console.log(userId);
     const user = await User.findById(userId);
 
     if (!user) {
         throw new Error('User not found');
     }
-    const accessKey = process.env.ACCESS_KEY;
-    const accessToken = jwt.sign({ userId }, accessKey, { expiresIn: '1h' });
 
-    const refreshKey = process.env.REFRESH_KEY;
-    const token = jwt.sign({ userId }, refreshKey, { expiresIn: '120' });
+    const accessToken = jwt.sign({ userId }, process.env.ACCESS_KEY, { expiresIn: '1h' });
+
+    const token = jwt.sign({ userId }, process.env.REFRESH_KEY, { expiresIn: '120' });
 
     return { accessToken, refreshToken: token };
 }

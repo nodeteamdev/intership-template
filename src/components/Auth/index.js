@@ -1,6 +1,13 @@
 const jwt = require('jsonwebtoken');
 const AuthService = require('./service');
 
+/**
+ * @function
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
+ * @returns {Promise < void >}
+ */
 async function register(req, res, next) {
     try {
         const data = await AuthService.register(req.body);
@@ -17,7 +24,13 @@ async function register(req, res, next) {
         return next(error);
     }
 }
-
+/**
+ * @function
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
+ * @returns {Promise < void >}
+ */
 async function login(req, res, next) {
     try {
         const data = await AuthService.login(req.body);
@@ -34,24 +47,29 @@ async function login(req, res, next) {
         return next(error);
     }
 }
-async function refreshToken(req, res) {
+/**
+ * @function
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
+ * @returns {Promise < void >}
+ */
+async function refreshToken(req, res, next) {
     const { refreshToken: token } = req.body;
-    console.log(token);
 
-    if (!token) {
-        res.status(400).send('A refresh token is required');
+    if (token) {
+        try {
+            const { userId } = jwt.verify(token, process.env.REFRESH_KEY);
+            const tokens = await AuthService.refreshToken(userId);
+            res.status(200).send(tokens);
+            return;
+        } catch (error) {
+            res.status(400).send('Invalid Token');
+            next(error);
+            return;
+        }
     }
-    try {
-        console.log('hi');
-        console.log(process.env.REFRESH_KEY);
-        const { userId } = jwt.verify(token, process.env.REFRESH_KEY);
-        console.log(userId);
-        const tokens = await AuthService.refreshToken(userId);
-        res.status(200).send(tokens);
-    } catch (err) {
-        console.log(err);
-        res.status(400).send('Invalid Token');
-    }
+    res.status(400).send('A refresh token is required');
 }
 
 module.exports = {
