@@ -1,8 +1,8 @@
 const { Schema, model } = require('mongoose');
 
 const TokenSchema = new Schema({
-  tokenId: String,
-  password: String,
+  id: String,
+  userId: String,
 });
 
 module.exports = model('Token', TokenSchema);

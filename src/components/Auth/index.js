@@ -8,15 +8,14 @@ const ValidationError = require('../../error/ValidationError');
 const { secret } = require('../../config/env').JWT;
 
 const updateTokens = async (userId) => {
-  const accessToken = await AuthHelper.generateAccessToken(userId);
-  const refreshToken = await AuthHelper.generateRefreshToken();
-  const newestTokens = await AuthHelper.replaceDbRefreshToken(refreshToken.id, userId)
-    .then(() => ({
-      accessToken,
-      refreshToken: refreshToken.token,
-    }));
+  const accessToken = AuthHelper.generateAccessToken(userId);
+  const refreshToken = AuthHelper.generateRefreshToken();
+  AuthHelper.replaceDbRefreshToken(refreshToken.id, userId);
 
-  return newestTokens;
+  return {
+    accessToken,
+    refreshToken: refreshToken.token,
+  };
 };
 /**
  * @function

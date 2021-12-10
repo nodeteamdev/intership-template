@@ -1,6 +1,5 @@
 const uuid = require('uuid').v4;
 const jwt = require('jsonwebtoken');
-const mongoose = require('mongoose');
 const AuthService = require('./service');
 const { secret, tokens } = require('../../config/env').JWT;
 
@@ -30,16 +29,11 @@ const generateRefreshToken = () => {
 };
 
 const replaceDbRefreshToken = async (tokenId, userId) => {
-  try {
-    const oldRefreshToken = await AuthService.removeRefreshToken(userId);
-    if (oldRefreshToken) {
-      throw new Error('Invalid token!');
-    }
-    const updatedRefreshToken = await AuthService.createRefreshToken(tokenId, userId);
-    return updatedRefreshToken;
-  } catch (error) {
-    console.error('Error:', error.message);
+  const oldRefreshToken = await AuthService.removeRefreshToken(userId);
+  if (oldRefreshToken === undefined) {
+    throw new Error('Invalid token!');
   }
+  return AuthService.createRefreshToken(tokenId, userId);
 };
 
 module.exports = {
