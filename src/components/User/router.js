@@ -1,9 +1,7 @@
 const { Router } = require('express');
 const UserComponent = require('.');
-const jwt = require('jsonwebtoken');
 
-
-const UserModel = require('./model');
+const auth = require('../Auth/middleware');
 
 /**
  * Express router to mount user related functions on.
@@ -34,7 +32,7 @@ router.get('/:id', UserComponent.findById);
 
 /**
  * Route serving a new user
- * @name /v1/users
+ * @name /v1/users/registration
  * @function
  * @inner
  * @param {string} path - Express path
@@ -42,8 +40,19 @@ router.get('/:id', UserComponent.findById);
  */
 router.post('/registration', UserComponent.create);
 
+/**
+ * Route serving login user
+ * @name /v1/users/registration
+ * @function
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware
+ */
 router.post('/login', UserComponent.login);
 
+router.post('/welcome', auth, (req, res) => {
+  res.status(200).send(`Welcome ${req.user.name} `);
+});
 
 /**
  * Route serving a new user

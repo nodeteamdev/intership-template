@@ -90,7 +90,8 @@ async function create(req, res, next) {
 
         const token = jwt.sign(
             { 
-                user_id: user._id, 
+                id: user._id,
+                name: user.fullName  
             },
                 'secret-token-key',
             {
@@ -137,7 +138,10 @@ async function login(req, res, next) {
     if (user && (await bcrypt.compare(password, user.password))) {
 
         const token = jwt.sign(
-            { user_id: user._id },
+            { 
+                id: user._id,
+                name: user.fullName 
+            },
             'secret-token-key',
             {
               expiresIn: "1h",
