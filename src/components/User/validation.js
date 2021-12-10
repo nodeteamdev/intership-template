@@ -40,6 +40,21 @@ class UserValidation extends Validation {
     }
 
     /**
+     * @param {String} profile.email
+     * @param {String} profile.password
+     * @returns
+     * @memberof UserValidation
+     */
+    login(profile) {
+        return this.Joi
+            .object({
+                email: this.Joi.string().email().required(),
+                password: this.Joi.string().min(6).max(15).required(),
+            })
+            .validate(profile);
+    }
+
+    /**
      * @param {String} data.id - objectId
      * @param {String} data.fullName
      * @returns

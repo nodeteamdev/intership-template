@@ -7,6 +7,7 @@ const ValidationError = require('../../error/ValidationError');
 
 
 
+
 /**
  * @function
  * @param {express.Request} req
@@ -119,6 +120,53 @@ async function create(req, res, next) {
     }
 }
 
+async function login(req, res, next) {
+
+  try {
+
+    const { email, password } = req.body;
+
+    const { error } = UserValidation.login(req.body);
+
+    if (error) {
+        throw new ValidationError(error.details);
+    }
+
+    const user = await UserService.findByEmail(email);
+
+    if (user && (await bcrypt.compare(password, user.password))) {
+
+        const token = jwt.sign(
+            { user_id: user._id },
+            'secret-token-key',
+            {
+              expiresIn: "1h",
+            }
+        );
+
+        res.status(200).send({ auth: true, token: token });
+    } else {
+        res.status(400).send({ auth: false });
+    }
+    } 
+    catch (error) {
+        if (error instanceof ValidationError) {
+            return res.status(422).json({
+                message: error.name,
+                details: error.message,
+            });
+        }
+
+        res.status(500).json({
+            message: error.name,
+            details: error.message,
+        });
+
+        return next(error);
+    }
+}
+
+
 /**
  * @function
  * @param {express.Request} req
@@ -197,6 +245,7 @@ module.exports = {
     findAll,
     findById,
     create,
+    login,
     updateById,
     deleteById,
 };

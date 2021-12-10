@@ -42,7 +42,7 @@ router.get('/:id', UserComponent.findById);
  */
 router.post('/registration', UserComponent.create);
 
-//router.post('/login', UserComponent.login);
+router.post('/login', UserComponent.login);
 
 
 /**
