@@ -5,9 +5,6 @@ const UserService = require('./service');
 const UserValidation = require('./validation');
 const ValidationError = require('../../error/ValidationError');
 
-
-
-
 /**
  * @function
  * @param {express.Request} req
@@ -87,16 +84,16 @@ async function create(req, res, next) {
         const encryptedPassword = await bcrypt.hash(req.body.password, 10);
 
         const user = await UserService.create({ ...req.body, password: encryptedPassword });
-
+        /* eslint-disable no-underscore-dangle */
         const token = jwt.sign(
-            { 
-                id: user._id,
-                name: user.fullName  
-            },
-                'secret-token-key',
             {
-                expiresIn: "1h",
-            }
+                id: user._id,
+                name: user.fullName,
+            },
+            'secret-token-key',
+            {
+                expiresIn: '1h',
+            },
         );
 
         user.token = token;
@@ -122,38 +119,33 @@ async function create(req, res, next) {
 }
 
 async function login(req, res, next) {
+    try {
+        const { email, password } = req.body;
 
-  try {
+        const { error } = UserValidation.login(req.body);
 
-    const { email, password } = req.body;
+        if (error) {
+            throw new ValidationError(error.details);
+        }
 
-    const { error } = UserValidation.login(req.body);
+        const user = await UserService.findByEmail(email);
+        /* eslint-disable no-underscore-dangle */
+        if (user && (await bcrypt.compare(password, user.password))) {
+            const token = jwt.sign(
+                {
+                    id: user._id,
+                    name: user.fullName,
+                },
+                'secret-token-key',
+                {
+                    expiresIn: '1h',
+                },
+            );
 
-    if (error) {
-        throw new ValidationError(error.details);
-    }
-
-    const user = await UserService.findByEmail(email);
-
-    if (user && (await bcrypt.compare(password, user.password))) {
-
-        const token = jwt.sign(
-            { 
-                id: user._id,
-                name: user.fullName 
-            },
-            'secret-token-key',
-            {
-              expiresIn: "1h",
-            }
-        );
-
-        res.status(200).send({ auth: true, token: token });
-    } else {
-        res.status(400).send({ auth: false });
-    }
-    } 
-    catch (error) {
+            return res.status(200).send({ auth: true, token });
+        }
+        return res.status(400).send({ auth: false });
+    } catch (error) {
         if (error instanceof ValidationError) {
             return res.status(422).json({
                 message: error.name,
@@ -169,7 +161,6 @@ async function login(req, res, next) {
         return next(error);
     }
 }
-
 
 /**
  * @function

@@ -11,11 +11,11 @@ const UserSchema = new Schema(
             type: String,
             required: true,
         },
-        password: { 
-            type: String 
+        password: {
+            type: String,
         },
-        token: { 
-            type: String 
+        token: {
+            type: String,
         },
     },
     {

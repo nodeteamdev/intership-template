@@ -28,7 +28,7 @@ module.exports = {
          * @inner
          * @param {callback} middleware - Express middleware.
          */
-        app.use((req, res, next) => {
+        app.use((req, res) => {
             res.status(404).send(http.STATUS_CODES[404]);
         });
 
