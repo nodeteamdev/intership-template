@@ -21,18 +21,18 @@
     "compression": "1.7.4",
     "cookie-parser": "1.4.6",
     "cors": "2.8.5",
-    "dotenv": "^10.0.0",
+    "dotenv": "10.0.0",
     "express": "4.17.1",
     "helmet": "4.6.0",
-    "joi": "^17.1.1",
-    "jsonwebtoken": "^8.5.1",
+    "joi": "17.1.1",
+    "jsonwebtoken": "8.5.1",
     "mongoose": "6.0.14",
-    "uuid": "^8.3.2"
+    "uuid": "8.3.2"
   },
   "devDependencies": {
-    "eslint": "^8.3.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.25.3",
-    "nodemon": "^2.0.15"
+    "eslint": "8.3.0",
+    "eslint-config-airbnb-base": "15.0.0",
+    "eslint-plugin-import": "2.25.3",
+    "nodemon": "2.0.15"
   }
 }
