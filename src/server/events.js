@@ -12,9 +12,11 @@ function onError(error) {
     case 'EACCES':
         console.error('Port requires elevated privileges');
         process.exit(1);
+        break;
     case 'EADDRINUSE':
         console.error('Port is already in use');
         process.exit(1);
+        break;
     default:
         throw error;
     }
@@ -36,7 +38,7 @@ function onListening() {
  * @inner
  * @param {http.Server} server
  */
-function bind(server) {
+function init(server) {
     server.on('error', (error) => this.onError.bind(server)(error));
     server.on('listening', this.onListening.bind(server));
 }
@@ -44,5 +46,5 @@ function bind(server) {
 module.exports = {
     onError,
     onListening,
-    bind,
+    init,
 };

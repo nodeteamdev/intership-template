@@ -1,4 +1,7 @@
+const bcrypt = require('bcrypt');
 const UserModel = require('./model');
+
+const saltRounds = 10;
 
 /**
  * @exports
@@ -30,7 +33,13 @@ function findById(id) {
  * @returns {Promise<UserModel>}
  */
 function create(profile) {
-    return UserModel.create(profile);
+    const hash = bcrypt.hashSync(profile.password, saltRounds);
+    return UserModel.create({
+        fullName: profile.fullName,
+        email: profile.email,
+        password: hash,
+        role: profile.role,
+    });
 }
 
 /**

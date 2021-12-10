@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const UserComponent = require('.');
+const AuthComponent = require('.');
 const { errorHandler } = require('../../error/errorsMiddleware');
 
 /**
@@ -10,53 +10,53 @@ const { errorHandler } = require('../../error/errorsMiddleware');
 const router = Router();
 
 /**
- * Route serving list of users.
- * @name /v1/users
+ * Route for signing up.
+ * @name /v1/auth/sign-up
  * @function
  * @inner
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/', errorHandler(UserComponent.findAll));
+router.post('/sign-up', errorHandler(AuthComponent.signUp));
 
 /**
- * Route serving a user
- * @name /v1/users/:id
+ * Route for signing in.
+ * @name /v1/auth/sign-in
  * @function
  * @inner
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/:id', errorHandler(UserComponent.findById));
+router.post('/sign-in', errorHandler(AuthComponent.signIn));
 
 /**
- * Route serving a new user
- * @name /v1/users
+ * Route for refreshing access token
+ * @name /v1/auth/refreshToken
  * @function
  * @inner
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.post('/', errorHandler(UserComponent.create));
+router.get('/refreshToken', errorHandler(AuthComponent.refreshToken));
 
 /**
- * Route serving a new user
- * @name /v1/users
+ * Route that serve token payload
+ * @name /v1/auth/payload
  * @function
  * @inner
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.put('/', errorHandler(UserComponent.updateById));
+router.get('/payload', errorHandler(AuthComponent.payload));
 
 /**
- * Route serving a new user
- * @name /v1/users
+ * Logout route
+ * @name /v1/auth/logout
  * @function
  * @inner
- * @param {string} path -Express path
+ * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.delete('/', errorHandler(UserComponent.deleteById));
+router.get('/logout', errorHandler(AuthComponent.logout));
 
 module.exports = router;

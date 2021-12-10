@@ -1,7 +1,7 @@
 const http = require('http');
-const UserService = require('./service');
-const UserValidation = require('./validation');
 const AuthValidation = require('../Auth/validation');
+const BookService = require('./service');
+const BookValidation = require('./validation');
 const ValidationError = require('../../error/ValidationError');
 const AuthError = require('../../error/AuthError');
 
@@ -13,11 +13,11 @@ const AuthError = require('../../error/AuthError');
  * @returns {Promise < void >}
  */
 async function findAll(req, res) {
-    const users = await UserService.findAll();
+    const books = await BookService.findAll();
 
     AuthValidation.checkToken(req.cookies.accessToken);
     res.status(200).json({
-        data: users,
+        data: books,
     });
 }
 
@@ -28,18 +28,22 @@ async function findAll(req, res) {
  * @param {express.NextFunction} next
  * @returns {Promise < void >}
  */
-async function findById(req, res) {
-    const { error } = UserValidation.checkId(req.params);
+async function findByTitle(req, res) {
+    const { error } = BookValidation.checkTitle(req.params);
 
     if (error) {
         throw new ValidationError(error.details);
     }
 
     AuthValidation.checkToken(req.cookies.accessToken);
-    const user = await UserService.findById(req.params.id);
-
-    return res.status(200).json({
-        data: user,
+    const book = await BookService.findByTitle(req.params.title);
+    if (book !== null) {
+        return res.status(200).json({
+            data: book,
+        });
+    }
+    return res.status(404).json({
+        data: 'Not found',
     });
 }
 
@@ -51,21 +55,18 @@ async function findById(req, res) {
  * @returns {Promise < void >}
  */
 async function create(req, res) {
-    const { error } = UserValidation.create(req.body);
+    const { error } = BookValidation.create(req.body);
 
     if (error) {
         throw new ValidationError(error.details);
     }
 
-    const payload = AuthValidation.checkToken(req.cookies.accessToken);
-    if (payload.role === 'Admin') {
-        const user = await UserService.create(req.body);
+    AuthValidation.checkToken(req.cookies.accessToken);
+    const book = await BookService.create(req.body);
 
-        return res.status(200).json({
-            data: user,
-        });
-    }
-    throw new AuthError(http.STATUS_CODES[403], 403);
+    return res.status(200).json({
+        data: book,
+    });
 }
 
 /**
@@ -75,22 +76,19 @@ async function create(req, res) {
  * @param {express.NextFunction} next
  * @returns {Promise<void>}
  */
-async function updateById(req, res) {
-    const { error } = UserValidation.updateById(req.body);
+async function updateByTitle(req, res) {
+    AuthValidation.checkToken(req.cookies.accessToken);
+    const { error } = BookValidation.updateByTitle(req.body);
 
     if (error) {
         throw new ValidationError(error.details);
     }
 
-    const user = AuthValidation.checkToken(req.cookies.accessToken);
-    if (user.role === 'Admin') {
-        const updatedUser = await UserService.updateById(req.body.id, req.body);
+    const updatedBook = await BookService.updateByTitle(req.body.title, req.body);
 
-        return res.status(200).json({
-            data: updatedUser,
-        });
-    }
-    throw new AuthError(http.STATUS_CODES[403], 403);
+    return res.status(200).json({
+        data: updatedBook,
+    });
 }
 
 /**
@@ -101,7 +99,7 @@ async function updateById(req, res) {
  * @returns {Promise<void>}
  */
 async function deleteById(req, res) {
-    const { error } = UserValidation.checkId(req.body);
+    const { error } = BookValidation.checkId(req.body);
 
     if (error) {
         throw new ValidationError(error.details);
@@ -109,10 +107,10 @@ async function deleteById(req, res) {
 
     const user = AuthValidation.checkToken(req.cookies.accessToken);
     if (user.role === 'Admin') {
-        const deletedUser = await UserService.deleteById(req.body.id);
+        const deletedBook = await BookService.deleteById(req.body.id);
 
         return res.status(200).json({
-            data: deletedUser,
+            data: deletedBook,
         });
     }
     throw new AuthError(http.STATUS_CODES[403], 403);
@@ -120,8 +118,8 @@ async function deleteById(req, res) {
 
 module.exports = {
     findAll,
-    findById,
+    findByTitle,
     create,
-    updateById,
+    updateByTitle,
     deleteById,
 };

@@ -1,4 +1,5 @@
-const Joi = require('@hapi/joi');
+const Joi = require('joi');
+const jwt = require('jsonwebtoken');
 const { Types } = require('mongoose');
 
 /**
@@ -17,6 +18,7 @@ class Validation {
          * @type {string}
          * @memberof JoiSchema
          */
+        this.JWT = jwt;
         this.messageObjectId = 'Argument passed in must be a single String of 12 bytes or a string of 24 hex characters';
         this.Joi = Joi.extend({
             type: 'objectId',
