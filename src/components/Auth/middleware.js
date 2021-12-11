@@ -22,7 +22,7 @@ module.exports = (req, res, next) => {
       }
     }
   } else {
-    res.status(401).json({ message: 'Token not provided!' });
+    res.status(403).json({ message: 'Token not provided!' });
     return;
   }
   next();

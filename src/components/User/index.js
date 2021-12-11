@@ -35,13 +35,13 @@ async function findAll(req, res, next) {
  */
 async function findById(req, res, next) {
   try {
-    const { error } = UserValidation.findById(req.params);
+    const { error, value } = UserValidation.findById(req.params);
 
     if (error) {
       throw new ValidationError(error.details);
     }
 
-    const user = await UserService.findById(req.params.id);
+    const user = await UserService.findById(value.id);
 
     return res.status(200).json({
       data: user,

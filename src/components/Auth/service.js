@@ -1,5 +1,5 @@
 const UserModel = require('../User/model');
-const TokenModel = require('./token-model');
+const TokenModel = require('./model');
 
 /**
  * @exports
@@ -9,7 +9,7 @@ const TokenModel = require('./token-model');
  * @returns {Promise<UserModel>}
  */
 function findByEmail(email) {
-  return UserModel.findOne({ email }).exec();
+  return UserModel.findOne({ email }).lean().exec();
 }
 
 /**
@@ -20,7 +20,7 @@ function findByEmail(email) {
  * @returns
  */
 function findTokenById(tokenId) {
-  return TokenModel.findOne({ tokenId }).exec();
+  return TokenModel.findOne({ tokenId }).lean();
 }
 
 /**
@@ -31,8 +31,7 @@ function findTokenById(tokenId) {
  * @returns
  */
 function removeRefreshToken(userId) {
-  const result = TokenModel.findOneAndRemove({ userId }).exec();
-  return result;
+  return TokenModel.findOneAndRemove({ userId }).lean();
 }
 
 /**

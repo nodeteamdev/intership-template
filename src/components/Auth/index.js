@@ -2,14 +2,14 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const AuthService = require('./service');
 const AuthHelper = require('./helper');
-const UserValidation = require('../User/validation');
+const AuthValidation = require('./validation');
 const UserService = require('../User/service');
 const ValidationError = require('../../error/ValidationError');
 const { secret } = require('../../config/env').JWT;
 
 const updateTokens = async (userId) => {
   const accessToken = AuthHelper.generateAccessToken(userId);
-  const refreshToken = AuthHelper.generateRefreshToken();
+  const refreshToken = AuthHelper.generateRefreshToken(userId);
   AuthHelper.replaceDbRefreshToken(refreshToken.id, userId);
 
   return {
@@ -26,27 +26,29 @@ const updateTokens = async (userId) => {
  */
 const signUp = async (req, res, next) => {
   try {
-    const { error, value } = UserValidation.create(req.body);
+    const { error, value } = AuthValidation.signUp(req.body);
 
     if (error) {
       throw new ValidationError(error.details);
     }
 
     const isUser = await AuthService.findByEmail(value.email);
-    if (isUser === null) {
-      const userData = {
-        firstName: value.firstName,
-        lastName: value.lastName,
-        email: value.email,
-        password: bcrypt.hashSync(value.password, 10),
-      };
 
-      const user = await UserService.create(userData);
-      res.status(200).json({ data: user });
-    } else {
-      res.status(400).json({ message: 'Email already exists!' });
+    if (isUser) {
+      res.status(403).json({ error: 'Email already exists!' });
     }
+
+    const user = await UserService.create(value);
+
+    res.status(201).json({ data: user });
   } catch (error) {
+    if (error instanceof ValidationError) {
+      res.status(422).json({
+        message: error.name,
+        details: error.message,
+      });
+    }
+
     res.status(500).json({
       message: error.name,
       details: error.message,
@@ -64,20 +66,33 @@ const signUp = async (req, res, next) => {
  */
 const signIn = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const { error, value } = AuthValidation.signIn(req.body);
 
-    const user = await AuthService.findByEmail(email);
+    if (error) {
+      throw new ValidationError(error.details);
+    }
+
+    const user = await AuthService.findByEmail(value.email);
+
     if (user === null) {
-      res.status(401).json({ message: 'User does not exist!' });
+      res.status(401).json({ error: 'User does not exist!' });
     } else {
-      const isValid = bcrypt.compareSync(password, user.password);
-      if (isValid) {
-        updateTokens(user._id).then((tokens) => res.json(tokens));
+      const isValid = bcrypt.compareSync(value.password, user.password);
+
+      if (!isValid) {
+        res.status(401).json({ error: 'Invalid credentials!' });
       } else {
-        res.status(401).json({ message: 'Invalid credentials!' });
+        res.json()
+        updateTokens(user.id).then((tokens) => res.json(tokens));
       }
     }
   } catch (error) {
+    if (error instanceof ValidationError) {
+      res.status(422).json({
+        message: error.name,
+        details: error.message,
+      });
+    }
     res.status(500).json({
       message: error.name,
       details: error.message,
@@ -86,8 +101,8 @@ const signIn = async (req, res, next) => {
   }
 };
 
-const refreshTokens = async (req, res) => {
-  const { refreshToken } = req.body;
+const refreshTokens = async (req, res, next) => {
+  const { error, refreshToken } = AuthValidation.token(req.body);
 
   let payload;
 
@@ -103,16 +118,15 @@ const refreshTokens = async (req, res) => {
     } else if (error instanceof jwt.JsonWebTokenError) {
       res.status(400).json({ message: 'Invalid token!' });
     }
+    next(error);
   }
 
-  const findToken = await AuthService.findTokenById({ tokenId: payload.id });
-  if (findToken === null) {
+  const token = await AuthService.findTokenById({ tokenId: payload.id });
+  if (token === null) {
     throw new Error('Invalid token!');
   }
-  const newTokens = await updateTokens(findToken.userId);
+  const newTokens = await updateTokens(token.userId);
   res.json(newTokens);
-
-  return newTokens;
 };
 
 module.exports = {

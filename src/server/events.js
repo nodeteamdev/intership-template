@@ -9,25 +9,21 @@ function onError(error) {
   }
 
   switch (error.code) {
-  case 'EACCES': {
+  case 'EACCES':
     console.error('Port requires elevated privileges');
     process.exit(1);
-  }
-  case 'EADDRINUSE': {
+  case 'EADDRINUSE':
     console.error('Port is already in use');
     process.exit(1);
-  }
-  default: {
+  default:
     throw error;
   }
-  }
 }
-
 /**
- * @function
- * @inner
- * @description log port to console
- */
+* @function
+* @inner
+* @description log port to console
+*/
 function onListening() {
   const addr = this.address();
   const bind = (typeof addr === 'string') ? `pipe ${addr}` : `port ${addr.port}`;
@@ -36,18 +32,11 @@ function onListening() {
 }
 
 /**
- * @function
- * @inner
- * @param {http.Server} server
- * @param {mongoose.connection} db
- */
-function bind(server, db) {
-  db.on('error', console.error.bind(console, 'connection error:'));
-  db.on('disconnected', () => { console.warn(' -> lost connection'); });
-  db.on('reconnect', () => { console.log('-> reconnected'); });
-  db.on('connected', () => {
-    console.info('Mongo connected!');
-  });
+* @function
+* @inner
+* @param {http.Server} server
+*/
+function bind(server) {
   server.on('error', (error) => this.onError.bind(server)(error));
   server.on('listening', this.onListening.bind(server));
 }
