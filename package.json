@@ -4,7 +4,8 @@
   "description": "```     https://hapi.dev/family/joi/ ```",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/server",
+    "dev": "nodemon src/server"
   },
   "repository": {
     "type": "git",
@@ -32,6 +33,7 @@
   "devDependencies": {
     "eslint": "8.3.0",
     "eslint-config-airbnb-base": "15.0.0",
-    "eslint-plugin-import": "2.25.3"
+    "eslint-plugin-import": "2.25.3",
+    "nodemon": "2.0.15"
   }
 }
