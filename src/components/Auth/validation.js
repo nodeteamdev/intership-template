@@ -1,6 +1,4 @@
-const { AuthError } = require('../../error');
 const Validation = require('../validation');
-const { tokens } = require('../../config/credentials').JWT;
 /**
  * @exports
  * @class
@@ -60,20 +58,6 @@ class AuthValidation extends Validation {
           .required(),
       })
       .validate(profile);
-  }
-
-  /**
-     * @param {String} token
-
-     * @returns
-     * @memberof AuthValidation
-     */
-  tokenValidate(profile) {
-    try {
-      return this.JWT.verify(profile.token, tokens.refresh.secret);
-    } catch (error) {
-      throw new AuthError(error.message, 403);
-    }
   }
 }
 
