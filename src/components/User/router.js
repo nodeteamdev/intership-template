@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const UserComponent = require('.');
+const AuthMiddleware = require('../Auth/middleware');
 
 /**
  * Express router to mount user related functions on.
@@ -16,7 +17,7 @@ const router = Router();
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/', UserComponent.findAll);
+router.get('/', AuthMiddleware, UserComponent.findAll);
 
 /**
  * Route serving a user

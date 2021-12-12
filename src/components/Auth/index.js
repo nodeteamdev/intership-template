@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const AuthService = require('./service');
 const AuthValidation = require('./validation');
-const { HASH_SALT, JWT) } = require('../../config/credentials');
+const { HASH_SALT, JWT } = require('../../config/credentials');
 const { generateTokens } = require('./helper');
 const { ValidationError, AuthError } = require('../../error');
 
@@ -128,13 +128,13 @@ async function signIn(req, res, next) {
  */
 async function refreshToken(req, res, next) {
   try {
-    const { error, value } = jwt.verify(res.body.token, JWT.tokens.refresh.secret)
+    const { error, value } = jwt.verify(res.body);
 
     if (error) {
       throw new ValidationError(error.details);
     }
 
-    if (value.refreshToken === null) {
+    if (value.token === null) {
       throw new AuthError('Token Not Found');
     }
 
@@ -146,7 +146,7 @@ async function refreshToken(req, res, next) {
 
     const tokens = generateTokens(value);
 
-    await AuthService.saveToken(user._id, tokens.refreshToken);
+    await AuthService.saveToken(user.id, tokens.refreshToken);
     return res.status(200).json({
       data: tokens,
     });

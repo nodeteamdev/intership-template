@@ -27,7 +27,7 @@ router.post('/signUp', AuthComponent.signUp);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.post('/signIn', AuthMiddleware, AuthComponent.signIn);
+router.post('/signIn', AuthComponent.signIn);
 
 /**
  * Route serving for refreshing token
