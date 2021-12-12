@@ -25,23 +25,23 @@ function signIn(profile) {
 
 /**
  * @exports
- * @method findByEmail
+ * @method searchByEmail
  * @param {string} email
  * @summary get a user
  * @returns {Promise<UserModel>}
  */
-function findByEmail(profile) {
-  return UserModel.findOne({ email: profile.email });
+function searchByEmail(email) {
+  return UserModel.findOne({ email });
 }
 
 /**
  * @exports
- * @method findTokenById
- * @param {string} tokenId
+ * @method searchRefreshToken
+ * @param {string} userId
  * @summary get a token
  * @returns
  */
-function findTokenByUserId(userId) {
+function searchTokenById(userId) {
   return TokenModel.findOne({ userId });
 }
 
@@ -65,14 +65,18 @@ function removeRefreshToken(userId) {
  * @returns
  */
 function saveToken(userId, token) {
+  const isToken = TokenModel.findOne({ userId });
+  if (isToken) {
+    return TokenModel.findOneAndReplace({ userId }, { userId, token });
+  }
   return TokenModel.create({ userId, token });
 }
 
 module.exports = {
   signUp,
   signIn,
-  findTokenByUserId,
+  searchTokenById,
   removeRefreshToken,
-  findByEmail,
+  searchByEmail,
   saveToken,
 };

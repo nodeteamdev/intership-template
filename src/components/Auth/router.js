@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const AuthComponent = require('.');
+const AuthMiddleware = require('./middleware');
 
 /**
  * Express router to mount user related functions on.
@@ -26,16 +27,16 @@ router.post('/signUp', AuthComponent.signUp);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.post('/signIn', AuthComponent.signIn);
+router.post('/signIn', AuthMiddleware, AuthComponent.signIn);
 
 /**
  * Route serving for refreshing token
- * @name /v1/auth/refresh-token
+ * @name /v1/auth/refreshtoken
  * @function
  * @inner
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/refresh-token', AuthComponent.refreshToken);
+router.get('/refreshtoken', AuthMiddleware, AuthComponent.refreshToken);
 
 module.exports = router;

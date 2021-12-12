@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
-const AuthService = require('./service');
-const { JWT } = require('../../config/credentials');
+const { tokens } = require('../../config/credentials').JWT;
 
 function generateTokens(user) {
   const payload = {
@@ -9,31 +8,10 @@ function generateTokens(user) {
   };
 
   return {
-    accessToken: jwt.sign(payload, JWT.secret, { expiresIn: JWT.tokens.access.expiresIn }),
-    refreshToken: jwt.sign(payload, JWT.secret, { expiresIn: JWT.tokens.refresh.expiresIn }),
+    accessToken: jwt.sign(payload, tokens.access.secret, { expiresIn: tokens.access.expiresIn }),
+    refreshToken: jwt.sign(payload, tokens.access.secret, { expiresIn: tokens.refresh.expiresIn }),
   };
 }
-
-// async function updateTokens(user) {
-//   const payload = {
-//     userId: user.id,
-//     firstName: user.firstName,
-//   };
-
-//   const accessToken = jwt.sign(payload, JWT.secret, { expiresIn: JWT.tokens.access.expiresIn });
-//   const refreshToken = jwt.sign(payload, JWT.secret, { expiresIn: JWT.tokens.refresh.expiresIn });
-
-//   const oldRefreshToken = await AuthService.removeRefreshToken(user.id);
-//   if (oldRefreshToken === undefined) {
-//     throw new Error('Invalid token!');
-//   }
-//   await AuthService.saveToken(user.id, refreshToken);
-
-//   return {
-//     accessToken,
-//     refreshToken,
-//   };
-// }
 
 module.exports = {
   generateTokens,

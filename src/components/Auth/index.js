@@ -1,11 +1,9 @@
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const AuthService = require('./service');
 const AuthValidation = require('./validation');
-const ValidationError = require('../../error/ValidationError');
-const AuthError = require('../../error/AuthError');
 const { HASH_SALT } = require('../../config/credentials');
 const { generateTokens } = require('./helper');
+const { ValidationError, AuthError } = require('../../error');
 
 /**
  * @function
@@ -22,10 +20,10 @@ async function signUp(req, res, next) {
       throw new ValidationError(error.details);
     }
 
-    const isUser = await AuthService.findByEmail(value.email);
+    const isUser = await AuthService.searchByEmail(value.email);
 
     if (isUser) {
-      throw new AuthError(403, 'Email already exist!');
+      throw new AuthError('Email already exists!');
     }
 
     const hashPassword = bcrypt.hashSync(value.password, HASH_SALT);
@@ -44,6 +42,13 @@ async function signUp(req, res, next) {
   } catch (error) {
     if (error instanceof ValidationError) {
       return res.status(422).json({
+        message: error.name,
+        details: error.message,
+      });
+    }
+
+    if (error instanceof AuthError) {
+      return res.status(403).json({
         message: error.name,
         details: error.message,
       });
@@ -75,25 +80,29 @@ async function signIn(req, res, next) {
 
     const user = await AuthService.signIn(value);
     if (user === null) {
-      throw new AuthError(401, 'User does not exist!');
+      throw new AuthError('User does not exists!');
     }
 
     if (!bcrypt.compareSync(value.password, user.password)) {
-      throw new AuthError(401, 'Invalid credentials!');
+      throw new AuthError('Invalid credentials!');
     }
 
     const tokens = generateTokens(user);
     await AuthService.saveToken(user._id, tokens.refreshToken);
 
     return res.status(200).json({
-      data: {
-        tokens,
-        user,
-      },
+      data: tokens,
     });
   } catch (error) {
     if (error instanceof ValidationError) {
       return res.status(422).json({
+        message: error.name,
+        details: error.message,
+      });
+    }
+
+    if (error instanceof AuthError) {
+      return res.status(401).json({
         message: error.name,
         details: error.message,
       });
@@ -118,18 +127,38 @@ async function signIn(req, res, next) {
  */
 async function refreshToken(req, res, next) {
   try {
-    const { error, value } = AuthValidation.token(req.body);
+    const { error, value } = AuthValidation.tokenValidate(req.body);
 
     if (error) {
       throw new ValidationError(error.details);
     }
 
-    return res.status(201).json({
-      data: value,
+    if (value.refreshToken === null) {
+      throw new AuthError('Token Not Found');
+    }
+
+    const requestToken = await AuthService.searchRefreshToken(value.id);
+
+    if (requestToken.token !== value.token) {
+      throw new AuthError('Token is invalid');
+    }
+
+    const tokens = generateTokens(value);
+
+    await AuthService.saveToken(user._id, tokens.refreshToken);
+    return res.status(200).json({
+      data: tokens,
     });
   } catch (error) {
     if (error instanceof ValidationError) {
       return res.status(422).json({
+        message: error.name,
+        details: error.message,
+      });
+    }
+
+    if (error instanceof AuthError) {
+      return res.status(401).json({
         message: error.name,
         details: error.message,
       });
@@ -143,42 +172,6 @@ async function refreshToken(req, res, next) {
     return next(error);
   }
 }
-
-// asdasd
-// async function refreshTokens(req, res, next) {
-//   const { error, value } = AuthValidation.token(req.body);
-
-//   if (error) {
-//     throw new ValidationError(error.details);
-//   }
-
-//   try {
-//     payload = jwt.verify(value.refreshToken, JWT.secret);
-//     if (payload.type !== 'refresh') {
-//       res.status(400).json({ message: 'Invalid token!' });
-//     }
-//   } catch (error) {
-//     if (error instanceof ValidationError) {
-//       return res.status(422).json({
-//         message: error.name,
-//         details: error.message,
-//       });
-//     }
-//     if (error instanceof jwt.TokenExpiredError) {
-//       return res.status(400).json({ message: 'Token expired!' });
-//     } if (error instanceof jwt.JsonWebTokenError) {
-//       return res.status(400).json({ message: 'Invalid token!' });
-//     }
-//     next(error);
-//   }
-
-//   const token = await AuthService.findTokenById({ tokenId: payload.id });
-//   if (token === null) {
-//     throw new Error('Invalid token!');
-//   }
-//   const newTokens = await updateTokens(token.userId);
-//   res.json(newTokens);
-// }
 
 module.exports = {
   signUp,
