@@ -134,7 +134,12 @@ async function login(req, res, next) {
                 },
             );
 
-            return res.status(200).send({ auth: true, token });
+            return res.status(200).json({
+                data: {
+                    auth: true,
+                    token,
+                },
+            });
         }
         return res.status(400).send({ auth: false });
     } catch (error) {
