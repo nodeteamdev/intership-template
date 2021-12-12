@@ -1,3 +1,4 @@
+require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
@@ -85,21 +86,6 @@ async function create(req, res, next) {
 
         const user = await UserService.create({ ...req.body, password: encryptedPassword });
 
-        const { _id: id, fullname: name } = user;
-
-        const token = jwt.sign(
-            {
-                id,
-                name,
-            },
-            'secret-token-key',
-            {
-                expiresIn: '1h',
-            },
-        );
-
-        user.token = token;
-
         return res.status(200).json({
             data: user,
         });
@@ -132,15 +118,15 @@ async function login(req, res, next) {
 
         const user = await UserService.findByEmail(email);
 
-        const { _id: id, fullname: name } = user;
+        const { _id: id, fullName } = user;
 
         if (user && (await bcrypt.compare(password, user.password))) {
             const token = jwt.sign(
                 {
                     id,
-                    name,
+                    fullName,
                 },
-                'secret-token-key',
+                process.env.JWT_KEY,
                 {
                     expiresIn: '1h',
                 },
