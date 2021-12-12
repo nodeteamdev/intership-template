@@ -84,11 +84,13 @@ async function create(req, res, next) {
         const encryptedPassword = await bcrypt.hash(req.body.password, 10);
 
         const user = await UserService.create({ ...req.body, password: encryptedPassword });
-        /* eslint-disable no-underscore-dangle */
+
+        const { _id: id, fullname: name } = user;
+
         const token = jwt.sign(
             {
-                id: user._id,
-                name: user.fullName,
+                id,
+                name,
             },
             'secret-token-key',
             {
@@ -129,12 +131,14 @@ async function login(req, res, next) {
         }
 
         const user = await UserService.findByEmail(email);
-        /* eslint-disable no-underscore-dangle */
+
+        const { _id: id, fullname: name } = user;
+
         if (user && (await bcrypt.compare(password, user.password))) {
             const token = jwt.sign(
                 {
-                    id: user._id,
-                    name: user.fullName,
+                    id,
+                    name,
                 },
                 'secret-token-key',
                 {
