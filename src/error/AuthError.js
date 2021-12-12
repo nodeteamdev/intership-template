@@ -11,6 +11,7 @@ class AuthError extends Error {
   constructor(status, message) {
     super();
     this.status = status;
+    this.name = 'Authentication Error';
     this.message = message;
   }
 }

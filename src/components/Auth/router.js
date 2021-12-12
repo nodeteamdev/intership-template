@@ -16,7 +16,7 @@ const router = Router();
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/signUp', AuthComponent.signUp);
+router.post('/signUp', AuthComponent.signUp);
 
 /**
  * Route serving a signing in users
@@ -26,7 +26,7 @@ router.get('/signUp', AuthComponent.signUp);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/signIn', AuthComponent.signIn);
+router.post('/signIn', AuthComponent.signIn);
 
 /**
  * Route serving for refreshing token

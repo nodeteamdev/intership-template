@@ -9,7 +9,7 @@ const TokenModel = require('./model');
  * @returns {Promise<UserModel>}
  */
 function signUp(profile) {
-  return UserModel.create(profile).lean().exec();
+  return UserModel.create(profile);
 }
 
 /**
@@ -19,8 +19,8 @@ function signUp(profile) {
  * @summary sign in
  * @returns {Promise<UserModel>}
  */
-async function signIn(profile) {
-  return UserModel.findOne({ email: profile.email }).lean().exec();
+function signIn(profile) {
+  return UserModel.findOne({ email: profile.email });
 }
 
 /**
@@ -30,8 +30,8 @@ async function signIn(profile) {
  * @summary get a user
  * @returns {Promise<UserModel>}
  */
-function findByEmail(email) {
-  return UserModel.findOne({ email }).lean().exec();
+function findByEmail(profile) {
+  return UserModel.findOne({ email: profile.email });
 }
 
 /**
@@ -42,30 +42,30 @@ function findByEmail(email) {
  * @returns
  */
 function findTokenByUserId(userId) {
-  return TokenModel.findOne({ userId }).lean();
+  return TokenModel.findOne({ userId });
 }
 
 /**
  * @exports
  * @method remove refresh token
- * @param {string} tokenId
+ * @param {string} userId
  * @summary remove old refresh token
  * @returns
  */
 function removeRefreshToken(userId) {
-  return TokenModel.findOneAndRemove({ userId }).lean();
+  return TokenModel.findOneAndRemove({ userId });
 }
 
 /**
  * @exports
  * @method createRefreshToken
- * @param {string} tokenId
  * @param {string} userId
+ * @param {string} token
  * @summary get a new refreshToken
  * @returns
  */
-async function saveToken(userId, token) {
-  return TokenModel.create({ userId, token }).lean().exec();
+function saveToken(userId, token) {
+  return TokenModel.create({ userId, token });
 }
 
 module.exports = {

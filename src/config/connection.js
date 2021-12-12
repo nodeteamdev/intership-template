@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { MONGO_URI } = require('./env');
+const { MONGO_URI } = require('./credentials');
 
 const connectOptions = {
   useNewUrlParser: true,
