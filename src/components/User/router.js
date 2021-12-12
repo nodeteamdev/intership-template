@@ -50,9 +50,7 @@ router.post('/registration', UserComponent.create);
  */
 router.post('/login', UserComponent.login);
 
-router.post('/welcome', auth, (req, res) => {
-    res.status(200).send(`Welcome ${req.user.fullName} `);
-});
+router.post('/wellcome', auth, UserComponent.wellcome);
 
 /**
  * Route serving a new user

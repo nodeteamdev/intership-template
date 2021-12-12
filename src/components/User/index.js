@@ -237,6 +237,10 @@ async function deleteById(req, res, next) {
     }
 }
 
+const wellcome = (req, res) => {
+    res.status(200).send(`Wellcome ${req.user.fullName} `);
+};
+
 module.exports = {
     findAll,
     findById,
@@ -244,4 +248,5 @@ module.exports = {
     login,
     updateById,
     deleteById,
+    wellcome,
 };
