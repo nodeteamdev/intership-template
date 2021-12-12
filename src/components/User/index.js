@@ -76,15 +76,17 @@ async function findById(req, res, next) {
  */
 async function create(req, res, next) {
     try {
-        const { error } = UserValidation.create(req.body);
+        const { error, value } = UserValidation.create(req.body);
+
+        const { password } = value;
 
         if (error) {
             throw new ValidationError(error.details);
         }
 
-        const encryptedPassword = await bcrypt.hash(req.body.password, 10);
+        const encryptedPassword = await bcrypt.hash(password, 10);
 
-        const user = await UserService.create({ ...req.body, password: encryptedPassword });
+        const user = await UserService.create({ ...value, password: encryptedPassword });
 
         return res.status(200).json({
             data: user,
@@ -108,9 +110,9 @@ async function create(req, res, next) {
 
 async function login(req, res, next) {
     try {
-        const { email, password } = req.body;
+        const { error, value } = UserValidation.login(req.body);
 
-        const { error } = UserValidation.login(req.body);
+        const { email, password } = value;
 
         if (error) {
             throw new ValidationError(error.details);
@@ -161,13 +163,15 @@ async function login(req, res, next) {
  */
 async function updateById(req, res, next) {
     try {
-        const { error } = UserValidation.updateById(req.body);
+        const { error, value } = UserValidation.updateById(req.body);
+
+        const { id } = value;
 
         if (error) {
             throw new ValidationError(error.details);
         }
 
-        const updatedUser = await UserService.updateById(req.body.id, req.body);
+        const updatedUser = await UserService.updateById(id, value);
 
         return res.status(200).json({
             data: updatedUser,
@@ -198,13 +202,15 @@ async function updateById(req, res, next) {
  */
 async function deleteById(req, res, next) {
     try {
-        const { error } = UserValidation.deleteById(req.body);
+        const { error, value } = UserValidation.deleteById(req.body);
+
+        const { id } = value;
 
         if (error) {
             throw new ValidationError(error.details);
         }
 
-        const deletedUser = await UserService.deleteById(req.body.id);
+        const deletedUser = await UserService.deleteById(id);
 
         return res.status(200).json({
             data: deletedUser,
