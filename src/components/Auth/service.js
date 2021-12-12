@@ -1,55 +1,82 @@
 const UserModel = require('../User/model');
-const TokenModel = require('./token-model');
+const TokenModel = require('./model');
 
 /**
  * @exports
- * @method findByEmail
- * @param {string} email
- * @summary get a user
+ * @method signUp
+ * @param {object} profile
+ * @summary create a new user
  * @returns {Promise<UserModel>}
  */
-function findByEmail(email) {
-  return UserModel.findOne({ email }).exec();
+function signUp(profile) {
+  return UserModel.create(profile);
 }
 
 /**
  * @exports
- * @method findTokenById
- * @param {string} tokenId
+ * @method signIn
+ * @param {object} profile
+ * @summary sign in
+ * @returns {Promise<UserModel>}
+ */
+function signIn(profile) {
+  return UserModel.findOne({ email: profile.email });
+}
+
+/**
+ * @exports
+ * @method searchByEmail
+ * @param {string} email
+ * @summary get a user
+ * @returns {Promise<UserModel>}
+ */
+function searchByEmail(email) {
+  return UserModel.findOne({ email });
+}
+
+/**
+ * @exports
+ * @method searchRefreshToken
+ * @param {string} userId
  * @summary get a token
  * @returns
  */
-function findTokenById(tokenId) {
-  return TokenModel.findOne({ tokenId }).exec();
+function searchTokenById(userId) {
+  return TokenModel.findOne({ userId });
 }
 
 /**
  * @exports
  * @method remove refresh token
- * @param {string} tokenId
+ * @param {string} userId
  * @summary remove old refresh token
  * @returns
  */
 function removeRefreshToken(userId) {
-  const result = TokenModel.findOneAndRemove({ userId }).exec();
-  return result;
+  return TokenModel.findOneAndRemove({ userId });
 }
 
 /**
  * @exports
  * @method createRefreshToken
- * @param {string} tokenId
  * @param {string} userId
+ * @param {string} token
  * @summary get a new refreshToken
  * @returns
  */
-function createRefreshToken(tokenId, userId) {
-  return TokenModel.create({ tokenId, userId });
+function saveToken(userId, token) {
+  const isToken = TokenModel.findOne({ userId });
+  if (isToken) {
+    return TokenModel.findOneAndReplace({ userId }, { userId, token });
+  }
+  return TokenModel.create({ userId, token });
 }
 
 module.exports = {
-  findByEmail,
+  signUp,
+  signIn,
+  searchTokenById,
   removeRefreshToken,
-  createRefreshToken,
-  findTokenById,
+  searchByEmail,
+  saveToken,
 };

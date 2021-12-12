@@ -24,8 +24,8 @@ module.exports = {
     app.use('/v1/users', UserRouter);
 
     /**
-     * Forwards any requests to the /v1/users URI to UserRouter.
-     * @name /v1/users
+     * Forwards any requests to the /v1/auth URI to UserRouter.
+     * @name /v1/auth
      * @function
      * @inner
      * @param {string} path - Express path
@@ -44,10 +44,10 @@ module.exports = {
     });
 
     /**
-     * @function
-     * @inner
-     * @param {express.Router}
-     */
+         * @function
+         * @inner
+         * @param {express.Router}
+         */
     app.use(router);
   },
 };

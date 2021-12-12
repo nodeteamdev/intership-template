@@ -27,7 +27,7 @@ router.get('/', AuthMiddleware, UserComponent.findAll);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/:id', AuthMiddleware, UserComponent.findById);
+router.get('/:id', UserComponent.findById);
 
 /**
  * Route serving a new user
@@ -47,7 +47,7 @@ router.post('/', UserComponent.create);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.put('/', AuthMiddleware, UserComponent.updateById);
+router.put('/', UserComponent.updateById);
 
 /**
  * Route serving a new user
@@ -57,6 +57,6 @@ router.put('/', AuthMiddleware, UserComponent.updateById);
  * @param {string} path -Express path
  * @param {callback} middleware - Express middleware
  */
-router.delete('/', AuthMiddleware, UserComponent.deleteById);
+router.delete('/', UserComponent.deleteById);
 
 module.exports = router;

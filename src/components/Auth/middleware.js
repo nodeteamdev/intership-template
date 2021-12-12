@@ -1,12 +1,12 @@
 const jwt = require('jsonwebtoken');
-const { secret } = require('../../config/env').JWT;
+const { tokens } = require('../../config/credentials').JWT;
 
 module.exports = (req, res, next) => {
   const authHeader = req.get('Authorization');
   if (authHeader !== undefined) {
     const token = authHeader.replace('Bearer ', '');
     try {
-      const payload = jwt.verify(token, secret);
+      const payload = jwt.verify(token, tokens.access.secret);
       if (payload.type !== 'access') {
         res.status(401).json({ message: 'Invalid token!' });
         return;
@@ -22,7 +22,7 @@ module.exports = (req, res, next) => {
       }
     }
   } else {
-    res.status(401).json({ message: 'Token not provided!' });
+    res.status(403).json({ message: 'Token not provided!' });
     return;
   }
   next();

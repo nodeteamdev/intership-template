@@ -1,23 +1,11 @@
-const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const AuthService = require('./service');
-const AuthHelper = require('./helper');
-const UserValidation = require('../User/validation');
-const UserService = require('../User/service');
-const ValidationError = require('../../error/ValidationError');
-const { secret } = require('../../config/env').JWT;
+const AuthValidation = require('./validation');
+const { HASH_SALT, JWT } = require('../../config/credentials');
+const { generateTokens } = require('./helper');
+const { ValidationError, AuthError } = require('../../error');
 
-const updateTokens = async (userId) => {
-  const accessToken = await AuthHelper.generateAccessToken(userId);
-  const refreshToken = await AuthHelper.generateRefreshToken();
-  const newestTokens = await AuthHelper.replaceDbRefreshToken(refreshToken.id, userId)
-    .then(() => ({
-      accessToken,
-      refreshToken: refreshToken.token,
-    }));
-
-  return newestTokens;
-};
 /**
  * @function
  * @param {express.Request} req
@@ -25,36 +13,111 @@ const updateTokens = async (userId) => {
  * @param {express.NextFunction} next
  * @returns {Promise < void >}
  */
-const signUp = async (req, res, next) => {
+async function signUp(req, res, next) {
   try {
-    const { error } = UserValidation.create(req.body);
+    const { error, value } = AuthValidation.signUp(req.body);
 
     if (error) {
       throw new ValidationError(error.details);
     }
 
-    const isUser = await AuthService.findByEmail(req.body.email);
-    if (isUser === null) {
-      const userData = {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        password: bcrypt.hashSync(req.body.password, 10),
-      };
+    const isUser = await AuthService.searchByEmail(value.email);
 
-      const user = await UserService.create(userData);
-      res.status(200).json({ data: user });
-    } else {
-      res.status(400).json({ message: 'Email already exists!' });
+    if (isUser) {
+      throw new AuthError('Email already exists!');
     }
+
+    const hashPassword = bcrypt.hashSync(value.password, HASH_SALT);
+    const userData = {
+      firstName: value.firstName,
+      lastName: value.lastName,
+      email: value.email,
+      password: hashPassword,
+    };
+
+    const user = await AuthService.signUp(userData);
+
+    return res.status(201).json({
+      data: user,
+    });
   } catch (error) {
+    if (error instanceof ValidationError) {
+      return res.status(422).json({
+        message: error.name,
+        details: error.message,
+      });
+    }
+
+    if (error instanceof AuthError) {
+      return res.status(403).json({
+        message: error.name,
+        details: error.message,
+      });
+    }
+
     res.status(500).json({
       message: error.name,
       details: error.message,
     });
-    next(error);
+
+    return next(error);
   }
-};
+}
+
+/**
+ * @function
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
+ * @returns {accessToken, refreshToken}
+ */
+async function signIn(req, res, next) {
+  try {
+    const { error, value } = AuthValidation.signIn(req.body);
+
+    if (error) {
+      throw new ValidationError(error.details);
+    }
+
+    const user = await AuthService.signIn(value);
+    if (user === null) {
+      throw new AuthError('User does not exists!');
+    }
+
+    if (!bcrypt.compareSync(value.password, user.password)) {
+      throw new AuthError('Invalid credentials!');
+    }
+
+    const tokens = generateTokens(user);
+    await AuthService.saveToken(user._id, tokens.refreshToken);
+
+    return res.status(200).json({
+      data: tokens,
+    });
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      return res.status(422).json({
+        message: error.name,
+        details: error.message,
+      });
+    }
+
+    if (error instanceof AuthError) {
+      return res.status(401).json({
+        message: error.name,
+        details: error.message,
+      });
+    }
+
+    res.status(500).json({
+      message: error.name,
+      details: error.message,
+    });
+
+    return next(error);
+  }
+}
+// asd
 
 /**
  * @function
@@ -63,61 +126,56 @@ const signUp = async (req, res, next) => {
  * @param {express.NextFunction} next
  * @returns {Promise < void >}
  */
-const signIn = async (req, res, next) => {
+async function refreshToken(req, res, next) {
   try {
-    const { email, password } = req.body;
+    const { error, value } = jwt.verify(res.body);
 
-    const user = await AuthService.findByEmail(email);
-    if (user === null) {
-      res.status(401).json({ message: 'User does not exist!' });
-    } else {
-      const isValid = bcrypt.compareSync(password, user.password);
-      if (isValid) {
-        updateTokens(user._id).then((tokens) => res.json(tokens));
-      } else {
-        res.status(401).json({ message: 'Invalid credentials!' });
-      }
+    if (error) {
+      throw new ValidationError(error.details);
     }
+
+    if (value.token === null) {
+      throw new AuthError('Token Not Found');
+    }
+
+    const requestToken = await AuthService.searchRefreshToken(value.id);
+
+    if (requestToken.token !== value.token) {
+      throw new AuthError('Token is invalid');
+    }
+
+    const tokens = generateTokens(value);
+
+    await AuthService.saveToken(user.id, tokens.refreshToken);
+    return res.status(200).json({
+      data: tokens,
+    });
   } catch (error) {
+    if (error instanceof ValidationError) {
+      return res.status(422).json({
+        message: error.name,
+        details: error.message,
+      });
+    }
+
+    if (error instanceof AuthError) {
+      return res.status(401).json({
+        message: error.name,
+        details: error.message,
+      });
+    }
+
     res.status(500).json({
       message: error.name,
       details: error.message,
     });
-    next(error);
+
+    return next(error);
   }
-};
-
-const refreshTokens = async (req, res) => {
-  const { refreshToken } = req.body;
-
-  let payload;
-
-  try {
-    payload = jwt.verify(refreshToken, secret);
-    if (payload.type !== 'refresh') {
-      res.status(400).json({ message: 'Invalid token!' });
-      return;
-    }
-  } catch (error) {
-    if (error instanceof jwt.TokenExpiredError) {
-      res.status(400).json({ message: 'Token expired!' });
-    } else if (error instanceof jwt.JsonWebTokenError) {
-      res.status(400).json({ message: 'Invalid token!' });
-    }
-  }
-
-  const findToken = await AuthService.findTokenById({ tokenId: payload.id });
-  if (findToken === null) {
-    throw new Error('Invalid token!');
-  }
-  const newTokens = await updateTokens(findToken.userId);
-  res.json(newTokens);
-
-  return newTokens;
-};
+}
 
 module.exports = {
-  signIn,
   signUp,
-  refreshTokens,
+  signIn,
+  refreshToken,
 };

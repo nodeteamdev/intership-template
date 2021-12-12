@@ -1,49 +1,18 @@
-const uuid = require('uuid').v4;
 const jwt = require('jsonwebtoken');
-const mongoose = require('mongoose');
-const AuthService = require('./service');
-const { secret, tokens } = require('../../config/env').JWT;
+const { tokens } = require('../../config/credentials').JWT;
 
-const generateAccessToken = (userId) => {
+function generateTokens(user) {
   const payload = {
-    userId,
-    type: tokens.access.type,
+    userId: user.id,
+    firstName: user.firstName,
   };
-
-  const options = { expiresIn: tokens.access.expiresIn };
-
-  return jwt.sign(payload, secret, options);
-};
-
-const generateRefreshToken = () => {
-  const payload = {
-    id: uuid(),
-    type: tokens.refresh.type,
-  };
-
-  const options = { expiresIn: tokens.refresh.expiresIn };
 
   return {
-    id: payload.id,
-    token: jwt.sign(payload, secret, options),
+    accessToken: jwt.sign(payload, tokens.access.secret, { expiresIn: tokens.access.expiresIn }),
+    refreshToken: jwt.sign(payload, tokens.access.secret, { expiresIn: tokens.refresh.expiresIn }),
   };
-};
-
-const replaceDbRefreshToken = async (tokenId, userId) => {
-  try {
-    const oldRefreshToken = await AuthService.removeRefreshToken(userId);
-    if (oldRefreshToken) {
-      throw new Error('Invalid token!');
-    }
-    const updatedRefreshToken = await AuthService.createRefreshToken(tokenId, userId);
-    return updatedRefreshToken;
-  } catch (error) {
-    console.error('Error:', error.message);
-  }
-};
+}
 
 module.exports = {
-  generateAccessToken,
-  generateRefreshToken,
-  replaceDbRefreshToken,
+  generateTokens,
 };

@@ -1,23 +1,9 @@
 const mongoose = require('mongoose');
-const { MONGO_URI } = require('./env');
+const { MONGO_URI } = require('./credentials');
 
-const connectDB = () => {
-  /**
-   * @function
-   * @description
-   * @returns mongoose.connection
-   */
-
-  const options = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  };
-  mongoose.connect(MONGO_URI, options);
-
-  require('../components/User/model');
-  require('../components/Auth/token-model');
-
-  return mongoose.connection;
+const connectOptions = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 };
 
-module.exports = connectDB;
+module.exports = mongoose.createConnection(MONGO_URI, connectOptions);
