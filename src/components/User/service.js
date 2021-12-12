@@ -8,7 +8,7 @@ const UserModel = require('./model');
  * @returns Promise<UserModel[]>
  */
 function findAll() {
-    return UserModel.find({}).exec();
+    return UserModel.find({}).lean();
 }
 
 /**
@@ -19,7 +19,7 @@ function findAll() {
  * @returns {Promise<UserModel>}
  */
 function findById(id) {
-    return UserModel.findById(id).exec();
+    return UserModel.findById(id).lean();
 }
 
 /**
@@ -30,7 +30,7 @@ function findById(id) {
  * @returns {Promise<UserModel>}
  */
 function findByEmail(email) {
-    return UserModel.findOne({ email }).exec();
+    return UserModel.findOne({ email }).lean();
 }
 
 /**
@@ -54,7 +54,7 @@ function create(profile) {
  * @returns {Promise<void>}
  */
 function updateById(_id, newProfile) {
-    return UserModel.updateOne({ _id }, newProfile).exec();
+    return UserModel.updateOne({ _id }, newProfile).lean();
 }
 
 /**
@@ -65,7 +65,7 @@ function updateById(_id, newProfile) {
  * @returns {Promise<void>}
  */
 function deleteById(_id) {
-    return UserModel.deleteOne({ _id }).exec();
+    return UserModel.deleteOne({ _id }).lean();
 }
 
 module.exports = {
