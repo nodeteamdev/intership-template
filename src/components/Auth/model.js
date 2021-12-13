@@ -3,8 +3,8 @@ const connections = require('../../config/connection');
 
 const TokenSchema = new Schema(
   {
-    token: String,
     userId: String,
+    token: String,
   },
   {
     collection: 'tokenmodel',

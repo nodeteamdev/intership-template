@@ -48,6 +48,17 @@ function updateById(_id, newProfile) {
 
 /**
  * @exports
+ * @method searchByEmail
+ * @param {string} email
+ * @summary get a user
+ * @returns {Promise<UserModel>}
+ */
+function searchByEmail(email) {
+  return UserModel.findOne({ email }).exec();
+}
+
+/**
+ * @exports
  * @method deleteById
  * @param {string} _id
  * @summary delete a user from database
@@ -60,6 +71,7 @@ function deleteById(_id) {
 module.exports = {
   findAll,
   findById,
+  searchByEmail,
   create,
   updateById,
   deleteById,

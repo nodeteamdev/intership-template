@@ -37,6 +37,6 @@ router.post('/signIn', AuthComponent.signIn);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/refreshtoken', AuthComponent.refreshToken);
+router.get('/refreshtoken', AuthMiddleware, AuthComponent.refreshToken);
 
 module.exports = router;
