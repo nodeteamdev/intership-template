@@ -39,10 +39,13 @@ module.exports = {
      * @inner
      * @param {callback} middleware - Express middleware.
      */
+    app.use('', router.get('', (req, res, next) => {
+      res.render('pages/index');
+    }));
+
     app.use((req, res, next) => {
       res.status(404).send(http.STATUS_CODES[404]);
     });
-
     /**
          * @function
          * @inner

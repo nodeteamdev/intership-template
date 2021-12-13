@@ -3,6 +3,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const express = require('express');
 const helmet = require('helmet');
+const path = require('path');
 
 module.exports = {
   /**
@@ -25,6 +26,8 @@ module.exports = {
     // providing a Connect/Express middleware that can be used to enable CORS with various options
     app.use(cors());
     // cors
+    app.set('views', path.join(__dirname, '../views'));
+    app.set('view engine', 'ejs');
     app.use((req, res, next) => {
       res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS ');
       res.header(

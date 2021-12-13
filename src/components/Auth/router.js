@@ -47,7 +47,9 @@ router.get('/refreshtoken', AuthMiddleware, AuthComponent.refreshToken);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.post('/forgot_password', AuthComponent.forgotPassword);
+router
+  .get('/forgot_password', AuthComponent.forgotPassword);
+// .post('/forgot_password', AuthComponent.forgotPassword);
 
 /**
  * Route serving for reset password

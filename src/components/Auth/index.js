@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const UserService = require('../User/service');
 const UserValidation = require('../User/validation');

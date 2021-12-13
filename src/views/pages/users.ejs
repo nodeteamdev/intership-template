@@ -1,0 +1,12 @@
+<%- include('./template');%>
+    <div>
+        <table class="table table-striped">
+            <%users.forEach(function(entry) {%>
+                <tr>
+                <td>ID:<%=entry.id%></td>
+                <td>EMAIL:<%=entry.email%></td>
+                </tr>
+                <%});%>
+        </table>
+    </div>
+<%- include('./template2') %>

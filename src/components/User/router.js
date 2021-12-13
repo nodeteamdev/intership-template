@@ -17,7 +17,7 @@ const router = Router();
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/', AuthMiddleware, UserComponent.findAll);
+router.get('/index', UserComponent.findAll);
 
 /**
  * Route serving a user
