@@ -1,6 +1,6 @@
 {
   "name": "intership-template",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "```     https://joi.dev/api/ ```",
   "main": "index.js",
   "scripts": {
@@ -26,7 +26,8 @@
     "helmet": "4.6.0",
     "joi": "17.1.1",
     "jsonwebtoken": "8.5.1",
-    "mongoose": "6.0.14"
+    "mongoose": "6.0.14",
+    "nodemailer": "6.7.2"
   },
   "devDependencies": {
     "eslint": "8.3.0",
