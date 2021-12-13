@@ -7,7 +7,8 @@ module.exports = (req, res, next) => {
     const token = authHeader.replace('Bearer ', '');
     try {
       const payload = jwt.verify(token, tokens.access.secret);
-      if (payload.type !== 'access') {
+      if (payload.userId !== req.body.userId) {
+        console.log(payload);
         res.status(401).json({ message: 'Invalid token!' });
         return;
       }

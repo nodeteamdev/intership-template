@@ -1,38 +1,4 @@
-const UserModel = require('../User/model');
 const TokenModel = require('./model');
-
-/**
- * @exports
- * @method signUp
- * @param {object} profile
- * @summary create a new user
- * @returns {Promise<UserModel>}
- */
-function signUp(profile) {
-  return UserModel.create(profile);
-}
-
-/**
- * @exports
- * @method signIn
- * @param {object} profile
- * @summary sign in
- * @returns {Promise<UserModel>}
- */
-function signIn(profile) {
-  return UserModel.findOne({ email: profile.email });
-}
-
-/**
- * @exports
- * @method searchByEmail
- * @param {string} email
- * @summary get a user
- * @returns {Promise<UserModel>}
- */
-function searchByEmail(email) {
-  return UserModel.findOne({ email });
-}
 
 /**
  * @exports
@@ -41,7 +7,7 @@ function searchByEmail(email) {
  * @summary get a token
  * @returns
  */
-function searchTokenById(userId) {
+function searchTokenByUserId(userId) {
   return TokenModel.findOne({ userId });
 }
 
@@ -49,7 +15,7 @@ function searchTokenById(userId) {
  * @exports
  * @method remove refresh token
  * @param {string} userId
- * @summary remove old refresh token
+ * @summary Remove refreshToken from database
  * @returns
  */
 function removeRefreshToken(userId) {
@@ -61,22 +27,15 @@ function removeRefreshToken(userId) {
  * @method createRefreshToken
  * @param {string} userId
  * @param {string} token
- * @summary get a new refreshToken
+ * @summary saving refreshToken in Database
  * @returns
  */
 function saveToken(userId, token) {
-  const isToken = TokenModel.findOne({ userId });
-  if (isToken) {
-    return TokenModel.findOneAndReplace({ userId }, { userId, token });
-  }
   return TokenModel.create({ userId, token });
 }
 
 module.exports = {
-  signUp,
-  signIn,
-  searchTokenById,
+  searchTokenByUserId,
   removeRefreshToken,
-  searchByEmail,
   saveToken,
 };

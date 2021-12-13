@@ -1,9 +1,11 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const UserService = require('../User/service');
+const UserValidation = require('../User/validation');
 const AuthService = require('./service');
 const AuthValidation = require('./validation');
-const { HASH_SALT, JWT } = require('../../config/credentials');
-const { generateTokens } = require('./helper');
+const { HASH_SALT } = require('../../config/credentials');
+const { generateTokens, updateOrSaveToken } = require('./helper');
 const { ValidationError, AuthError } = require('../../error');
 
 /**
@@ -15,13 +17,13 @@ const { ValidationError, AuthError } = require('../../error');
  */
 async function signUp(req, res, next) {
   try {
-    const { error, value } = AuthValidation.signUp(req.body);
+    const { error, value } = UserValidation.create(req.body);
 
     if (error) {
       throw new ValidationError(error.details);
     }
 
-    const isUser = await AuthService.searchByEmail(value.email);
+    const isUser = await UserService.searchByEmail(value.email);
 
     if (isUser) {
       throw new AuthError('Email already exists!');
@@ -35,7 +37,7 @@ async function signUp(req, res, next) {
       password: hashPassword,
     };
 
-    const user = await AuthService.signUp(userData);
+    const user = await UserService.create(userData);
 
     return res.status(201).json({
       data: user,
@@ -79,17 +81,18 @@ async function signIn(req, res, next) {
       throw new ValidationError(error.details);
     }
 
-    const user = await AuthService.signIn(value);
-    if (user === null) {
+    const isUser = await UserService.searchByEmail(value.email);
+    if (isUser === null) {
       throw new AuthError('User does not exists!');
     }
 
-    if (!bcrypt.compareSync(value.password, user.password)) {
+    if (!bcrypt.compareSync(value.password, isUser.password)) {
       throw new AuthError('Invalid credentials!');
     }
 
-    const tokens = generateTokens(user);
-    await AuthService.saveToken(user._id, tokens.refreshToken);
+    const tokens = generateTokens(isUser);
+
+    updateOrSaveToken(isUser._id, tokens.refreshToken);
 
     return res.status(200).json({
       data: tokens,
@@ -117,7 +120,6 @@ async function signIn(req, res, next) {
     return next(error);
   }
 }
-// asd
 
 /**
  * @function
@@ -128,27 +130,25 @@ async function signIn(req, res, next) {
  */
 async function refreshToken(req, res, next) {
   try {
-    const { error, value } = jwt.verify(res.body);
+    const { error, value } = AuthValidation.refreshToken(req.body);
 
     if (error) {
       throw new ValidationError(error.details);
     }
 
-    if (value.token === null) {
-      throw new AuthError('Token Not Found');
-    }
-
-    const requestToken = await AuthService.searchRefreshToken(value.id);
+    const requestToken = await AuthService.searchTokenByUserId(value.userId);
 
     if (requestToken.token !== value.token) {
       throw new AuthError('Token is invalid');
     }
 
-    const tokens = generateTokens(value);
+    const user = await UserService.findById(value.userId);
 
-    await AuthService.saveToken(user.id, tokens.refreshToken);
+    const tokens = generateTokens(user);
+    updateOrSaveToken(value.userId, tokens.refreshToken);
+
     return res.status(200).json({
-      data: tokens,
+      newdata: tokens,
     });
   } catch (error) {
     if (error instanceof ValidationError) {
