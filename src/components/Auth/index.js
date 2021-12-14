@@ -181,7 +181,7 @@ async function refreshToken(req, res, next) {
  */
 async function forgotPassword(req, res, next) {
   try {
-    const { error, value } = AuthValidation.forgotPassEmail(req.body);
+    const { error, value } = AuthValidation.forgotPassword(req.body);
 
     if (error || value.email === undefined) {
       throw new ValidationError(error.details);
@@ -190,7 +190,7 @@ async function forgotPassword(req, res, next) {
     const isUser = await UserService.searchByEmail(value.email);
 
     if (isUser === null) {
-      throw new AuthError('User with this email does not exist!');
+      throw new AuthError('User with this email does not exists!');
     }
 
     const newTokens = generateTokens(isUser);
@@ -199,7 +199,12 @@ async function forgotPassword(req, res, next) {
 
     const link = `${BASE_URL}:${PORT}/v1/auth/password-reset/${isUser.id}/${newTokens.accessToken}`;
 
-    sendEmail(isUser.email, 'Password reset', link);
+    const htmlMailPage = `
+      <h2>Please click on given link to reset your password</h2>
+      <p>${link}</p>
+    `;
+
+    sendEmail(isUser.email, 'Password reset', htmlMailPage);
 
     return res.status(200).json({
       info: 'Password reset link sent to your email account! Check spam folder also.',
@@ -240,8 +245,8 @@ async function resetPassword(req, res, next) {
     const { error, value } = AuthValidation.resetPassword(req.body);
 
     if (error) throw new ValidationError(error.details);
-
-    const isUser = await UserService.findById(req.params.userId);
+    console.log(req.params);
+    const isUser = await UserService.findById(req.params.id);
 
     if (isUser === null) {
       throw new AuthError('Invalid or expired link');

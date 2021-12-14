@@ -52,7 +52,7 @@ class AuthValidation extends Validation {
    * @returns
    * @memberof AuthValidation
    */
-  forgotPassEmail(email) {
+  forgotPassword(email) {
     return this.Joi
       .object({
         email: this.Joi
@@ -76,7 +76,16 @@ class AuthValidation extends Validation {
           .string()
           .min(6)
           .max(30)
-          .required(),
+          .required()
+          .label('Password'),
+        passwordConfirmation: this.Joi
+          .any()
+          .valid(
+            this.Joi.ref('password'),
+          )
+          .required()
+          .label('Confirm password')
+          .options({ messages: { 'any.only': '{{#label}} does match' } }),
       })
       .validate(profile);
   }
