@@ -7,7 +7,6 @@
             <h2>
                 Reset Password
             </h2>
-            <%- include ("./messages") %>
             <form action="/auth/reset/<%= id %>"  method="POST">
                 <div class="form-group">
                     <label for="password">Password</label>
@@ -22,7 +21,7 @@
                 <button type="submit" class="btn btn-primary btn-block">Reset Password</button>
             </form>
             <p class="mt-4">
-                Remember your password? <a href="/auth/login">Login</a>
+                Remember your password? <a href="/v1/auth/login">Login</a>
             </p>
         </div>
     </div>
