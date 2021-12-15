@@ -1,16 +1,16 @@
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
 const AuthService = require('./service');
-const { tokens } = require('../../config/credentials').JWT;
+const { JWT, MAILER } = require('../../config/credentials');
 
 function generateTokens(user) {
   const payload = {
     userId: user.id,
     firstName: user.firstName,
   };
-
   return {
-    accessToken: jwt.sign(payload, tokens.access.secret, { expiresIn: tokens.access.expiresIn }),
-    refreshToken: jwt.sign(payload, tokens.refresh.secret, { expiresIn: tokens.refresh.expiresIn }),
+    accessToken: jwt.sign(payload, JWT.tokens.access.secret, { expiresIn: JWT.tokens.access.expiresIn }),
+    refreshToken: jwt.sign(payload, JWT.tokens.refresh.secret, { expiresIn: JWT.tokens.refresh.expiresIn }),
   };
 }
 
@@ -20,10 +20,8 @@ async function updateOrSaveToken(userId, token) {
   let result;
 
   if (isToken === null) {
-    console.log('isToken = null');
     result = await AuthService.saveToken(userId, token);
   } else {
-    console.log(isToken);
     await AuthService.removeRefreshToken(userId);
     result = await AuthService.saveToken(userId, token);
   }
@@ -31,7 +29,34 @@ async function updateOrSaveToken(userId, token) {
   return result;
 }
 
+const sendEmail = async (email, subject, html) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      service: MAILER.service,
+      // host: MAILER.host,
+      // port: MAILER.port,
+      // secure: MAILER.secure,
+      auth: {
+        user: MAILER.auth.user,
+        pass: MAILER.auth.pass,
+      },
+    });
+
+    await transporter.sendMail({
+      from: MAILER.auth.user,
+      to: email,
+      subject,
+      html,
+    });
+
+    console.info('Email sent successfully');
+  } catch (error) {
+    console.error(error, 'email not sent');
+  }
+};
+
 module.exports = {
   generateTokens,
   updateOrSaveToken,
+  sendEmail,
 };

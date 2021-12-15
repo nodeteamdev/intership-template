@@ -39,4 +39,28 @@ router.post('/signIn', AuthComponent.signIn);
  */
 router.get('/refreshtoken', AuthMiddleware, AuthComponent.refreshToken);
 
+/**
+ * Route serving forgot password
+ * @name /v1/auth/forgot_password
+ * @function
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
+router
+  .get('/forgot_password', (req, res) => res.render('forgot'))
+  .post('/forgot_password', AuthComponent.forgotPassword);
+
+/**
+ * Route serving for reset password
+ * @name /v1/auth/password_reset/
+ * @function
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
+router
+  .get('/password_reset/:id/:token', (req, res) => res.render('reset'))
+  .post('/password_reset/:id/:token', AuthComponent.resetPassword);
+
 module.exports = router;

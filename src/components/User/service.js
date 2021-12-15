@@ -54,7 +54,7 @@ function updateById(_id, newProfile) {
  * @returns {Promise<UserModel>}
  */
 function searchByEmail(email) {
-  return UserModel.findOne({ email }).exec();
+  return UserModel.findOne({ email });
 }
 
 /**
