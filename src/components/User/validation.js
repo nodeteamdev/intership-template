@@ -74,25 +74,6 @@ class UserValidation extends Validation {
             })
             .validate(data);
     }
-
-    /**
-     * @param {String} profile.email
-     * @param {String} profile.fullName
-     * @returns
-     * @memberof UserValidation
-     */
-    loginUser(profile) {
-        return this.Joi
-            .object({
-                email: this.Joi.string().email(),
-                password: this.Joi
-                    .string()
-                    .min(4)
-                    .max(10)
-                    .required(),
-            })
-            .validate(profile);
-    }
 }
 
 module.exports = new UserValidation();

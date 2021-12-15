@@ -9,6 +9,11 @@ const routes = require('../config/router');
 const app = express();
 
 /**
+ * @description set the view engine to ejs
+ */
+app.set('view engine', 'ejs');
+
+/**
  * @description express.Application Middleware
  */
 middleware.init(app);

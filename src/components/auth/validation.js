@@ -5,35 +5,23 @@ const Validation = require('../validation');
  * @class
  * @extends Validation
  */
-class UserValidation extends Validation {
+class AuthUserValidation extends Validation {
     /**
-     * @param {String} data.id - objectId
-     * @returns
-     * @memberof UserValidation
-     */
-    findById(data) {
-        return this.Joi
-            .object({
-                id: this.Joi.objectId(),
-            })
-            .validate(data);
-    }
-
-    /**
-     * @param {String} profile.email
      * @param {String} profile.fullName
+     * @param {String} profile.email
+     * @param {String} profile.password
      * @returns
      * @memberof UserValidation
      */
     create(profile) {
         return this.Joi
             .object({
-                email: this.Joi.string().email(),
                 fullName: this.Joi
                     .string()
                     .min(1)
                     .max(30)
                     .required(),
+                email: this.Joi.string().email(),
                 password: this.Joi
                     .string()
                     .min(4)
@@ -43,46 +31,13 @@ class UserValidation extends Validation {
             .validate(profile);
     }
 
-    /**
-     * @param {String} data.id - objectId
-     * @param {String} data.fullName
-     * @returns
-     * @memberof UserValidation
-     */
-    updateById(data) {
-        return this.Joi
-            .object({
-                id: this.Joi.objectId(),
-                fullName: this.Joi
-                    .string()
-                    .min(1)
-                    .max(30)
-                    .required(),
-            })
-            .validate(data);
-    }
-
-    /**
-     * @param {String} data.id - objectId
-     * @returns
-     * @memberof UserValidation
-     */
-    deleteById(data) {
-        return this.Joi
-            .object({
-                id: this.Joi.objectId(),
-            })
-            .validate(data);
-    }
-
-    // My code ////////////////////////
     /**
      * @param {String} profile.email
-     * @param {String} profile.fullName
+     * @param {String} profile.password
      * @returns
      * @memberof UserValidation
      */
-    loginUser(profile) {
+    signIn(profile) {
         return this.Joi
             .object({
                 email: this.Joi.string().email(),
@@ -91,15 +46,9 @@ class UserValidation extends Validation {
                     .min(4)
                     .max(10)
                     .required(),
-                // fullName: this.Joi
-                //     .string()
-                //     .min(1)
-                //     .max(30)
-                //     .required(),
             })
             .validate(profile);
     }
-    // My code ////////////////////////
 }
 
-module.exports = new UserValidation();
+module.exports = new AuthUserValidation();

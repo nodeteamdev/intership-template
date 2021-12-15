@@ -8,8 +8,8 @@ const AuthUserComponent = require('.');
 const router = Router();
 
 /**
- * Route serving list of users.
- * @name /v1/signUp
+ * Route to sing up.
+ * @name /v1/auth/signUp
  * @function
  * @inner
  * @param {string} path - Express path
@@ -18,8 +18,8 @@ const router = Router();
 router.post('/signUp', AuthUserComponent.signUp);
 
 /**
- * Route for user login
- * @name /v1/users/login
+ * Route to sign in
+ * @name /v1/auth/singIn
  * @function
  * @inner
  * @param {string} path -Express path
@@ -28,13 +28,53 @@ router.post('/signUp', AuthUserComponent.signUp);
 router.post('/signIn', AuthUserComponent.signIn);
 
 /**
- * Route for user login
- * @name /v1/users/refresh-token
+ * Route to refreshAccessToken
+ * @name /v1/auth/refreshToken
  * @function
  * @inner
  * @param {string} path -Express path
  * @param {callback}  - Express middleware
  */
 router.post('/refreshToken', AuthUserComponent.refreshAccessToken);
+
+/**
+ * Route to get form to input email
+ * @name /v1/auth/forgotPassword
+ * @function
+ * @inner
+ * @param {string} path -Express path
+ * @param {callback}  - Express middleware
+ */
+router.get('/forgotPassword', AuthUserComponent.forgotPassword);
+
+/**
+ * Route to change password
+ * @name /v1/auth/confirmEmail
+ * @function
+ * @inner
+ * @param {string} path -Express path
+ * @param {callback}  - Express middleware
+ */
+router.post('/confirmEmail', AuthUserComponent.confirmEmail);
+
+/**
+ * Route to get form to input new password
+ * @name /v1/auth/newPasswordForm
+ * @function
+ * @inner
+ * @param {string} path -Express path
+ * @param {callback}  - Express middleware
+ */
+router.get('/newPasswordForm', AuthUserComponent.newPasswordForm);
+
+/**
+ * Route to get form to input new password
+ * @name /v1/auth/resetPassword
+ * @function
+ * @inner
+ * @param {string} path -Express path
+ * @param {callback}  - Express middleware
+ */
+router.post('/resetPassword', AuthUserComponent.resetPassword);
 
 module.exports = router;
