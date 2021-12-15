@@ -197,7 +197,7 @@ async function forgotPassword(req, res, next) {
 
     updateOrSaveToken(isUser.id, newTokens.accessToken);
 
-    const link = `${BASE_URL}:${PORT}/v1/auth/password-reset/${isUser.id}/${newTokens.accessToken}`;
+    const link = `${BASE_URL}:${PORT}/v1/auth/password_reset/${isUser.id}/${newTokens.accessToken}`;
 
     const htmlMailPage = `
       <h2>Please click on given link to reset your password</h2>

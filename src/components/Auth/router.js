@@ -48,7 +48,7 @@ router.get('/refreshtoken', AuthMiddleware, AuthComponent.refreshToken);
  * @param {callback} middleware - Express middleware.
  */
 router
-  // .get('/forgot_password', (req, res) => res.render('forgot'))
+  .get('/forgot_password', (req, res) => res.render('forgot'))
   .post('/forgot_password', AuthComponent.forgotPassword);
 
 /**
@@ -60,7 +60,7 @@ router
  * @param {callback} middleware - Express middleware.
  */
 router
-  .get('/password-reset/:id/:token', (req, res) => res.render('reset'))
-  .post('/password-reset/:id/:token', AuthComponent.resetPassword);
+  .get('/password_reset/:id/:token', (req, res) => res.render('reset'))
+  .post('/password_reset/:id/:token', AuthComponent.resetPassword);
 
 module.exports = router;

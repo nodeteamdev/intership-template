@@ -78,7 +78,7 @@ class AuthValidation extends Validation {
           .max(30)
           .required()
           .label('Password'),
-        passwordConfirmation: this.Joi
+        password2: this.Joi
           .any()
           .valid(
             this.Joi.ref('password'),
