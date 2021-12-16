@@ -32,6 +32,7 @@ class Validation {
                         errors: helpers.error('objectId.base'),
                     };
                 }
+
                 return {
                     value,
                 };

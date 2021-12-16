@@ -5,10 +5,10 @@ const BookModel = require('./model');
  * @method findAll
  * @param {}
  * @summary get list of all users
- * @returns Promise<BookModel[]>
+ * @returns {Promise<[]>}
  */
 function findAll() {
-    return BookModel.find({}).exec();
+    return BookModel.find({}).lean();
 }
 
 /**
@@ -16,10 +16,10 @@ function findAll() {
  * @method findById
  * @param {string} title
  * @summary get a book
- * @returns {Promise<BookModel>}
+ * @returns {Promise<{}>}
  */
 function findByTitle(title) {
-    return BookModel.findOne({ title }).exec();
+    return BookModel.findOne({ title }).lean();
 }
 
 /**
@@ -40,10 +40,12 @@ function create(profile) {
  * @param {string} _id
  * @param {object} newProfile
  * @summary update a book's profile
- * @returns {Promise<void>}
+ * @returns {Promise<{}>}
  */
-function updateByTitle(title, newProfile) {
-    return BookModel.updateOne({ title }, newProfile).exec();
+function updateByTitle(newProfile) {
+    return BookModel.updateOne({
+        title: newProfile.title,
+    }, newProfile).lean();
 }
 
 /**
@@ -51,10 +53,10 @@ function updateByTitle(title, newProfile) {
  * @method deleteById
  * @param {string} _id
  * @summary delete a book from database
- * @returns {Promise<void>}
+ * @returns {Promise<{}>}
  */
 function deleteById(_id) {
-    return BookModel.deleteOne({ _id }).exec();
+    return BookModel.deleteOne({ _id }).lean();
 }
 
 module.exports = {

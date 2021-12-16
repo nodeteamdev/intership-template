@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const UserComponent = require('.');
 const { errorHandler } = require('../../error/errorsMiddleware');
+const authMiddleware = require('../shared/authMiddleware');
 
 /**
  * Express router to mount user related functions on.
@@ -37,7 +38,7 @@ router.get('/:id', errorHandler(UserComponent.findById));
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.post('/', errorHandler(UserComponent.create));
+router.post('/', errorHandler(authMiddleware), errorHandler(UserComponent.create));
 
 /**
  * Route serving a new user
@@ -47,7 +48,7 @@ router.post('/', errorHandler(UserComponent.create));
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.put('/', errorHandler(UserComponent.updateById));
+router.put('/', errorHandler(authMiddleware), errorHandler(UserComponent.updateById));
 
 /**
  * Route serving a new user
@@ -57,6 +58,6 @@ router.put('/', errorHandler(UserComponent.updateById));
  * @param {string} path -Express path
  * @param {callback} middleware - Express middleware
  */
-router.delete('/', errorHandler(UserComponent.deleteById));
+router.delete('/', errorHandler(authMiddleware), errorHandler(UserComponent.deleteById));
 
 module.exports = router;

@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const AuthComponent = require('.');
 const { errorHandler } = require('../../error/errorsMiddleware');
+const authMiddleware = require('../shared/authMiddleware');
 
 /**
  * Express router to mount user related functions on.
@@ -37,7 +38,7 @@ router.post('/sign-in', errorHandler(AuthComponent.signIn));
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.get('/refreshToken', errorHandler(AuthComponent.refreshToken));
+router.get('/refreshToken', errorHandler(authMiddleware), errorHandler(AuthComponent.refreshToken));
 
 /**
  * Route that serve token payload
@@ -47,7 +48,7 @@ router.get('/refreshToken', errorHandler(AuthComponent.refreshToken));
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.get('/payload', errorHandler(AuthComponent.payload));
+router.get('/payload', errorHandler(authMiddleware), errorHandler(AuthComponent.payload));
 
 /**
  * Logout route
@@ -57,6 +58,6 @@ router.get('/payload', errorHandler(AuthComponent.payload));
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.get('/logout', errorHandler(AuthComponent.logout));
+router.get('/logout', errorHandler(authMiddleware), errorHandler(AuthComponent.logout));
 
 module.exports = router;

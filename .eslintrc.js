@@ -11,6 +11,7 @@ module.exports = {
         ecmaVersion: 13,
     },
     rules: {
+        'newline-before-return': 2,
         indent: ['error', 4],
     },
 };

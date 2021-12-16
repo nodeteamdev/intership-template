@@ -16,13 +16,13 @@ const AuthError = require('../../error/AuthError');
  * @returns {Promise < void >}
  */
 async function signUp(req, res) {
-    const { error } = UserValidation.create(req.body);
+    const { value, error } = UserValidation.create(req.body);
 
     if (error) {
         throw new ValidationError(error.details);
     }
 
-    await UserService.create(req.body);
+    await UserService.create(value);
 
     return res.status(200).json({
         data: {
@@ -40,18 +40,22 @@ async function signUp(req, res) {
  * @returns {Promise < void >}
  */
 async function signIn(req, res) {
-    const { error } = AuthValidation.signIn(req.body);
+    const { value, error } = AuthValidation.signIn(req.body);
 
     if (error) {
         throw new ValidationError(error.details);
     }
 
-    const tokens = await AuthService.signIn(req.body);
-    const profile = { email: req.body.email, token: tokens.refreshToken };
-    await AuthService.saveToken(profile);
+    const tokens = await AuthService.signIn(value);
+
+    await AuthService.saveToken({
+        email: value.email,
+        token: tokens.refreshToken,
+    });
 
     res.cookie('accessToken', tokens.accessToken, { maxAge: config.accessAge });
     res.cookie('refreshToken', tokens.refreshToken, { maxAge: config.refreshAge });
+
     return res.status(200).json({
         data: tokens,
     });
@@ -66,23 +70,26 @@ async function signIn(req, res) {
  * @returns {Promise < void >}
  */
 async function refreshToken(req, res) {
-    const user = AuthValidation.checkToken(req.cookies.refreshToken);
-    const compared = await AuthService.compareTokens(user.email, req.cookies.refreshToken);
-    if (compared) {
-        const newTokens = AuthService.genTokens(user);
+    const { user, cookies } = req;
+    const compared = await AuthService.compareTokens(user.email, cookies.refreshToken);
 
-        await AuthService.updateToken({
-            email: user.email,
-            token: newTokens.refreshToken,
-        });
-
-        res.cookie('accessToken', newTokens.accessToken, { maxAge: config.accessAge });
-        res.cookie('refreshToken', newTokens.refreshToken, { maxAge: config.refreshAge });
-        return res.status(200).json({
-            data: newTokens,
-        });
+    if (!compared) {
+        throw new AuthError(http.STATUS_CODES[401]);
     }
-    throw new AuthError(http.STATUS_CODES[401]);
+
+    const newTokens = AuthService.genTokens(user);
+
+    await AuthService.updateToken({
+        email: user.email,
+        token: newTokens.refreshToken,
+    });
+
+    res.cookie('accessToken', newTokens.accessToken, { maxAge: config.accessAge });
+    res.cookie('refreshToken', newTokens.refreshToken, { maxAge: config.refreshAge });
+
+    return res.status(200).json({
+        data: newTokens,
+    });
 }
 
 /**
@@ -94,7 +101,7 @@ async function refreshToken(req, res) {
  * @returns {Promise < void >}
  */
 async function payload(req, res) {
-    const user = AuthValidation.checkToken(req.cookies.accessToken);
+    const { user } = req.user;
 
     return res.status(200).json({
         data: user,
@@ -110,11 +117,11 @@ async function payload(req, res) {
  * @returns {Promise < void >}
  */
 async function logout(req, res) {
-    AuthValidation.checkToken(req.cookies.accessToken);
     await AuthService.removeToken(req.cookies.refreshToken);
 
     res.clearCookie('accessToken');
     res.clearCookie('refreshToken');
+
     return res.status(200).json({
         data: {
             status: 200,

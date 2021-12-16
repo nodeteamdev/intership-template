@@ -8,10 +8,10 @@ const saltRounds = 10;
  * @method findAll
  * @param {}
  * @summary get list of all users
- * @returns Promise<UserModel[]>
+ * @returns {Promise<[]>}
  */
 function findAll() {
-    return UserModel.find({}).exec();
+    return UserModel.find({}).lean();
 }
 
 /**
@@ -19,10 +19,10 @@ function findAll() {
  * @method findById
  * @param {string} id
  * @summary get a user
- * @returns {Promise<UserModel>}
+ * @returns {Promise<{}>}
  */
 function findById(id) {
-    return UserModel.findById(id).exec();
+    return UserModel.findById(id).lean();
 }
 
 /**
@@ -49,10 +49,10 @@ function create(profile) {
  * @param {string} _id
  * @param {object} newProfile
  * @summary update a user's profile
- * @returns {Promise<void>}
+ * @returns {Promise<{}>}
  */
 function updateById(_id, newProfile) {
-    return UserModel.updateOne({ _id }, newProfile).exec();
+    return UserModel.updateOne({ _id }, newProfile).lean();
 }
 
 /**
@@ -60,10 +60,10 @@ function updateById(_id, newProfile) {
  * @method deleteById
  * @param {string} _id
  * @summary delete a user from database
- * @returns {Promise<void>}
+ * @returns {Promise<{}>}
  */
 function deleteById(_id) {
-    return UserModel.deleteOne({ _id }).exec();
+    return UserModel.deleteOne({ _id }).lean();
 }
 
 module.exports = {

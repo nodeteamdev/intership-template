@@ -3,7 +3,7 @@ const connections = require('../../config/connection');
 
 const TokenSchema = new Schema(
     {
-        email: {
+        userId: {
             type: String,
             required: true,
             unique: true,
@@ -12,6 +12,7 @@ const TokenSchema = new Schema(
             type: String,
             trim: true,
             required: true,
+            unique: true,
         },
     },
     {

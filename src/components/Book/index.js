@@ -29,19 +29,20 @@ async function findAll(req, res) {
  * @returns {Promise < void >}
  */
 async function findByTitle(req, res) {
-    const { error } = BookValidation.checkTitle(req.params);
+    const { value, error } = BookValidation.checkTitle(req.params);
 
     if (error) {
         throw new ValidationError(error.details);
     }
 
     AuthValidation.checkToken(req.cookies.accessToken);
-    const book = await BookService.findByTitle(req.params.title);
+    const book = await BookService.findByTitle(value.title);
     if (book !== null) {
         return res.status(200).json({
             data: book,
         });
     }
+
     return res.status(404).json({
         data: 'Not found',
     });
@@ -55,14 +56,14 @@ async function findByTitle(req, res) {
  * @returns {Promise < void >}
  */
 async function create(req, res) {
-    const { error } = BookValidation.create(req.body);
+    const { value, error } = BookValidation.create(req.body);
 
     if (error) {
         throw new ValidationError(error.details);
     }
 
     AuthValidation.checkToken(req.cookies.accessToken);
-    const book = await BookService.create(req.body);
+    const book = await BookService.create(value);
 
     return res.status(200).json({
         data: book,
@@ -78,13 +79,13 @@ async function create(req, res) {
  */
 async function updateByTitle(req, res) {
     AuthValidation.checkToken(req.cookies.accessToken);
-    const { error } = BookValidation.updateByTitle(req.body);
+    const { value, error } = BookValidation.updateByTitle(req.body);
 
     if (error) {
         throw new ValidationError(error.details);
     }
 
-    const updatedBook = await BookService.updateByTitle(req.body.title, req.body);
+    const updatedBook = await BookService.updateByTitle(value);
 
     return res.status(200).json({
         data: updatedBook,
@@ -99,7 +100,7 @@ async function updateByTitle(req, res) {
  * @returns {Promise<void>}
  */
 async function deleteById(req, res) {
-    const { error } = BookValidation.checkId(req.body);
+    const { value, error } = BookValidation.checkId(req.body);
 
     if (error) {
         throw new ValidationError(error.details);
@@ -107,7 +108,7 @@ async function deleteById(req, res) {
 
     const user = AuthValidation.checkToken(req.cookies.accessToken);
     if (user.role === 'Admin') {
-        const deletedBook = await BookService.deleteById(req.body.id);
+        const deletedBook = await BookService.deleteById(value.id);
 
         return res.status(200).json({
             data: deletedBook,

@@ -27,7 +27,7 @@ function signUp(profile) {
  * @returns { accessToken, refreshToken }
  */
 async function signIn(profile) {
-    const user = await UserModel.findOne({ email: profile.email }).exec();
+    const user = await UserModel.findOne({ email: profile.email }).lean();
     const match = await bcrypt.compare(profile.password, user.password);
     if (match) {
         return {
@@ -52,6 +52,7 @@ function genTokens(payload) {
         email: payload.email,
         role: payload.role,
     };
+
     return {
         accessToken: jwt.sign(data, process.env.SECRET, { expiresIn: config.accessAge }),
         refreshToken: jwt.sign(data, process.env.SECRET, { expiresIn: config.refreshAge }),
@@ -69,10 +70,11 @@ function genTokens(payload) {
 async function saveToken(profile) {
     try {
         const tokens = await AuthModel.create(profile);
+
         return tokens;
     } catch (err) {
         if (err.code === 11000) {
-            return AuthModel.updateOne({ email: profile.email }, profile).exec();
+            return AuthModel.updateOne({ userId: profile.id }, profile).lean();
         }
         throw err;
     }
@@ -87,7 +89,7 @@ async function saveToken(profile) {
  * @returns {Promise<AuthModel>}
  */
 function updateToken(profile) {
-    return AuthModel.updateOne({ email: profile.email }, profile).exec();
+    return AuthModel.updateOne({ userId: profile.id }, profile).lean();
 }
 
 /**
@@ -98,8 +100,9 @@ function updateToken(profile) {
  * @summary Compare tokens
  * @returns {Promise<Boolean>}
  */
-async function compareTokens(email, token) {
-    const user = await AuthModel.findOne({ email }).exec();
+async function compareTokens(userId, token) {
+    const user = await AuthModel.findOne({ userId }).lean();
+
     return user.token === token;
 }
 
@@ -111,7 +114,7 @@ async function compareTokens(email, token) {
  * @returns {Promise<AuthModel>}
  */
 function removeToken(token) {
-    return AuthModel.deleteOne({ token }).exec();
+    return AuthModel.deleteOne({ token }).lean();
 }
 
 module.exports = {
