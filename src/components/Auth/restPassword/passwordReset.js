@@ -34,25 +34,22 @@ function renderResetPassword(req, res) {
 
 async function confirmPassword(req, res, next) {
     try {
-        // const schema = Joi.object({ password1: Joi.string().required() });
+        const schema = Joi.object().keys({
+            password1: Joi.string().required(),
+            password2: Joi.valid(Joi.ref('password1')).required(),
+            refreshToken: [Joi.string(), Joi.number()],
+        }).and('refreshToken');
 
-        // const { error } = schema.validate(req.body);
+        const { error } = schema.validate(req.body);
 
-        // if (error) return res.status(400).send(error.details[0].message);
-        // const schema2 = Joi.object({ password2: Joi.string().required() });
+        if (error) return res.status(400).send(error.details[0].message);
 
-        // const { error2 } = schema2.validate(req.body);
-
-        // if (error2) return res.status(400).send(error.details[0].message);
-
-        const { password1, password2, refreshToken } = req.body;
-        if (password1 !== password2) res.status(400).send('passwords are not the same');
-        if (!refreshToken) res.status(400).send('Invalid link or expired');
+        const { password1, refreshToken } = req.body;
         const { userId } = jwt.verify(refreshToken, process.env.REFRESH_KEY);
         const user = await UserModel.findById(userId);
         if (!user) return res.status(400).send('invalid link or expired');
 
-        user.password = req.body.password1;
+        user.password = password1;
         await user.save();
 
         return res.send('password reset sucessfully.');

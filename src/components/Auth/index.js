@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const Joi = require('joi');
 const AuthService = require('./service');
 
 /**
@@ -33,6 +34,16 @@ async function register(req, res, next) {
  */
 async function login(req, res, next) {
     try {
+        const schema = Joi.object({
+            email: Joi.string().email().required(),
+            fulName: Joi.string().required(),
+            password: Joi.string().required(),
+            _id: Joi.string().required(),
+
+        });
+
+        const { error } = schema.validate(req.body);
+        if (error) return res.status(400).send(error.details[0].message);
         const data = await AuthService.login(req.body);
 
         return res.status(200).json({
