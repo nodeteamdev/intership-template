@@ -12,6 +12,7 @@ module.exports = {
      * @returns void
      */
     init(app) {
+        app.set('view engine', 'ejs');
         app.use(express.urlencoded({
             extended: false,
         }));
