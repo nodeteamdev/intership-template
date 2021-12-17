@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
-const Joi = require('joi');
 const AuthService = require('./service');
+const ValidationError = require('../../error/ValidationError');
+const AuthValidation = require('./validation');
 
 /**
  * @function
@@ -11,15 +12,26 @@ const AuthService = require('./service');
  */
 async function register(req, res, next) {
     try {
+        const { error } = AuthValidation.register(req.body);
+
+        if (error) {
+            throw new ValidationError(error.details);
+        }
         const data = await AuthService.register(req.body);
 
         return res.status(200).json({
             data,
         });
     } catch (error) {
+        if (error instanceof ValidationError) {
+            return res.status(422).json({
+                error: error.name,
+                details: error.message,
+            });
+        }
         res.status(500).json({
-            error: error.message,
-            details: null,
+            message: error.name,
+            details: error.message,
         });
 
         return next(error);
@@ -34,27 +46,27 @@ async function register(req, res, next) {
  */
 async function login(req, res, next) {
     try {
-        const schema = Joi.object({
-            email: Joi.string().email().required(),
-            fulName: Joi.string().required(),
-            password: Joi.string().required(),
-            _id: Joi.string().required(),
+        const { error } = AuthValidation.login(req.body);
 
-        });
-
-        const { error } = schema.validate(req.body);
-        if (error) return res.status(400).send(error.details[0].message);
+        if (error) {
+            throw new ValidationError(error.details);
+        }
         const data = await AuthService.login(req.body);
 
         return res.status(200).json({
             data,
         });
     } catch (error) {
+        if (error instanceof ValidationError) {
+            return res.status(422).json({
+                error: error.name,
+                details: error.message,
+            });
+        }
         res.status(500).json({
-            error: error.message,
-            details: null,
+            message: error.name,
+            details: error.message,
         });
-
         return next(error);
     }
 }
@@ -65,26 +77,35 @@ async function login(req, res, next) {
  * @param {express.NextFunction} next
  * @returns {Promise < void >}
  */
-async function refreshToken(req, res, next) {
-    const { refreshToken: token } = req.body;
+async function refresh(req, res, next) {
+    try {
+        const { error } = AuthValidation.refreshToken(req.body);
 
-    if (token) {
-        try {
-            const { userId } = jwt.verify(token, process.env.REFRESH_KEY);
-            const tokens = await AuthService.refreshToken(userId);
-            res.status(200).send(tokens);
-            return;
-        } catch (error) {
-            res.status(400).send('Invalid Token');
-            next(error);
-            return;
+        if (error) {
+            throw new ValidationError(error.details);
         }
+        const { refreshToken } = req.body;
+        const { userId } = jwt.verify(refreshToken, process.env.REFRESH_KEY);
+        const tokens = await AuthService.generateTokens(userId);
+
+        return res.status(200).send(tokens);
+    } catch (error) {
+        if (error instanceof ValidationError) {
+            return res.status(422).json({
+                error: error.name,
+                details: error.message,
+            });
+        }
+        res.status(500).json({
+            message: error.name,
+            details: error.message,
+        });
+        return next(error);
     }
-    res.status(400).send('A refresh token is required');
 }
 
 module.exports = {
     register,
     login,
-    refreshToken,
+    refresh,
 };

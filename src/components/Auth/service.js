@@ -29,15 +29,15 @@ async function login(data) {
         userId: user._id,
     }, process.env.ACCESS_KEY, { expiresIn: '1h' });
 
-    const token = jwt.sign({
+    const refreshToken = jwt.sign({
         userId: user._id,
     }, process.env.REFRESH_KEY, { expiresIn: 60 * 1000 * 60 * 24 * 7 });
 
-    await User.findByIdAndUpdate(user._id, { accessToken, refreshToken: token });
+    await User.findByIdAndUpdate(user._id, { accessToken, refreshToken });
 
-    return { accessToken, refreshToken: token };
+    return { accessToken, refreshToken };
 }
-async function refreshToken(userId) {
+async function generateTokens(userId) {
     const user = await User.findById(userId);
 
     if (!user) {
@@ -46,13 +46,13 @@ async function refreshToken(userId) {
 
     const accessToken = jwt.sign({ userId }, process.env.ACCESS_KEY, { expiresIn: '1h' });
 
-    const token = jwt.sign({ userId }, process.env.REFRESH_KEY, { expiresIn: '2h' });
+    const refreshToken = jwt.sign({ userId }, process.env.REFRESH_KEY, { expiresIn: '2h' });
 
-    return { accessToken, refreshToken: token };
+    return { accessToken, refreshToken };
 }
 
 module.exports = {
     register,
     login,
-    refreshToken,
+    generateTokens,
 };

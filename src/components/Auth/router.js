@@ -8,7 +8,7 @@ router.post('/register', AuthComponent.register);
 router.post('/login', AuthComponent.login);
 router.get('/password-reset/:refreshToken', PasswordComponent.renderResetPassword);
 router.post('/password-confirm', PasswordComponent.confirmPassword);
-router.post('/refresh', AuthComponent.refreshToken);
-router.post('/password', PasswordComponent.password);
+router.post('/refresh', AuthComponent.refresh);
+router.post('/password', PasswordComponent.forgotPassword);
 
 module.exports = router;
