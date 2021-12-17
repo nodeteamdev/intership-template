@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
+const config = require('../../config');
 const UserModel = require('./model');
-
-const saltRounds = 10;
 
 /**
  * @exports
@@ -12,6 +11,17 @@ const saltRounds = 10;
  */
 function findAll() {
     return UserModel.find({}).lean();
+}
+
+/**
+ * @exports
+ * @method findOne
+ * @param {}
+ * @summary get list of all users with requested email
+ * @returns {Promise<[]>}
+ */
+function findOne(profile) {
+    return UserModel.findOne(profile).lean();
 }
 
 /**
@@ -33,7 +43,8 @@ function findById(id) {
  * @returns {Promise<UserModel>}
  */
 function create(profile) {
-    const hash = bcrypt.hashSync(profile.password, saltRounds);
+    const hash = bcrypt.hashSync(profile.password, config.saltRounds);
+
     return UserModel.create({
         fullName: profile.fullName,
         email: profile.email,
@@ -69,6 +80,7 @@ function deleteById(_id) {
 module.exports = {
     findAll,
     findById,
+    findOne,
     create,
     updateById,
     deleteById,

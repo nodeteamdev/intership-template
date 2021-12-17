@@ -1,5 +1,4 @@
 const http = require('http');
-const AuthValidation = require('../Auth/validation');
 const BookService = require('./service');
 const BookValidation = require('./validation');
 const ValidationError = require('../../error/ValidationError');
@@ -15,7 +14,6 @@ const AuthError = require('../../error/AuthError');
 async function findAll(req, res) {
     const books = await BookService.findAll();
 
-    AuthValidation.checkToken(req.cookies.accessToken);
     res.status(200).json({
         data: books,
     });
@@ -35,7 +33,6 @@ async function findByTitle(req, res) {
         throw new ValidationError(error.details);
     }
 
-    AuthValidation.checkToken(req.cookies.accessToken);
     const book = await BookService.findByTitle(value.title);
     if (book !== null) {
         return res.status(200).json({
@@ -62,7 +59,6 @@ async function create(req, res) {
         throw new ValidationError(error.details);
     }
 
-    AuthValidation.checkToken(req.cookies.accessToken);
     const book = await BookService.create(value);
 
     return res.status(200).json({
@@ -78,7 +74,6 @@ async function create(req, res) {
  * @returns {Promise<void>}
  */
 async function updateByTitle(req, res) {
-    AuthValidation.checkToken(req.cookies.accessToken);
     const { value, error } = BookValidation.updateByTitle(req.body);
 
     if (error) {
@@ -106,8 +101,7 @@ async function deleteById(req, res) {
         throw new ValidationError(error.details);
     }
 
-    const user = AuthValidation.checkToken(req.cookies.accessToken);
-    if (user.role === 'Admin') {
+    if (req.user.role === 'Admin') {
         const deletedBook = await BookService.deleteById(value.id);
 
         return res.status(200).json({

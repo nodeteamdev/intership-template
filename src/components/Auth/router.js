@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const AuthComponent = require('.');
 const { errorHandler } = require('../../error/errorsMiddleware');
-const authMiddleware = require('../shared/authMiddleware');
+const auth = require('../shared/authMiddleware');
 
 /**
  * Express router to mount user related functions on.
@@ -38,7 +38,39 @@ router.post('/sign-in', errorHandler(AuthComponent.signIn));
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.get('/refreshToken', errorHandler(authMiddleware), errorHandler(AuthComponent.refreshToken));
+router.get('/refreshToken', auth.authMiddleware, errorHandler(AuthComponent.refreshToken));
+
+/**
+ * Route for sending reset-password mail
+ * @name /v1/auth/resetPassword
+ * @function
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware
+ */
+router.post('/resetPassword', errorHandler(AuthComponent.sendResetPassword));
+
+/**
+ * Route for reseting password
+ * @name /v1/auth/resetPassword
+ * @method GET
+ * @function
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware
+ */
+router.get('/resetPassword/:token', errorHandler(AuthComponent.resetPasswordPage));
+
+/**
+ * Route for reseting password
+ * @name /v1/auth/resetPassword
+ * @method UPDATE
+ * @function
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware
+ */
+router.post('/resetPassword/:token', errorHandler(AuthComponent.resetPassword));
 
 /**
  * Route that serve token payload
@@ -48,7 +80,7 @@ router.get('/refreshToken', errorHandler(authMiddleware), errorHandler(AuthCompo
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.get('/payload', errorHandler(authMiddleware), errorHandler(AuthComponent.payload));
+router.get('/payload', auth.authMiddleware, errorHandler(AuthComponent.payload));
 
 /**
  * Logout route
@@ -58,6 +90,6 @@ router.get('/payload', errorHandler(authMiddleware), errorHandler(AuthComponent.
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.get('/logout', errorHandler(authMiddleware), errorHandler(AuthComponent.logout));
+router.get('/logout', auth.authMiddleware, errorHandler(AuthComponent.logout));
 
 module.exports = router;

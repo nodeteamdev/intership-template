@@ -1,7 +1,6 @@
 const http = require('http');
 const UserService = require('./service');
 const UserValidation = require('./validation');
-const AuthValidation = require('../Auth/validation');
 const ValidationError = require('../../error/ValidationError');
 const AuthError = require('../../error/AuthError');
 
@@ -15,7 +14,6 @@ const AuthError = require('../../error/AuthError');
 async function findAll(req, res) {
     const users = await UserService.findAll();
 
-    AuthValidation.checkToken(req.cookies.accessToken);
     res.status(200).json({
         data: users,
     });
@@ -35,7 +33,6 @@ async function findById(req, res) {
         throw new ValidationError(error.details);
     }
 
-    AuthValidation.checkToken(req.cookies.accessToken);
     const user = await UserService.findById(req.params.id);
 
     return res.status(200).json({
@@ -51,21 +48,20 @@ async function findById(req, res) {
  * @returns {Promise < void >}
  */
 async function create(req, res) {
-    const { error } = UserValidation.create(req.body);
+    const { value, error } = UserValidation.create(req.body);
 
     if (error) {
         throw new ValidationError(error.details);
     }
 
-    const payload = AuthValidation.checkToken(req.cookies.accessToken);
-    if (payload.role === 'Admin') {
-        const user = await UserService.create(req.body);
-
-        return res.status(201).json({
-            data: user,
-        });
+    if (req.user.role !== 'Admin') {
+        throw new AuthError(http.STATUS_CODES[403], 403);
     }
-    throw new AuthError(http.STATUS_CODES[403], 403);
+    const user = await UserService.create(value);
+
+    res.status(201).json({
+        data: user,
+    });
 }
 
 /**
@@ -82,8 +78,7 @@ async function updateById(req, res) {
         throw new ValidationError(error.details);
     }
 
-    const user = AuthValidation.checkToken(req.cookies.accessToken);
-    if (user.role === 'Admin') {
+    if (req.user.role === 'Admin') {
         const updatedUser = await UserService.updateById(req.body.id, req.body);
 
         return res.status(200).json({
@@ -107,8 +102,7 @@ async function deleteById(req, res) {
         throw new ValidationError(error.details);
     }
 
-    const user = AuthValidation.checkToken(req.cookies.accessToken);
-    if (user.role === 'Admin') {
+    if (req.user.role === 'Admin') {
         const deletedUser = await UserService.deleteById(req.body.id);
 
         return res.status(200).json({

@@ -1,11 +1,11 @@
 const http = require('http');
 const AuthService = require('./service');
-const UserService = require('../User/service');
 const UserValidation = require('../User/validation');
 const AuthValidation = require('./validation');
 const ValidationError = require('../../error/ValidationError');
 const config = require('../../config');
 const AuthError = require('../../error/AuthError');
+const auth = require('../shared/authMiddleware');
 
 /**
  * @function
@@ -13,7 +13,7 @@ const AuthError = require('../../error/AuthError');
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {express.NextFunction} next
- * @returns {Promise < void >}
+ * @returns {Promise < any >}
  */
 async function signUp(req, res) {
     const { value, error } = UserValidation.create(req.body);
@@ -22,13 +22,77 @@ async function signUp(req, res) {
         throw new ValidationError(error.details);
     }
 
-    await UserService.create(value);
+    await AuthService.signUp(value);
 
     return res.status(200).json({
         data: {
             status: 200,
         },
     });
+}
+
+/**
+ * @function
+ * @name sendResetPassword
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
+ * @returns {Promise < any >}
+ */
+async function sendResetPassword(req, res) {
+    const { value, error } = AuthValidation.checkMail(req.body);
+
+    if (error) {
+        throw new ValidationError(error.details);
+    }
+
+    const response = await AuthService.sendResetMail(value);
+
+    return res.status(200).json({
+        data: {
+            status: 200,
+            response,
+        },
+    });
+}
+
+/**
+ * @function
+ * @name resetPasswordPage
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
+ * @returns {Promise < any >}
+ */
+async function resetPasswordPage(req, res) {
+    const user = auth.checkToken(req.params.token);
+
+    user.tokenMail = req.params.token;
+
+    return res.render('resetPassword', { user });
+}
+
+/**
+ * @function
+ * @name resetPassword
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
+ * @returns {Promise < any >}
+ */
+async function resetPassword(req, res) {
+    const user = auth.checkToken(req.params.token);
+    const { value, error } = AuthValidation.signIn(req.body);
+
+    if (error) {
+        throw new ValidationError(error.details);
+    } else if (user.email !== value.email) {
+        throw new ValidationError('Invalid email');
+    }
+
+    const result = await AuthService.updateById(user.id, value);
+
+    return res.status(200).json(result);
 }
 
 /**
@@ -48,11 +112,6 @@ async function signIn(req, res) {
 
     const tokens = await AuthService.signIn(value);
 
-    await AuthService.saveToken({
-        email: value.email,
-        token: tokens.refreshToken,
-    });
-
     res.cookie('accessToken', tokens.accessToken, { maxAge: config.accessAge });
     res.cookie('refreshToken', tokens.refreshToken, { maxAge: config.refreshAge });
 
@@ -67,11 +126,11 @@ async function signIn(req, res) {
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {express.NextFunction} next
- * @returns {Promise < void >}
+ * @returns {Promise < any >}
  */
 async function refreshToken(req, res) {
     const { user, cookies } = req;
-    const compared = await AuthService.compareTokens(user.email, cookies.refreshToken);
+    const compared = await AuthService.compareTokens(user.id, cookies.refreshToken);
 
     if (!compared) {
         throw new AuthError(http.STATUS_CODES[401]);
@@ -80,7 +139,7 @@ async function refreshToken(req, res) {
     const newTokens = AuthService.genTokens(user);
 
     await AuthService.updateToken({
-        email: user.email,
+        userId: user.id,
         token: newTokens.refreshToken,
     });
 
@@ -98,13 +157,11 @@ async function refreshToken(req, res) {
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {express.NextFunction} next
- * @returns {Promise < void >}
+ * @returns {Promise < any >}
  */
 async function payload(req, res) {
-    const { user } = req.user;
-
     return res.status(200).json({
-        data: user,
+        data: req.user,
     });
 }
 
@@ -114,7 +171,7 @@ async function payload(req, res) {
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {express.NextFunction} next
- * @returns {Promise < void >}
+ * @returns {Promise < any >}
  */
 async function logout(req, res) {
     await AuthService.removeToken(req.cookies.refreshToken);
@@ -135,4 +192,7 @@ module.exports = {
     payload,
     logout,
     refreshToken,
+    sendResetPassword,
+    resetPasswordPage,
+    resetPassword,
 };

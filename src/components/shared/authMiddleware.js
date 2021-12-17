@@ -1,7 +1,28 @@
-const { checkToken } = require('../Auth/validation');
+const jwt = require('jsonwebtoken');
+const AuthError = require('../../error/AuthError');
 
-const authMiddleware = (err, req) => {
+/**
+ * @param {String} profile.token
+ * @returns {payload}
+ */
+function checkToken(token) {
+    try {
+        return jwt.verify(token, process.env.SECRET);
+    } catch (error) {
+        throw new AuthError(error.message);
+    }
+}
+
+/**
+ * @param {express.Request} req
+ * @returns {void}
+ */
+const authMiddleware = (req, res, next) => {
     req.user = checkToken(req.cookies.accessToken);
+    next();
 };
 
-module.exports = authMiddleware;
+module.exports = {
+    authMiddleware,
+    checkToken,
+};
