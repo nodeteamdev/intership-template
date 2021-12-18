@@ -1,4 +1,6 @@
 const bcrypt = require('bcrypt');
+const ejs = require('ejs');
+const path = require('path');
 const UserService = require('../User/service');
 const UserValidation = require('../User/validation');
 const AuthService = require('./service');
@@ -178,7 +180,9 @@ async function forgotPassword(req, res, next) {
 
     const link = `${BASE_URL}:${PORT}/v1/auth/password-reset/${newTokens.accessToken}`;
 
-    sendEmail(user.email, user.firstName, 'Password reset', link);
+    const html = await ejs.renderFile(path.join(__dirname, '../../views/pages/email-page.ejs'), { firstName: user.firstName, link });
+
+    sendEmail(user.email, 'Password reset', html);
 
     return res.render('forgot-reset-success', {
       data: {
