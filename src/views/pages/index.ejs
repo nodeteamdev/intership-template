@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="shortcut icon" type="image/x-icon" href="/assets/secure-icon.png" />
-    <!-- Styles -->
-    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
-    <!-- Icons CDN -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/761d42c757.js" crossorigin="anonymous"></script>
-    <title>NodeJS Auth App</title>
+    <%- include('../partials/head'); %>
 </head>
+<body class="container">
 
-<body>
+<header>
+    <%- include('../partials/header'); %>
+</header>
+
+<main>
     <div class="container">
-        <%- body %>
+        <h1>This is great</h1>
+        <p>Welcome to templating using EJS</p>
     </div>
+</main>
 
+<footer>
+    <%- include('../partials/footer'); %>
+</footer>
+    
     <!-- Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
@@ -30,5 +31,4 @@
         integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
         crossorigin="anonymous"></script>
 </body>
-
 </html>

@@ -197,7 +197,7 @@ async function forgotPassword(req, res, next) {
 
     updateOrSaveToken(user.id, newTokens.accessToken);
 
-    const link = `${BASE_URL}:${PORT}/v1/auth/password_reset/${user.id}/${newTokens.accessToken}`;
+    const link = `${BASE_URL}:${PORT}/v1/auth/password-reset/${user.id}/${newTokens.accessToken}`;
 
     const htmlMailPage = `
       <h2>Please click on given link to reset your password</h2>
@@ -206,8 +206,10 @@ async function forgotPassword(req, res, next) {
 
     sendEmail(user.email, 'Password reset', htmlMailPage);
 
-    return res.status(200).json({
-      info: 'Password reset link sent to your email account! Check spam folder also.',
+    return res.render('email-sent', {
+      data: {
+        message: 'Email sent successfully. Check spam folder also',
+      },
     });
   } catch (error) {
     if (error instanceof ValidationError) {
@@ -260,7 +262,11 @@ async function resetPassword(req, res, next) {
 
     await UserService.updateById(user.id, { password: hashPassword });
 
-    return res.send('Password reset sucessfully!');
+    return res.render('reset-success', {
+      data: {
+        message: 'Password changed successfully.',
+      },
+    });
   } catch (error) {
     if (error instanceof ValidationError) {
       return res.status(422).json({
