@@ -7,8 +7,7 @@
             <h2>
                 Login
             </h2>
-            <%- include ("./messages") %>
-            <form action="/auth/login" method="POST">
+            <form action="/v1/auth/signin" method="POST">
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" class="form-control" placeholder="Enter Email" />

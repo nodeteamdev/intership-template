@@ -13,7 +13,7 @@ async function findAll(req, res, next) {
   try {
     const users = await UserService.findAll();
 
-    res.render('pages/users', { users });
+    res.render('index', { users });
   } catch (error) {
     res.status(500).json({
       error: error.message,

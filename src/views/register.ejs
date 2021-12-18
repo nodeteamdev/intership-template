@@ -7,8 +7,7 @@
         <h2>
           Register New User
         </h2>
-        <%- include ("./messages") %>
-        <form action="/auth/register" method="POST">
+        <form action="/v1/auth/signup" method="POST">
           <div class="form-group">
             <label for="name">Name</label>
             <input type="name" id="name" name="name" class="form-control" placeholder="Enter Name"

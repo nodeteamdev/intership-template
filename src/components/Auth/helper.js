@@ -31,7 +31,7 @@ async function updateOrSaveToken(userId, token) {
   return result;
 }
 
-const sendEmail = async (email, firstName, subject, link) => {
+const sendEmail = async (email, subject, html) => {
   try {
     const transporter = nodemailer.createTransport({
       service: MAILER.service,
@@ -44,13 +44,11 @@ const sendEmail = async (email, firstName, subject, link) => {
       },
     });
 
-    const data = await ejs.renderFile(path.join(__dirname, '../../views/pages/email-page.ejs'), { firstName, link });
-
     await transporter.sendMail({
       from: MAILER.auth.user,
       to: email,
       subject,
-      html: data,
+      html,
     });
 
     console.info(`Email sent to ${email} has successfully`);

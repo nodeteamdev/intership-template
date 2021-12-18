@@ -7,7 +7,7 @@ const AuthService = require('./service');
 const AuthValidation = require('./validation');
 const { HASH_SALT, BASE_URL, PORT } = require('../../config/credentials');
 const { generateTokens, updateOrSaveToken, sendEmail } = require('./helper');
-const { ValidationError, AuthError } = require('../../error');
+const { ValidationError } = require('../../error');
 
 /**
  * @function
@@ -27,7 +27,7 @@ async function signUp(req, res, next) {
     const isUser = await UserService.searchByEmail(value.email);
 
     if (isUser) {
-      throw new AuthError('Email already exists!');
+      throw new Error('Email already exists!');
     }
 
     const hashPassword = bcrypt.hashSync(value.password, HASH_SALT);
@@ -46,13 +46,6 @@ async function signUp(req, res, next) {
   } catch (error) {
     if (error instanceof ValidationError) {
       return res.status(422).json({
-        message: error.name,
-        details: error.message,
-      });
-    }
-
-    if (error instanceof AuthError) {
-      return res.status(403).json({
         message: error.name,
         details: error.message,
       });
@@ -84,11 +77,11 @@ async function signIn(req, res, next) {
 
     const user = await UserService.searchByEmail(value.email);
     if (user === null) {
-      throw new AuthError('User does not exists!');
+      throw new Error('User does not exists!');
     }
 
     if (!bcrypt.compareSync(value.password, user.password)) {
-      throw new AuthError('Invalid credentials!');
+      throw new Error('Invalid credentials!');
     }
 
     const tokens = generateTokens(user);
@@ -100,13 +93,6 @@ async function signIn(req, res, next) {
   } catch (error) {
     if (error instanceof ValidationError) {
       return res.status(422).json({
-        message: error.name,
-        details: error.message,
-      });
-    }
-
-    if (error instanceof AuthError) {
-      return res.status(401).json({
         message: error.name,
         details: error.message,
       });
@@ -139,7 +125,7 @@ async function refreshToken(req, res, next) {
     const requestToken = await AuthService.searchTokenByUserId(value.userId);
 
     if (requestToken.token !== value.token) {
-      throw new AuthError('Token is invalid');
+      throw new Error('Token is invalid');
     }
 
     const user = await UserService.findById(value.userId);
@@ -153,13 +139,6 @@ async function refreshToken(req, res, next) {
   } catch (error) {
     if (error instanceof ValidationError) {
       return res.status(422).json({
-        message: error.name,
-        details: error.message,
-      });
-    }
-
-    if (error instanceof AuthError) {
-      return res.status(401).json({
         message: error.name,
         details: error.message,
       });
@@ -192,7 +171,7 @@ async function forgotPassword(req, res, next) {
     const user = await UserService.searchByEmail(value.email);
 
     if (user === null) {
-      throw new AuthError('User with this email does not exists!');
+      throw new Error('User with this email does not exists!');
     }
 
     const newTokens = generateTokens(user);
@@ -201,9 +180,11 @@ async function forgotPassword(req, res, next) {
 
     const link = `${BASE_URL}:${PORT}/v1/auth/password-reset/${newTokens.accessToken}`;
 
-    sendEmail(user.email, user.firstName, 'Password reset', link);
+    const html = await ejs.renderFile(path.join(__dirname, '../../views/pages/email-page.ejs'), { firstName: user.firstName, link });
 
-    return res.render('email-sent', {
+    sendEmail(user.email, 'Password reset', html);
+
+    return res.render('forgot-reset-success', {
       data: {
         message: 'Email sent successfully. Check spam folder also',
       },
@@ -211,13 +192,6 @@ async function forgotPassword(req, res, next) {
   } catch (error) {
     if (error instanceof ValidationError) {
       return res.status(422).json({
-        message: error.name,
-        details: error.message,
-      });
-    }
-
-    if (error instanceof AuthError) {
-      return res.status(401).json({
         message: error.name,
         details: error.message,
       });
@@ -247,13 +221,13 @@ async function resetPassword(req, res, next) {
 
     const token = await AuthService.searchToken(req.params.token);
 
-    if (token === null) throw new AuthError('Invalid or expired link');
+    if (token === null) throw new Error('Invalid or expired link');
 
     const hashPassword = bcrypt.hashSync(value.password, HASH_SALT);
 
     await UserService.updateById(token.userId, { password: hashPassword });
 
-    return res.render('reset-success', {
+    return res.render('forgot-reset-success', {
       data: {
         message: 'Password changed successfully.',
       },
@@ -261,13 +235,6 @@ async function resetPassword(req, res, next) {
   } catch (error) {
     if (error instanceof ValidationError) {
       return res.status(422).json({
-        message: error.name,
-        details: error.message,
-      });
-    }
-
-    if (error instanceof AuthError) {
-      return res.status(401).json({
         message: error.name,
         details: error.message,
       });
