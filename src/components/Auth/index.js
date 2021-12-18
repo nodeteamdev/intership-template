@@ -187,24 +187,24 @@ async function forgotPassword(req, res, next) {
       throw new ValidationError(error.details);
     }
 
-    const isUser = await UserService.searchByEmail(value.email);
+    const user = await UserService.searchByEmail(value.email);
 
-    if (isUser === null) {
+    if (user === null) {
       throw new AuthError('User with this email does not exists!');
     }
 
-    const newTokens = generateTokens(isUser);
+    const newTokens = generateTokens(user);
 
-    updateOrSaveToken(isUser.id, newTokens.accessToken);
+    updateOrSaveToken(user.id, newTokens.accessToken);
 
-    const link = `${BASE_URL}:${PORT}/v1/auth/password_reset/${isUser.id}/${newTokens.accessToken}`;
+    const link = `${BASE_URL}:${PORT}/v1/auth/password_reset/${user.id}/${newTokens.accessToken}`;
 
     const htmlMailPage = `
       <h2>Please click on given link to reset your password</h2>
       <p>${link}</p>
     `;
 
-    sendEmail(isUser.email, 'Password reset', htmlMailPage);
+    sendEmail(user.email, 'Password reset', htmlMailPage);
 
     return res.status(200).json({
       info: 'Password reset link sent to your email account! Check spam folder also.',
@@ -245,20 +245,20 @@ async function resetPassword(req, res, next) {
     const { error, value } = AuthValidation.resetPassword(req.body);
 
     if (error) throw new ValidationError(error.details);
-    console.log(req.params);
-    const isUser = await UserService.findById(req.params.id);
 
-    if (isUser === null) {
+    const user = await UserService.findById(req.params.id);
+
+    if (user === null) {
       throw new AuthError('Invalid or expired link');
     }
 
-    const token = await AuthService.searchTokenByUserId(isUser.id);
+    const token = await AuthService.searchTokenByUserId(user.id);
 
     if (token === null) throw new AuthError('Invalid or expired link');
 
     const hashPassword = bcrypt.hashSync(value.password, HASH_SALT);
 
-    await UserService.updateById(isUser.id, { password: hashPassword });
+    await UserService.updateById(user.id, { password: hashPassword });
 
     return res.send('Password reset sucessfully!');
   } catch (error) {
