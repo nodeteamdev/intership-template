@@ -10,21 +10,21 @@ module.exports = (req, res, next) => {
       const payload = jwt.verify(token, tokens.access.secret);
       if (payload.userId !== req.body.userId) {
         console.log(payload);
-        res.status(401).json({ message: 'Invalid token!' });
+        res.render('middleware-messages', { data: { message: 'Invalid token!' } });
         return;
       }
     } catch (error) {
       if (error instanceof jwt.TokenExpiredError) {
-        res.status(401).json({ message: 'Token expired!' });
+        res.render('middleware-messages', { data: { message: 'Token expired!' } });
         return;
       }
       if (error instanceof jwt.JsonWebTokenError) {
-        res.status(401).json({ message: 'Invalid token!' });
+        res.render('middleware-messages', { data: { message: 'Invalid token!' } });
         return;
       }
     }
   } else {
-    res.status(403).json({ message: 'Token not provided!' });
+    res.render('middleware-messages', { data: { message: 'Token not provided!' } });
     return;
   }
   next();
