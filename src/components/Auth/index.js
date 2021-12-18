@@ -80,18 +80,18 @@ async function signIn(req, res, next) {
       throw new ValidationError(error.details);
     }
 
-    const isUser = await UserService.searchByEmail(value.email);
-    if (isUser === null) {
+    const user = await UserService.searchByEmail(value.email);
+    if (user === null) {
       throw new AuthError('User does not exists!');
     }
 
-    if (!bcrypt.compareSync(value.password, isUser.password)) {
+    if (!bcrypt.compareSync(value.password, user.password)) {
       throw new AuthError('Invalid credentials!');
     }
 
-    const tokens = generateTokens(isUser);
+    const tokens = generateTokens(user);
 
-    updateOrSaveToken(isUser._id, tokens.refreshToken);
+    updateOrSaveToken(user._id, tokens.refreshToken);
     return res.status(200).json({
       data: tokens,
     });
