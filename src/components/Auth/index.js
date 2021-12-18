@@ -1,4 +1,6 @@
 const bcrypt = require('bcrypt');
+const ejs = require('ejs');
+const path = require('path');
 const UserService = require('../User/service');
 const UserValidation = require('../User/validation');
 const AuthService = require('./service');
@@ -199,12 +201,7 @@ async function forgotPassword(req, res, next) {
 
     const link = `${BASE_URL}:${PORT}/v1/auth/password-reset/${newTokens.accessToken}`;
 
-    const htmlMailPage = `
-      <h2>Please click on given link to reset your password</h2>
-      <p>${link}</p>
-    `;
-
-    sendEmail(user.email, 'Password reset', htmlMailPage);
+    sendEmail(user.email, user.firstName, 'Password reset', link);
 
     return res.render('email-sent', {
       data: {
