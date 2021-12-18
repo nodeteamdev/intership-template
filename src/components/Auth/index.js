@@ -1,4 +1,6 @@
 const bcrypt = require('bcrypt');
+const ejs = require('ejs');
+const path = require('path');
 const UserService = require('../User/service');
 const UserValidation = require('../User/validation');
 const AuthService = require('./service');
@@ -80,18 +82,18 @@ async function signIn(req, res, next) {
       throw new ValidationError(error.details);
     }
 
-    const isUser = await UserService.searchByEmail(value.email);
-    if (isUser === null) {
+    const user = await UserService.searchByEmail(value.email);
+    if (user === null) {
       throw new AuthError('User does not exists!');
     }
 
-    if (!bcrypt.compareSync(value.password, isUser.password)) {
+    if (!bcrypt.compareSync(value.password, user.password)) {
       throw new AuthError('Invalid credentials!');
     }
 
-    const tokens = generateTokens(isUser);
+    const tokens = generateTokens(user);
 
-    updateOrSaveToken(isUser._id, tokens.refreshToken);
+    updateOrSaveToken(user._id, tokens.refreshToken);
     return res.status(200).json({
       data: tokens,
     });
@@ -187,27 +189,24 @@ async function forgotPassword(req, res, next) {
       throw new ValidationError(error.details);
     }
 
-    const isUser = await UserService.searchByEmail(value.email);
+    const user = await UserService.searchByEmail(value.email);
 
-    if (isUser === null) {
+    if (user === null) {
       throw new AuthError('User with this email does not exists!');
     }
 
-    const newTokens = generateTokens(isUser);
+    const newTokens = generateTokens(user);
 
-    updateOrSaveToken(isUser.id, newTokens.accessToken);
+    updateOrSaveToken(user.id, newTokens.accessToken);
 
-    const link = `${BASE_URL}:${PORT}/v1/auth/password_reset/${isUser.id}/${newTokens.accessToken}`;
+    const link = `${BASE_URL}:${PORT}/v1/auth/password-reset/${newTokens.accessToken}`;
 
-    const htmlMailPage = `
-      <h2>Please click on given link to reset your password</h2>
-      <p>${link}</p>
-    `;
+    sendEmail(user.email, user.firstName, 'Password reset', link);
 
-    sendEmail(isUser.email, 'Password reset', htmlMailPage);
-
-    return res.status(200).json({
-      info: 'Password reset link sent to your email account! Check spam folder also.',
+    return res.render('email-sent', {
+      data: {
+        message: 'Email sent successfully. Check spam folder also',
+      },
     });
   } catch (error) {
     if (error instanceof ValidationError) {
@@ -245,22 +244,20 @@ async function resetPassword(req, res, next) {
     const { error, value } = AuthValidation.resetPassword(req.body);
 
     if (error) throw new ValidationError(error.details);
-    console.log(req.params);
-    const isUser = await UserService.findById(req.params.id);
 
-    if (isUser === null) {
-      throw new AuthError('Invalid or expired link');
-    }
-
-    const token = await AuthService.searchTokenByUserId(isUser.id);
+    const token = await AuthService.searchToken(req.params.token);
 
     if (token === null) throw new AuthError('Invalid or expired link');
 
     const hashPassword = bcrypt.hashSync(value.password, HASH_SALT);
 
-    await UserService.updateById(isUser.id, { password: hashPassword });
+    await UserService.updateById(token.userId, { password: hashPassword });
 
-    return res.send('Password reset sucessfully!');
+    return res.render('reset-success', {
+      data: {
+        message: 'Password changed successfully.',
+      },
+    });
   } catch (error) {
     if (error instanceof ValidationError) {
       return res.status(422).json({

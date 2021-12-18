@@ -13,6 +13,17 @@ function searchTokenByUserId(userId) {
 
 /**
  * @exports
+ * @method searchRefreshToken
+ * @param {string} userId
+ * @summary get a token
+ * @returns
+ */
+function searchToken(token) {
+  return TokenModel.findOne({ token });
+}
+
+/**
+ * @exports
  * @method remove refresh token
  * @param {string} userId
  * @summary Remove refreshToken from database
@@ -38,4 +49,5 @@ module.exports = {
   searchTokenByUserId,
   removeRefreshToken,
   saveToken,
+  searchToken,
 };

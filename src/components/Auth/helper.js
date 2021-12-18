@@ -1,4 +1,6 @@
 const jwt = require('jsonwebtoken');
+const ejs = require('ejs');
+const path = require('path');
 const nodemailer = require('nodemailer');
 const AuthService = require('./service');
 const { JWT, MAILER } = require('../../config/credentials');
@@ -29,7 +31,7 @@ async function updateOrSaveToken(userId, token) {
   return result;
 }
 
-const sendEmail = async (email, subject, html) => {
+const sendEmail = async (email, firstName, subject, link) => {
   try {
     const transporter = nodemailer.createTransport({
       service: MAILER.service,
@@ -42,14 +44,16 @@ const sendEmail = async (email, subject, html) => {
       },
     });
 
+    const data = await ejs.renderFile(path.join(__dirname, '../../views/pages/email-page.ejs'), { firstName, link });
+
     await transporter.sendMail({
       from: MAILER.auth.user,
       to: email,
       subject,
-      html,
+      html: data,
     });
 
-    console.info('Email sent successfully');
+    console.info(`Email sent to ${email} has successfully`);
   } catch (error) {
     console.error(error, 'email not sent');
   }

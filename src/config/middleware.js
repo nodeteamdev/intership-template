@@ -30,7 +30,7 @@ module.exports = {
     app.use(expressLayouts);
     // layout
     app.use('/assets', express.static(path.join(__dirname, '../assets')));
-    app.set('views', path.join(__dirname, '../views'));
+    app.set('views', path.join(__dirname, '../views/pages'));
     app.set('view engine', 'ejs');
     // ejs
     app.use((req, res, next) => {
