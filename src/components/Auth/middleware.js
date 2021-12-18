@@ -3,6 +3,7 @@ const { tokens } = require('../../config/credentials').JWT;
 
 module.exports = (req, res, next) => {
   const authHeader = req.get('Authorization');
+
   if (authHeader !== undefined) {
     const token = authHeader.replace('Bearer ', '');
     try {
