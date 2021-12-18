@@ -197,7 +197,7 @@ async function forgotPassword(req, res, next) {
 
     updateOrSaveToken(user.id, newTokens.accessToken);
 
-    const link = `${BASE_URL}:${PORT}/v1/auth/password-reset/${user.id}/${newTokens.accessToken}`;
+    const link = `${BASE_URL}:${PORT}/v1/auth/password-reset/${newTokens.accessToken}`;
 
     const htmlMailPage = `
       <h2>Please click on given link to reset your password</h2>
@@ -248,19 +248,13 @@ async function resetPassword(req, res, next) {
 
     if (error) throw new ValidationError(error.details);
 
-    const user = await UserService.findById(req.params.id);
-
-    if (user === null) {
-      throw new AuthError('Invalid or expired link');
-    }
-
-    const token = await AuthService.searchTokenByUserId(user.id);
+    const token = await AuthService.searchToken(req.params.token);
 
     if (token === null) throw new AuthError('Invalid or expired link');
 
     const hashPassword = bcrypt.hashSync(value.password, HASH_SALT);
 
-    await UserService.updateById(user.id, { password: hashPassword });
+    await UserService.updateById(token.userId, { password: hashPassword });
 
     return res.render('reset-success', {
       data: {

@@ -60,7 +60,7 @@ router
  * @param {callback} middleware - Express middleware.
  */
 router
-  .get('/password-reset/:id/:token', (req, res) => res.render('reset'))
-  .post('/password-reset/:id/:token', AuthComponent.resetPassword);
+  .get('/password-reset/:token', (req, res) => res.render('reset'))
+  .post('/password-reset/:token', AuthComponent.resetPassword);
 
 module.exports = router;
