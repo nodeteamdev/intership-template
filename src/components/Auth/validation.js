@@ -74,13 +74,13 @@ class AuthValidation extends Validation {
    * @returns
    * @memberof AuthValidation
    */
-  refreshToken(profile) {
+  Tokens(profile) {
     return this.Joi
       .object({
-        userId: this.Joi
+        accessToken: this.Joi
           .string()
           .required(),
-        token: this.Joi
+        refreshToken: this.Joi
           .string()
           .required(),
       })

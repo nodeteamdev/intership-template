@@ -13,7 +13,12 @@ async function findAll(req, res, next) {
   try {
     const users = await UserService.findAll();
 
-    res.render('index', { users });
+    res.render('users', {
+      data: {
+        status: 200,
+        users,
+      },
+    });
   } catch (error) {
     res.status(500).json({
       error: error.message,

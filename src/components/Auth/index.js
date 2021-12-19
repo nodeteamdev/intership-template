@@ -1,10 +1,13 @@
 const bcrypt = require('bcrypt');
 const ejs = require('ejs');
 const path = require('path');
+const helmet = require('helmet');
 const UserService = require('../User/service');
 const AuthService = require('./service');
 const AuthValidation = require('./validation');
-const { HASH_SALT, BASE_URL, PORT } = require('../../config/credentials');
+const {
+  HASH_SALT, BASE_URL, PORT, JWT,
+} = require('../../config/credentials');
 const { generateTokens, updateOrSaveToken, sendEmail } = require('./helper');
 const { ValidationError } = require('../../error');
 
@@ -87,10 +90,15 @@ async function signIn(req, res, next) {
 
     const tokens = generateTokens(user);
 
-    updateOrSaveToken(user._id, tokens.refreshToken);
-    return res.status(200).json({
-      data: tokens,
-    });
+    updateOrSaveToken(user.id, tokens.refreshToken);
+
+    return res
+      .status(200)
+      .cookie('accessToken', `Bearer ${tokens.accessToken}`, {
+        maxAge: 1000 * 60 * 30, httpOnly: true,
+      })
+      .cookie('refreshToken', tokens.refreshToken, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true })
+      .redirect(301, '/v1/users');
   } catch (error) {
     if (error instanceof ValidationError) {
       return res.status(422).json({
@@ -117,26 +125,30 @@ async function signIn(req, res, next) {
  */
 async function refreshToken(req, res, next) {
   try {
-    const { error, value } = AuthValidation.refreshToken(req.body);
-
+    const { error, value } = AuthValidation.Tokens(req.cookies);
     if (error) {
       throw new ValidationError(error.details);
     }
 
-    const requestToken = await AuthService.searchTokenByUserId(value.userId);
+    const requestToken = await AuthService.searchToken(value.refreshToken);
 
-    if (requestToken.token !== value.token) {
+    if (requestToken === null) {
       throw new Error('Token is invalid');
     }
 
-    const user = await UserService.findById(value.userId);
+    const user = await UserService.findById(requestToken.userId);
 
     const tokens = generateTokens(user);
-    updateOrSaveToken(value.userId, tokens.refreshToken);
 
-    return res.status(200).json({
-      newdata: tokens,
-    });
+    updateOrSaveToken(user.id, tokens.refreshToken);
+
+    return res
+      .status(200)
+      .cookie('accessToken', `Bearer ${tokens.accessToken}`, {
+        maxAge: 1000 * 60 * 30, httpOnly: true,
+      })
+      .cookie('refreshToken', tokens.refreshToken, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true })
+      .redirect('back');
   } catch (error) {
     if (error instanceof ValidationError) {
       return res.status(422).json({
@@ -181,12 +193,13 @@ async function forgotPassword(req, res, next) {
 
     const link = `${BASE_URL}:${PORT}/v1/auth/password-reset/${newTokens.accessToken}`;
 
-    const html = ejs.render(path.join(__dirname, '../../views/pages/email-page.ejs'), { firstName: user.firstName, link });
+    const html = await ejs.renderFile(path.join(__dirname, '../../views/pages/email-page.ejs'), { firstName: user.firstName, link });
 
     sendEmail(user.email, 'Password reset', html);
 
     return res.render('forgot-reset-success', {
       data: {
+        status: 200,
         message: 'Email sent successfully. Check spam folder also',
       },
     });
@@ -230,7 +243,7 @@ async function resetPassword(req, res, next) {
 
     return res.render('forgot-reset-success', {
       data: {
-        message: 'Password changed successfully.',
+        message: 'Password changed',
       },
     });
   } catch (error) {

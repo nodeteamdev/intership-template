@@ -30,7 +30,9 @@ router
  * @param {callback} middleware - Express middleware.
  */
 router
-  .get('/signIn', (req, res) => res.render('signin'))
+  .get('/signIn', (req, res) => {
+    res.render('signin');
+  })
   .post('/signIn', AuthComponent.signIn);
 
 /**
@@ -64,7 +66,7 @@ router
  * @param {callback} middleware - Express middleware.
  */
 router
-  .get('/password-reset/:token', (req, res) => res.render('reset'))
-  .post('/password-reset/:token', AuthComponent.resetPassword);
+  .get('/password-reset/:token', AuthMiddleware, (req, res) => res.render('reset'))
+  .post('/password-reset/:token', AuthMiddleware, AuthComponent.resetPassword);
 
 module.exports = router;
