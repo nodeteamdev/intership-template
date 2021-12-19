@@ -2,7 +2,6 @@ const bcrypt = require('bcrypt');
 const ejs = require('ejs');
 const path = require('path');
 const UserService = require('../User/service');
-const UserValidation = require('../User/validation');
 const AuthService = require('./service');
 const AuthValidation = require('./validation');
 const { HASH_SALT, BASE_URL, PORT } = require('../../config/credentials');
@@ -18,7 +17,7 @@ const { ValidationError } = require('../../error');
  */
 async function signUp(req, res, next) {
   try {
-    const { error, value } = UserValidation.create(req.body);
+    const { error, value } = AuthValidation.signUp(req.body);
 
     if (error) {
       throw new ValidationError(error.details);
@@ -40,8 +39,10 @@ async function signUp(req, res, next) {
 
     const user = await UserService.create(userData);
 
-    return res.status(201).json({
-      data: user,
+    return res.render('welcome', {
+      data: {
+        firstName: user.firstName,
+      },
     });
   } catch (error) {
     if (error instanceof ValidationError) {
@@ -180,7 +181,7 @@ async function forgotPassword(req, res, next) {
 
     const link = `${BASE_URL}:${PORT}/v1/auth/password-reset/${newTokens.accessToken}`;
 
-    const html = await ejs.renderFile(path.join(__dirname, '../../views/pages/email-page.ejs'), { firstName: user.firstName, link });
+    const html = ejs.render(path.join(__dirname, '../../views/pages/email-page.ejs'), { firstName: user.firstName, link });
 
     sendEmail(user.email, 'Password reset', html);
 

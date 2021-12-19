@@ -17,7 +17,9 @@ const router = Router();
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.post('/signUp', AuthComponent.signUp);
+router
+  .get('/signUp', (req, res) => res.render('signup'))
+  .post('/signUp', AuthComponent.signUp);
 
 /**
  * Route serving a signing in users
@@ -27,7 +29,9 @@ router.post('/signUp', AuthComponent.signUp);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.post('/signIn', AuthComponent.signIn);
+router
+  .get('/signIn', (req, res) => res.render('signin'))
+  .post('/signIn', AuthComponent.signIn);
 
 /**
  * Route serving for refreshing token
