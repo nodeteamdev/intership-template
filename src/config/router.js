@@ -1,5 +1,4 @@
 const express = require('express');
-const http = require('http');
 const UserRouter = require('../components/User/router');
 const AuthRouter = require('../components/Auth/router');
 const BookRouter = require('../components/Book/router');
@@ -44,9 +43,17 @@ module.exports = {
      */
     app.use('/v1/books', BookRouter);
 
+    /**
+     * Wrong auth
+     */
     app.use((req, res, next) => {
-      res.status(404).send(http.STATUS_CODES[404]);
+      try {
+        res.status(404).render('error', { data: { message: 'Page not found' } });
+      } catch (error) {
+        next(error);
+      }
     });
+
     /**
          * @function
          * @inner

@@ -1,3 +1,6 @@
+const fs = require('fs');
+const csv = require('fast-csv');
+const path = require('path');
 const BookService = require('./service');
 const BookValidation = require('./validation');
 const ValidationError = require('../../error/ValidationError');
@@ -137,9 +140,49 @@ async function deleteById(req, res, next) {
   }
 }
 
+/**
+ * @function
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
+ * @returns {Promise<void>}
+ */
+async function upload(req, res, next) {
+  try {
+    if (req.file === undefined) {
+      throw new Error('Please, upload a CSV file!');
+    }
+
+    fs.createReadStream(path.resolve(__dirname, '../../', 'resources/uploads', req.file.filename))
+      .pipe(csv.parse())
+      .on('error', (error) => { throw new Error(error.details); })
+      .on('data', (row) => {
+        const BookLayout = {
+          code3: row[0],
+          title: row[1],
+          description: row[2],
+        };
+
+        BookService.create(BookLayout);
+      })
+      .on('end', (rowCount) => {
+        console.log(`Parsed ${rowCount} rows`);
+        return res.status(200).json({ data: { message: 'Data from CSV file was been saved on database' } });
+      });
+  } catch (error) {
+    res.status(500).json({
+      message: error.name,
+      details: error.message,
+    });
+
+    return next(error);
+  }
+}
+
 module.exports = {
   findAll,
   findById,
   updateById,
   deleteById,
+  upload,
 };

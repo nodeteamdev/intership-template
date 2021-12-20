@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const BookComponent = require('.');
 const AuthMiddleware = require('../Auth/middleware');
+const upload = require('../../config/upload');
 
 /**
  * Express router to mount user related functions on.
@@ -8,6 +9,18 @@ const AuthMiddleware = require('../Auth/middleware');
  * @const
  */
 const router = Router();
+
+/**
+ * Route serving list of books.
+ * @name /v1/books/upload
+ * @function
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
+router
+  // .get('/upload', (req, res, next) => res.render('upload'))
+  .post('/upload', upload.single('file'), BookComponent.upload);
 
 /**
  * Route serving list of books.
