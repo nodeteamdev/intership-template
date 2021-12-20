@@ -1,6 +1,4 @@
 const jwt = require('jsonwebtoken');
-const ejs = require('ejs');
-const path = require('path');
 const nodemailer = require('nodemailer');
 const AuthService = require('./service');
 const { JWT, MAILER } = require('../../config/credentials');

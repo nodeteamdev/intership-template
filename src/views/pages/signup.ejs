@@ -9,9 +9,14 @@
         </h2>
         <form action="/v1/auth/signup" method="POST">
           <div class="form-group">
-            <label for="name">Name</label>
-            <input type="name" id="name" name="name" class="form-control" placeholder="Enter Name"
-              value="<%= typeof name != 'undefined' ? name : '' %>" />
+            <label for="firstName">First Name</label>
+            <input type="firstName" id="firstName" name="firstName" class="form-control" placeholder="Enter First Name"
+              value="<%= typeof firstName != 'undefined' ? firstName : '' %>" />
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="lastName" id="lastName" name="lastName" class="form-control" placeholder="Enter Last Name"
+              value="<%= typeof lastName != 'undefined' ? lastName : null %>" />
           </div>
           <div class="form-group">
             <label for="email">Email</label>
@@ -32,7 +37,7 @@
             Register
           </button>
         </form>
-        <p class="mt-4">Already have an account? <a href="/auth/login">Login</a></p>
+        <p class="mt-4">Already have an account? <a href="/v1/auth/signin">Sign In</a></p>
       </div>
     </div>
   </div>

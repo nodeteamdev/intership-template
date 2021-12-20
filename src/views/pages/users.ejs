@@ -1,0 +1,6 @@
+<h1>List of all users</h1>
+    <ul>
+    <% data.users.forEach(function(user) { %>
+        <li> email: <%= user.email %> | <%= user.firstName %></li>
+    <% }); %> 
+    </ul>

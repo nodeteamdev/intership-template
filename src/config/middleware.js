@@ -14,6 +14,12 @@ module.exports = {
      * @returns void
      */
   init(app) {
+    app.use(expressLayouts);
+    // layout
+    app.use('/assets', express.static(path.join(__dirname, '../assets')));
+    app.set('views', path.join(__dirname, '../views/pages'));
+    app.set('view engine', 'ejs');
+    // ejs
     app.use(express.urlencoded({
       extended: false,
     }));
@@ -27,12 +33,6 @@ module.exports = {
     // providing a Connect/Express middleware that can be used to enable CORS with various options
     app.use(cors());
     // cors
-    app.use(expressLayouts);
-    // layout
-    app.use('/assets', express.static(path.join(__dirname, '../assets')));
-    app.set('views', path.join(__dirname, '../views/pages'));
-    app.set('view engine', 'ejs');
-    // ejs
     app.use((req, res, next) => {
       res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS ');
       res.header(

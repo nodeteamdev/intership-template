@@ -1,6 +1,7 @@
 const { Router } = require('express');
-const UserComponent = require('.');
+const BookComponent = require('.');
 const AuthMiddleware = require('../Auth/middleware');
+const upload = require('../../config/upload');
 
 /**
  * Express router to mount user related functions on.
@@ -10,43 +11,55 @@ const AuthMiddleware = require('../Auth/middleware');
 const router = Router();
 
 /**
- * Route serving list of users.
- * @name /v1/users
+ * Route serving list of books.
+ * @name /v1/books/upload
  * @function
  * @inner
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/', AuthMiddleware, UserComponent.findAll);
+router
+  // .get('/upload', (req, res, next) => res.render('upload'))
+  .post('/upload', upload.single('file'), BookComponent.upload);
+
+/**
+ * Route serving list of books.
+ * @name /v1/books
+ * @function
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
+router.get('/', AuthMiddleware, BookComponent.findAll);
 
 /**
  * Route serving a user
- * @name /v1/users/:id
+ * @name /v1/books/:id
  * @function
  * @inner
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/:id', AuthMiddleware, UserComponent.findById);
+router.get('/:id', AuthMiddleware, BookComponent.findById);
 
 /**
  * Route serving a new user
- * @name /v1/users
+ * @name /v1/books
  * @function
  * @inner
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.put('/', AuthMiddleware, UserComponent.updateById);
+router.put('/', AuthMiddleware, BookComponent.updateById);
 
 /**
  * Route serving a new user
- * @name /v1/users
+ * @name /v1/books
  * @function
  * @inner
  * @param {string} path -Express path
  * @param {callback} middleware - Express middleware
  */
-router.delete('/', AuthMiddleware, UserComponent.deleteById);
+router.delete('/', AuthMiddleware, BookComponent.deleteById);
 
 module.exports = router;
