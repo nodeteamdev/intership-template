@@ -18,7 +18,8 @@ class BookValidation extends Validation {
       .object({
         code3: this.Joi
           .string()
-          .min(3)
+          .uppercase()
+          .trim()
           .max(3)
           .required(),
         title: this.Joi
@@ -30,31 +31,25 @@ class BookValidation extends Validation {
           .string()
           .min(10)
           .required(),
-        createAt: this.Joi
+        createdAt: this.Joi
           .date()
-          .default(() => moment().format(), 'date created'),
+          .default(Date.now),
+        updatedAt: this.Joi
+          .date()
+          .default(Date.now),
       })
       .validate(book);
   }
 
   /**
      * @param {String} data.id - objectId
-     * @param {String} data.fullName
      * @returns
-     * @memberof UserValidation
+     * @memberof BookValidation
      */
-  updateById(data) {
+  findById(data) {
     return this.Joi
       .object({
         id: this.Joi.objectId(),
-        firstName: this.Joi
-          .string()
-          .min(1)
-          .max(30),
-        lastName: this.Joi
-          .string()
-          .min(1)
-          .max(30),
       })
       .validate(data);
   }
@@ -62,7 +57,7 @@ class BookValidation extends Validation {
   /**
      * @param {String} data.id - objectId
      * @returns
-     * @memberof UserValidation
+     * @memberof BookValidation
      */
   deleteById(data) {
     return this.Joi
