@@ -7,6 +7,36 @@ const BookModel = require('./model');
  * @summary get list of all Books
  * @returns Promise<BookModel[]>
  */
+function countPerCountry() {
+  return BookModel.aggregate([
+    { $group: { _id: '$code3', value: { $sum: 1 } } },
+  ]);
+}
+
+/**
+ * @exports
+ * @method findAll
+ * @param {}
+ * @summary get list of all new Books
+ * @returns Promise<BookModel[]>
+ */
+function findNewestBooks() {
+  const last7days = new Date();
+  last7days.setHours(last7days.getHours() - 168);
+
+  return BookModel.aggregate([
+    { $match: { createdAt: { $gt: last7days } } },
+    { $project: { createdAt: 1, _id: '$_id', code3: '$code3' } },
+  ]);
+}
+
+/**
+ * @exports
+ * @method findAll
+ * @param {}
+ * @summary get list of all Books
+ * @returns Promise<BookModel[]>
+ */
 function findAll() {
   return BookModel.find({});
 }
@@ -75,4 +105,6 @@ module.exports = {
   create,
   updateById,
   deleteById,
+  countPerCountry,
+  findNewestBooks,
 };
