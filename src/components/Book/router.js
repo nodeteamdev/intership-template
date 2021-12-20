@@ -18,9 +18,27 @@ const router = Router();
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router
-  // .get('/upload', (req, res, next) => res.render('upload'))
-  .post('/upload', upload.single('file'), BookComponent.upload);
+router.post('/upload', upload.single('file'), BookComponent.upload);
+
+/**
+ * Route serving list of books.
+ * @name /v1/books
+ * @function
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
+router.get('/count-per-country', AuthMiddleware, BookComponent.countPerCountry);
+
+/**
+ * Route serving list of books.
+ * @name /v1/books
+ * @function
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
+router.get('/new-books', AuthMiddleware, BookComponent.findNewestBooks);
 
 /**
  * Route serving list of books.
