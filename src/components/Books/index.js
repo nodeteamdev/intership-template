@@ -25,6 +25,29 @@ async function findAll(req, res, next) {
         next(error);
     }
 }
+/**
+ * @function
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
+ * @returns {Promise < void >}
+ */
+async function getNewBooks(req, res, next) {
+    try {
+        const books = await BookService.findNewBook();
+
+        res.status(200).json({
+            data: books,
+        });
+    } catch (error) {
+        res.status(500).json({
+            error: error.message,
+            details: null,
+        });
+
+        next(error);
+    }
+}
 
 /**
  * @function
@@ -180,4 +203,5 @@ module.exports = {
     create,
     updateById,
     deleteById,
+    getNewBooks,
 };

@@ -4,12 +4,22 @@ const BookModel = require('./model');
  * @exports
  * @method findAll
  * @param {}
- * @summary get list of all books
+ * @summary get list of new books
  * @returns Promise<BookModel[]>
  */
 function findAll() {
     console.log('===step1');
     return BookModel.find({}).exec();
+}
+/**
+ * @exports
+ * @method findAll
+ * @param {}
+ * @summary get list of all books
+ * @returns Promise<BookModel[]>
+ */
+function getNewBooks() {
+    return BookModel.find().sort({ createdAt: -1 }).limit(5).lean();
 }
 
 /**
@@ -64,4 +74,5 @@ module.exports = {
     create,
     updateById,
     deleteById,
+    getNewBooks,
 };

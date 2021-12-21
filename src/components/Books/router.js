@@ -18,6 +18,8 @@ const router = Router();
  */
 router.get('/', BookComponent.findAll);
 
+router.get('/new-book', BookComponent.getNewBooks);
+
 /**
  * Route serving a book
  * @name /v1/books/:id
