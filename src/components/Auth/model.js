@@ -1,6 +1,11 @@
 const { Schema } = require('mongoose');
 const connections = require('../../config/connection');
 
+/**
+ * @schema TokenSchema
+ * @param {String} userId
+ * @param {String} token
+ */
 const TokenSchema = new Schema(
     {
         userId: {
@@ -16,7 +21,7 @@ const TokenSchema = new Schema(
         },
     },
     {
-        collection: 'tokenmodel',
+        collection: 'tokens',
         versionKey: false,
     },
 );

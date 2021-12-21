@@ -1,6 +1,13 @@
 const { Schema } = require('mongoose');
 const connections = require('../../config/connection');
 
+/**
+ * @schema BookSchema
+ * @param {String} title
+ * @param {String} desc
+ * @param {Date} createdAt
+ * @param {Date} updatedAt
+ */
 const BookSchema = new Schema(
     {
         title: {
@@ -8,7 +15,11 @@ const BookSchema = new Schema(
             required: true,
             trim: true,
         },
-        desc: {
+        description: {
+            type: String,
+            required: true,
+        },
+        code3: {
             type: String,
             required: true,
         },

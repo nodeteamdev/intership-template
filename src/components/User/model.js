@@ -1,6 +1,13 @@
 const { Schema } = require('mongoose');
 const connections = require('../../config/connection');
 
+/**
+ * @schema UserSchema
+ * @param {String} fullName
+ * @param {String} email
+ * @param {String} password
+ * @param {String} role
+ */
 const UserSchema = new Schema(
     {
         fullName: {
@@ -21,9 +28,14 @@ const UserSchema = new Schema(
             default: 'User',
             required: true,
         },
+        lastVisitBooks: {
+            type: Date,
+            default: Date.now,
+            required: true,
+        },
     },
     {
-        collection: 'usermodel',
+        collection: 'users',
         versionKey: false,
     },
 );

@@ -54,6 +54,10 @@ class BookValidation extends Validation {
                     .string()
                     .min(1)
                     .required(),
+                code3: this.Joi
+                    .string()
+                    .length(3)
+                    .required(),
             })
             .validate(profile);
     }
@@ -76,6 +80,10 @@ class BookValidation extends Validation {
                 desc: this.Joi
                     .string()
                     .min(1)
+                    .required(),
+                code3: this.Joi
+                    .string()
+                    .length(3)
                     .required(),
             })
             .validate(data);

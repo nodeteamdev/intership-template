@@ -34,12 +34,26 @@ function findById(id) {
  */
 function create(profile) {
     const hash = bcrypt.hashSync(profile.password, saltRounds);
+
     return UserModel.create({
         fullName: profile.fullName,
         email: profile.email,
         password: hash,
         role: profile.role,
     });
+}
+
+/**
+ * Find a user by id and update his profile
+ * @exports
+ * @method updateById
+ * @param {string} _id
+ * @param {object} newProfile
+ * @summary update a user's profile
+ * @returns {Promise<{}>}
+ */
+function updateVisitBooks(_id) {
+    return UserModel.updateOne({ _id }, { lastVisitBooks: Date.now() }).lean();
 }
 
 /**
@@ -69,6 +83,7 @@ function deleteById(_id) {
 module.exports = {
     findAll,
     findById,
+    updateVisitBooks,
     create,
     updateById,
     deleteById,

@@ -13,6 +13,27 @@ function findAll() {
 
 /**
  * @exports
+ * @method findNew
+ * @param {}
+ * @summary get new books by user activity
+ * @returns {Promise<[BookModel]>}
+ */
+function findNew(lastVisitBooks) {
+    return BookModel.aggregate([{
+        $match: {
+            updatedAt: {
+                $gte: lastVisitBooks,
+            },
+        },
+        $unset: [
+            'createdAt',
+            'updatedAt',
+        ],
+    }]).lean();
+}
+
+/**
+ * @exports
  * @method findById
  * @param {string} title
  * @summary get a book
@@ -20,6 +41,31 @@ function findAll() {
  */
 function findByTitle(title) {
     return BookModel.findOne({ title }).lean();
+}
+
+/**
+ * @exports
+ * @method countPerCountry
+ * @param {}
+ * @summary gets a number of books per country
+ * @returns {Promise<[{ code3, value }]>}
+ */
+function countPerCountry() {
+    return BookModel.aggregate([{
+        $match: {},
+        $unset: [
+            'title',
+            'description',
+            'createdAt',
+            'updatedAt',
+        ],
+        $group: {
+            code3: '$code3',
+            value: {
+                $count: {},
+            },
+        },
+    }]).lean();
 }
 
 /**
@@ -61,7 +107,9 @@ function deleteById(_id) {
 
 module.exports = {
     findAll,
+    findNew,
     findByTitle,
+    countPerCountry,
     create,
     updateByTitle,
     deleteById,

@@ -49,7 +49,7 @@ async function signIn(req, res) {
     const tokens = await AuthService.signIn(value);
 
     await AuthService.saveToken({
-        email: value.email,
+        userId: value.email,
         token: tokens.refreshToken,
     });
 
@@ -80,7 +80,7 @@ async function refreshToken(req, res) {
     const newTokens = AuthService.genTokens(user);
 
     await AuthService.updateToken({
-        email: user.email,
+        user: user.email,
         token: newTokens.refreshToken,
     });
 

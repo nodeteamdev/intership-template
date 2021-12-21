@@ -4,25 +4,49 @@ const { errorHandler } = require('../../error/errorsMiddleware');
 const authMiddleware = require('../shared/authMiddleware');
 
 /**
- * Express router to mount book related functions on.
+ * @description Express router to mount book related functions on.
  * @type {Express.Router}
  * @const
  */
 const router = Router();
 
 /**
- * Route serving list of books.
+ * @description Route serving list of books.
  * @name /v1/books
+ * @method get
  * @function
  * @inner
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/', errorHandler(BookComponent.findAll));
+router.get('/', errorHandler(authMiddleware), errorHandler(BookComponent.findAll));
 
 /**
- * Route serving a book
+ * @description Route serving list of books.
+ * @name /v1/books/new-books
+ * @method get
+ * @function
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
+router.get('/new-books', errorHandler(authMiddleware), errorHandler(BookComponent.newBooks));
+
+/**
+ * @description Route serving number of books per country.
+ * @name /v1/count-per-country
+ * @method get
+ * @function
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
+router.get('/count-per-country', errorHandler(authMiddleware), errorHandler(BookComponent.countPerCountry));
+
+/**
+ * @description Route serving a book by title
  * @name /v1/books/:id
+ * @method get
  * @function
  * @inner
  * @param {string} path - Express path
@@ -31,8 +55,9 @@ router.get('/', errorHandler(BookComponent.findAll));
 router.get('/:title', errorHandler(BookComponent.findByTitle));
 
 /**
- * Route serving a new book
+ * @description Route serving a new book
  * @name /v1/books
+ * @method post
  * @function
  * @inner
  * @param {string} path - Express path
@@ -41,8 +66,9 @@ router.get('/:title', errorHandler(BookComponent.findByTitle));
 router.post('/', errorHandler(authMiddleware), errorHandler(BookComponent.create));
 
 /**
- * Route serving a new book
+ * @description Route serving a book update
  * @name /v1/books
+ * @method put
  * @function
  * @inner
  * @param {string} path - Express path
@@ -51,8 +77,9 @@ router.post('/', errorHandler(authMiddleware), errorHandler(BookComponent.create
 router.put('/', errorHandler(authMiddleware), errorHandler(BookComponent.updateByTitle));
 
 /**
- * Route serving a new book
+ * @description Route for book removing
  * @name /v1/books
+ * @method delete
  * @function
  * @inner
  * @param {string} path -Express path
