@@ -1,3 +1,4 @@
+const { exists } = require('./model');
 const BookModel = require('./model');
 
 /**
@@ -9,7 +10,9 @@ const BookModel = require('./model');
  */
 function countPerCountry() {
   return BookModel.aggregate([
+    { $match: { _id: exists } },
     { $group: { _id: '$code3', value: { $sum: 1 } } },
+    { $sort: { value: -1 } },
   ]);
 }
 
@@ -26,7 +29,7 @@ function findNewestBooks() {
 
   return BookModel.aggregate([
     { $match: { createdAt: { $gt: last7days } } },
-    { $project: { createdAt: 1, _id: '$_id', code3: '$code3' } },
+    { $project: { createdAt: 1, title: '$title', code3: '$code3' } },
   ]);
 }
 

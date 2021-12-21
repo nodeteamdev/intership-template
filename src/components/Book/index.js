@@ -16,7 +16,14 @@ async function countPerCountry(req, res, next) {
   try {
     const books = await BookService.countPerCountry();
 
-    res.status(200).json(books);
+    const bookList = [];
+
+    for (let i = 0; i < books.length; i++) {
+      const element = books[i];
+      bookList.push({ code3: element._id, value: element.value });
+    }
+
+    res.status(200).json({ data: bookList });
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -92,12 +99,12 @@ async function findById(req, res, next) {
 
     const book = await BookService.findById(value.id);
 
-    return res.status(200).json({
+    res.status(200).json({
       data: book,
     });
   } catch (error) {
     if (error instanceof ValidationError) {
-      return res.status(422).json({
+      res.status(422).json({
         error: error.name,
         details: error.message,
       });
@@ -108,7 +115,7 @@ async function findById(req, res, next) {
       details: error.message,
     });
 
-    return next(error);
+    next(error);
   }
 }
 
@@ -129,12 +136,12 @@ async function updateById(req, res, next) {
 
     const updatedBook = await BookService.updateById(value);
 
-    return res.status(200).json({
+    res.status(200).json({
       data: updatedBook,
     });
   } catch (error) {
     if (error instanceof ValidationError) {
-      return res.status(422).json({
+      res.status(422).json({
         message: error.name,
         details: error.message,
       });
@@ -145,7 +152,7 @@ async function updateById(req, res, next) {
       details: error.message,
     });
 
-    return next(error);
+    next(error);
   }
 }
 
@@ -166,12 +173,12 @@ async function deleteById(req, res, next) {
 
     const deletedBook = await BookService.deleteById(value.id);
 
-    return res.status(200).json({
+    res.status(200).json({
       data: deletedBook,
     });
   } catch (error) {
     if (error instanceof ValidationError) {
-      return res.status(422).json({
+      res.status(422).json({
         message: error.name,
         details: error.message,
       });
@@ -182,7 +189,7 @@ async function deleteById(req, res, next) {
       details: error.message,
     });
 
-    return next(error);
+    next(error);
   }
 }
 
@@ -213,7 +220,7 @@ async function upload(req, res, next) {
       })
       .on('end', (rowCount) => {
         console.log(`Parsed ${rowCount} rows`);
-        return res.status(200).json({ data: { message: 'Data from CSV file was been saved on database' } });
+        res.status(200).json({ data: { message: 'Data from CSV file was been saved on database' } });
       });
   } catch (error) {
     res.status(500).json({
@@ -221,7 +228,7 @@ async function upload(req, res, next) {
       details: error.message,
     });
 
-    return next(error);
+    next(error);
   }
 }
 

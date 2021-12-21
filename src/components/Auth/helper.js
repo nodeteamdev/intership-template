@@ -33,9 +33,6 @@ const sendEmail = async (email, subject, html) => {
   try {
     const transporter = nodemailer.createTransport({
       service: MAILER.service,
-      // host: MAILER.host,
-      // port: MAILER.port,
-      // secure: MAILER.secure,
       auth: {
         user: MAILER.auth.user,
         pass: MAILER.auth.pass,

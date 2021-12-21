@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const ejs = require('ejs');
 const path = require('path');
-const helmet = require('helmet');
 const UserService = require('../User/service');
 const AuthService = require('./service');
 const AuthValidation = require('./validation');
@@ -42,14 +41,14 @@ async function signUp(req, res, next) {
 
     const user = await UserService.create(userData);
 
-    return res.render('welcome', {
+    res.render('welcome', {
       data: {
         firstName: user.firstName,
       },
     });
   } catch (error) {
     if (error instanceof ValidationError) {
-      return res.status(422).json({
+      res.status(422).json({
         message: error.name,
         details: error.message,
       });
@@ -60,7 +59,7 @@ async function signUp(req, res, next) {
       details: error.message,
     });
 
-    return next(error);
+    next(error);
   }
 }
 
@@ -80,6 +79,7 @@ async function signIn(req, res, next) {
     }
 
     const user = await UserService.searchByEmail(value.email);
+
     if (user === null) {
       throw new Error('User does not exists!');
     }
@@ -92,7 +92,7 @@ async function signIn(req, res, next) {
 
     updateOrSaveToken(user.id, tokens.refreshToken);
 
-    return res
+    res
       .status(200)
       .cookie('accessToken', `Bearer ${tokens.accessToken}`, {
         maxAge: 1000 * 60 * 30, httpOnly: true,
@@ -101,7 +101,7 @@ async function signIn(req, res, next) {
       .redirect(301, '/v1/users');
   } catch (error) {
     if (error instanceof ValidationError) {
-      return res.status(422).json({
+      res.status(422).json({
         message: error.name,
         details: error.message,
       });
@@ -112,7 +112,7 @@ async function signIn(req, res, next) {
       details: error.message,
     });
 
-    return next(error);
+    next(error);
   }
 }
 
@@ -142,7 +142,7 @@ async function refreshToken(req, res, next) {
 
     updateOrSaveToken(user.id, tokens.refreshToken);
 
-    return res
+    res
       .status(200)
       .cookie('accessToken', `Bearer ${tokens.accessToken}`, {
         maxAge: 1000 * 60 * 30, httpOnly: true,
@@ -151,7 +151,7 @@ async function refreshToken(req, res, next) {
       .redirect('back');
   } catch (error) {
     if (error instanceof ValidationError) {
-      return res.status(422).json({
+      res.status(422).json({
         message: error.name,
         details: error.message,
       });
@@ -162,7 +162,7 @@ async function refreshToken(req, res, next) {
       details: error.message,
     });
 
-    return next(error);
+    next(error);
   }
 }
 
@@ -197,15 +197,16 @@ async function forgotPassword(req, res, next) {
 
     sendEmail(user.email, 'Password reset', html);
 
-    return res.render('forgot-reset-success', {
-      data: {
-        status: 200,
-        message: 'Email sent successfully. Check spam folder also',
-      },
-    });
+    res
+      .status(200)
+      .render('forgot-reset-success', {
+        data: {
+          message: 'Email sent successfully. Check spam folder also',
+        },
+      });
   } catch (error) {
     if (error instanceof ValidationError) {
-      return res.status(422).json({
+      res.status(422).json({
         message: error.name,
         details: error.message,
       });
@@ -216,7 +217,7 @@ async function forgotPassword(req, res, next) {
       details: error.message,
     });
 
-    return next(error);
+    next(error);
   }
 }
 
@@ -241,14 +242,14 @@ async function resetPassword(req, res, next) {
 
     await UserService.updateById(token.userId, { password: hashPassword });
 
-    return res.render('forgot-reset-success', {
+    res.render('forgot-reset-success', {
       data: {
         message: 'Password changed',
       },
     });
   } catch (error) {
     if (error instanceof ValidationError) {
-      return res.status(422).json({
+      res.status(422).json({
         message: error.name,
         details: error.message,
       });
@@ -259,7 +260,7 @@ async function resetPassword(req, res, next) {
       details: error.message,
     });
 
-    return next(error);
+    next(error);
   }
 }
 
