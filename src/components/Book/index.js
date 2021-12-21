@@ -208,7 +208,7 @@ async function upload(req, res, next) {
 
     fs.createReadStream(path.resolve(__dirname, '../../', 'resources/uploads', req.file.filename))
       .pipe(csv.parse())
-      .on('error', (error) => { throw new Error(error.details); })
+      .on('error', (error) => { throw error(error.details); })
       .on('data', (row) => {
         const BookLayout = {
           code3: row[0],

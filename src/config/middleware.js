@@ -5,6 +5,7 @@ const express = require('express');
 const helmet = require('helmet');
 const path = require('path');
 const expressLayouts = require('express-ejs-layouts');
+const multer = require('multer');
 
 module.exports = {
   /**
@@ -20,6 +21,7 @@ module.exports = {
     app.set('views', path.join(__dirname, '../views/pages'));
     app.set('view engine', 'ejs');
     // ejs
+    app.use(multer({ dest: path.join(__dirname, '../resources/uploads') }).single('filedata'));
     app.use(express.urlencoded({
       extended: false,
     }));
