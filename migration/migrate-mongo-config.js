@@ -1,6 +1,9 @@
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({
+    path: path.join(__dirname, '../.env'),
+});
 
-const config = {
+module.exports = {
     mongodb: {
         url: process.env.MONGO_URI,
         databaseName: 'users_db',
@@ -13,5 +16,3 @@ const config = {
     migrationsDir: 'migrations',
     changelogCollectionName: 'changelog',
 };
-
-module.exports = config;

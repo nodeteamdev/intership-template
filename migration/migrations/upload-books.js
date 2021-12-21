@@ -1,8 +1,9 @@
+const path = require('path');
 const csv = require('csvtojson');
 
 const uploadBooks = {
     async up(db) {
-        const data = await csv().fromFile('../data/books.csv');
+        const data = await csv().fromFile(path.join(__dirname, '../data/books.csv'));
 
         const books = db.collection('books');
         await books.insertMany(data);
