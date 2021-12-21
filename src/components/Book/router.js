@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const BookComponent = require('.');
 const { errorHandler } = require('../../error/errorsMiddleware');
-const authMiddleware = require('../shared/authMiddleware');
+const auth = require('../shared/authMiddleware');
 
 /**
  * @description Express router to mount book related functions on.
@@ -63,7 +63,7 @@ router.get('/:title', errorHandler(BookComponent.findByTitle));
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.post('/', errorHandler(authMiddleware), errorHandler(BookComponent.create));
+router.post('/', auth.authMiddleware, errorHandler(BookComponent.create));
 
 /**
  * @description Route serving a book update
@@ -74,7 +74,7 @@ router.post('/', errorHandler(authMiddleware), errorHandler(BookComponent.create
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.put('/', errorHandler(authMiddleware), errorHandler(BookComponent.updateByTitle));
+router.put('/', auth.authMiddleware, errorHandler(BookComponent.updateByTitle));
 
 /**
  * @description Route for book removing
@@ -85,6 +85,6 @@ router.put('/', errorHandler(authMiddleware), errorHandler(BookComponent.updateB
  * @param {string} path -Express path
  * @param {callback} middleware - Express middleware
  */
-router.delete('/', errorHandler(authMiddleware), errorHandler(BookComponent.deleteById));
+router.delete('/', auth.authMiddleware, errorHandler(BookComponent.deleteById));
 
 module.exports = router;

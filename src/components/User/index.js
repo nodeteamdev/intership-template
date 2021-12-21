@@ -48,20 +48,29 @@ async function findById(req, res) {
  * @returns {Promise < void >}
  */
 async function create(req, res) {
-    const { error } = UserValidation.create(req.body);
+    const { value, error } = UserValidation.create(req.body);
 
     if (error) {
         throw new ValidationError(error.details);
     }
 
+<<<<<<< HEAD
     if (req.user.role === 'Admin') {
         const user = await UserService.create(req.body);
 
         return res.status(201).json({
             data: user,
         });
+=======
+    if (req.user.role !== 'Admin') {
+        throw new AuthError(http.STATUS_CODES[403], 403);
+>>>>>>> feature-reset-password
     }
-    throw new AuthError(http.STATUS_CODES[403], 403);
+    const user = await UserService.create(value);
+
+    res.status(201).json({
+        data: user,
+    });
 }
 
 /**

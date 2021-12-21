@@ -1,6 +1,19 @@
-### Validation
+### .env
 ```
-    https://hapi.dev/family/joi/
+PORT=3000
+MONGO_URI=mongodb+srv://blablabla.mongodb.net/your_db?retryWrites=true&w=majority
+SECRET=some-super-secret-key
+GMAIL=your.mail@gmail.com
+GPASS=application-password
+```
+
+### Send reset password mail
+```
+    curl --location --request POST 'localhost:3000/v1/auth/resetPassword' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+        "email": "test@gmail.com"
+    }'
 ```
 
 ### Find User

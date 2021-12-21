@@ -11,6 +11,7 @@ module.exports = {
         ecmaVersion: 13,
     },
     rules: {
+        'no-underscore-dangle': 0,
         'newline-before-return': 2,
         indent: ['error', 4],
     },

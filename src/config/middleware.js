@@ -1,3 +1,4 @@
+const path = require('path');
 const compression = require('compression');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
@@ -12,6 +13,8 @@ module.exports = {
    * @returns void
    */
     init(app) {
+        app.set('view engine', 'ejs');
+        app.set('views', path.join(__dirname, '../views'));
         app.use(express.urlencoded({
             extended: false,
         }));

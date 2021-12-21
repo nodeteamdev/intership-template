@@ -1,5 +1,4 @@
 const Validation = require('../validation');
-const AuthError = require('../../error/AuthError');
 
 /**
  * @exports
@@ -26,16 +25,16 @@ class AuthValidation extends Validation {
     }
 
     /**
-     * @param {String} profile.token
+     * @param {String} profile.email
      * @returns
      * @memberof AuthValidation
      */
-    checkToken(token) {
-        try {
-            return this.JWT.verify(token, process.env.SECRET);
-        } catch (error) {
-            throw new AuthError(error.message, 403);
-        }
+    checkMail(profile) {
+        return this.Joi
+            .object({
+                email: this.Joi.string().trim().email().required(),
+            })
+            .validate(profile);
     }
 }
 
