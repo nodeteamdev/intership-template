@@ -28,6 +28,7 @@
         "helmet": "4.6.0",
         "joi": "17.5.0",
         "jsonwebtoken": "8.5.1",
+        "migrate-mongo": "^8.2.3",
         "mongoose": "6.0.14"
     },
     "devDependencies": {
