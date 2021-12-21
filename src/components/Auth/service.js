@@ -30,7 +30,7 @@ function searchToken(token) {
  * @returns
  */
 function removeRefreshToken(userId) {
-  return TokenModel.findOneAndRemove({ userId });
+  return TokenModel.findOneAndRemove({ userId }).lean();
 }
 
 /**
