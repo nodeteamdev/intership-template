@@ -14,8 +14,9 @@ const BookSchema = new Schema(
         },
     },
     {
-        collection: 'bookmodel',
+        collection: 'books',
         versionKey: false,
+        timestamps: true,
     },
 );
 
