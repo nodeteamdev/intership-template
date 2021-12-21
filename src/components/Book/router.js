@@ -19,7 +19,7 @@ const router = Router();
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/', errorHandler(authMiddleware), errorHandler(BookComponent.findAll));
+router.get('/', auth.authMiddleware, errorHandler(BookComponent.findAll));
 
 /**
  * @description Route serving list of books.
@@ -30,7 +30,7 @@ router.get('/', errorHandler(authMiddleware), errorHandler(BookComponent.findAll
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/new-books', errorHandler(authMiddleware), errorHandler(BookComponent.newBooks));
+router.get('/new-books', auth.authMiddleware, errorHandler(BookComponent.newBooks));
 
 /**
  * @description Route serving number of books per country.
@@ -41,7 +41,7 @@ router.get('/new-books', errorHandler(authMiddleware), errorHandler(BookComponen
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/count-per-country', errorHandler(authMiddleware), errorHandler(BookComponent.countPerCountry));
+router.get('/count-per-country', auth.authMiddleware, errorHandler(BookComponent.countPerCountry));
 
 /**
  * @description Route serving a book by title

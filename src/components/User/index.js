@@ -54,18 +54,10 @@ async function create(req, res) {
         throw new ValidationError(error.details);
     }
 
-<<<<<<< HEAD
-    if (req.user.role === 'Admin') {
-        const user = await UserService.create(req.body);
-
-        return res.status(201).json({
-            data: user,
-        });
-=======
     if (req.user.role !== 'Admin') {
         throw new AuthError(http.STATUS_CODES[403], 403);
->>>>>>> feature-reset-password
     }
+
     const user = await UserService.create(value);
 
     res.status(201).json({
