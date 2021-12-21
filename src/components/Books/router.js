@@ -18,7 +18,25 @@ const router = Router();
  */
 router.get('/', BookComponent.findAll);
 
+/**
+ * Route serving list of books.
+ * @name /v1/books
+ * @function
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
 router.get('/new-book', BookComponent.getNewBooks);
+
+/**
+ * Route serving list of books.
+ * @name /v1/books
+ * @function
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
+router.get('/count-per-country', BookComponent.getCountOfBooksByCountry);
 
 /**
  * Route serving a book

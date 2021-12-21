@@ -32,6 +32,29 @@ async function findAll(req, res, next) {
  * @param {express.NextFunction} next
  * @returns {Promise < void >}
  */
+async function getCountOfBooksByCountry(req, res, next) {
+    try {
+        const books = await BookService.getCountOfBooksByCountry();
+
+        res.status(200).json({
+            data: books,
+        });
+    } catch (error) {
+        res.status(500).json({
+            error: error.message,
+            details: null,
+        });
+
+        next(error);
+    }
+}
+/**
+ * @function
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
+ * @returns {Promise < void >}
+ */
 async function getNewBooks(req, res, next) {
     try {
         const books = await BookService.findNewBook();
@@ -204,4 +227,5 @@ module.exports = {
     updateById,
     deleteById,
     getNewBooks,
+    getCountOfBooksByCountry,
 };

@@ -8,7 +8,6 @@ const BookModel = require('./model');
  * @returns Promise<BookModel[]>
  */
 function findAll() {
-    console.log('===step1');
     return BookModel.find({}).exec();
 }
 /**
@@ -21,7 +20,20 @@ function findAll() {
 function getNewBooks() {
     return BookModel.find().sort({ createdAt: -1 }).limit(5).lean();
 }
+function getCountOfBooksByCountry() {
+    return BookModel.aggregate([
+        {
+            $group: {
+                _id: '$code3',
+                value: {
+                    $sum: 1,
 
+                },
+
+            },
+        },
+    ]);
+}
 /**
  * @exports
  * @method findById
@@ -75,4 +87,5 @@ module.exports = {
     updateById,
     deleteById,
     getNewBooks,
+    getCountOfBooksByCountry,
 };
