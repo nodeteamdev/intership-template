@@ -13,6 +13,6 @@ module.exports = {
     rules: {
         'no-underscore-dangle': 0,
         'newline-before-return': 2,
-        indent: ['error', 4],
+        indent: ['error', 4, { SwitchCase: 1 }],
     },
 };

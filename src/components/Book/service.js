@@ -25,11 +25,13 @@ function findNew(lastVisitBooks) {
                 $gte: lastVisitBooks,
             },
         },
+    },
+    {
         $unset: [
             'createdAt',
             'updatedAt',
         ],
-    }]).lean();
+    }]);
 }
 
 /**
@@ -52,20 +54,19 @@ function findByTitle(title) {
  */
 function countPerCountry() {
     return BookModel.aggregate([{
-        $match: {},
-        $unset: [
-            'title',
-            'description',
-            'createdAt',
-            'updatedAt',
-        ],
         $group: {
-            code3: '$code3',
-            value: {
-                $count: {},
-            },
+            _id: '$code3',
+            count: { $sum: 1 },
         },
-    }]).lean();
+    },
+    {
+        $project: {
+            code3: '$_id',
+            count: '$count',
+            _id: 0,
+        },
+    },
+    ]);
 }
 
 /**

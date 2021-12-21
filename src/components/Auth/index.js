@@ -129,7 +129,8 @@ async function signIn(req, res) {
  * @returns {Promise < any >}
  */
 async function refreshToken(req, res) {
-    const { user, cookies } = req;
+    const { cookies } = req;
+    const user = auth.checkToken(cookies.refreshToken);
     const compared = await AuthService.compareTokens(user.id, cookies.refreshToken);
 
     if (!compared) {

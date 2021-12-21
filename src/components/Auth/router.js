@@ -38,7 +38,7 @@ router.post('/sign-in', errorHandler(AuthComponent.signIn));
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.get('/refreshToken', auth.authMiddleware, errorHandler(AuthComponent.refreshToken));
+router.get('/refreshToken', errorHandler(AuthComponent.refreshToken));
 
 /**
  * Route for sending reset-password mail

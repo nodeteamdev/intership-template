@@ -50,7 +50,7 @@ class BookValidation extends Validation {
                     .min(1)
                     .max(256)
                     .required(),
-                desc: this.Joi
+                description: this.Joi
                     .string()
                     .min(1)
                     .required(),
@@ -77,7 +77,7 @@ class BookValidation extends Validation {
                     .min(1)
                     .max(256)
                     .required(),
-                desc: this.Joi
+                description: this.Joi
                     .string()
                     .min(1)
                     .required(),
