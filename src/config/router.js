@@ -3,6 +3,7 @@ const express = require('express');
 const http = require('http');
 const UserRouter = require('../components/User/router');
 const AuthRouter = require('../components/auth/router');
+const BookRouter = require('../components/books/router');
 
 module.exports = {
     /**
@@ -13,6 +14,17 @@ module.exports = {
      */
     init(app) {
         const router = express.Router();
+
+        /**
+         * Forwards any requests to the /v1/books URI to BookRouter.
+         * @name /v1/books
+         * @function
+         * @inner
+         * @param {string} path - Express path
+         * @param {callback} middleware - Express middleware.
+         */
+        app.use('/v1/books', BookRouter);
+
         /**
          * Forwards any requests to the /v1/users URI to UserRouter.
          * @name /v1/auth
