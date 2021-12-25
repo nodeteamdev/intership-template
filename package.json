@@ -18,6 +18,7 @@
   "homepage": "https://github.com/alenworld/intership-template#readme",
   "dependencies": {
     "bcrypt": "5.0.1",
+    "commitizen": "^4.2.4",
     "compression": "1.7.4",
     "cookie-parser": "1.4.6",
     "cors": "2.8.5",
@@ -34,9 +35,15 @@
     "nodemailer": "6.7.2"
   },
   "devDependencies": {
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "8.3.0",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-plugin-import": "2.25.3",
     "nodemon": "2.0.15"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }

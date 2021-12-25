@@ -5,7 +5,7 @@ const { JWT, MAILER } = require('../../config/credentials');
 
 function generateTokens(user) {
   const payload = {
-    userId: user.id,
+    userId: user._id,
     firstName: user.firstName,
   };
   return {

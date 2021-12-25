@@ -90,7 +90,7 @@ async function signIn(req, res, next) {
 
     const tokens = generateTokens(user);
 
-    updateOrSaveToken(user.id, tokens.refreshToken);
+    updateOrSaveToken(user._id, tokens.refreshToken);
 
     res
       .status(200)
@@ -148,7 +148,7 @@ async function refreshToken(req, res, next) {
         maxAge: 1000 * 60 * 30, httpOnly: true,
       })
       .cookie('refreshToken', tokens.refreshToken, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true })
-      .redirect('back');
+      .redirect('/v1/users');
   } catch (error) {
     if (error instanceof ValidationError) {
       res.status(422).json({

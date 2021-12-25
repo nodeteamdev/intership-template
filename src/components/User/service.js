@@ -19,7 +19,7 @@ function findAll() {
  * @returns {Promise<UserModel>}
  */
 function findById(id) {
-  return UserModel.findById(id).lean();
+  return UserModel.findById(id);
 }
 
 /**
@@ -54,7 +54,7 @@ function updateById(_id, newProfile) {
  * @returns {Promise<UserModel>}
  */
 function searchByEmail(email) {
-  return UserModel.findOne({ email }).lean();
+  return UserModel.findOne({ email });
 }
 
 /**
