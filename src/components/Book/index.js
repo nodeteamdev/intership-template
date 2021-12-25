@@ -88,21 +88,6 @@ async function findById(req, res, next) {
       data: book,
     });
   } catch (error) {
-<<<<<<< HEAD
-    if (error instanceof ValidationError) {
-      res.status(422).json({
-        error: error.name,
-        details: error.message,
-      });
-    }
-
-    res.status(500).json({
-      message: error.name,
-      details: error.message,
-    });
-
-=======
->>>>>>> develop
     next(error);
   }
 }
