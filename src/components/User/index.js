@@ -20,11 +20,6 @@ async function findAll(req, res, next) {
       },
     });
   } catch (error) {
-    res.status(500).json({
-      error: error.message,
-      details: null,
-    });
-
     next(error);
   }
 }
@@ -50,18 +45,6 @@ async function findById(req, res, next) {
       data: user,
     });
   } catch (error) {
-    if (error instanceof ValidationError) {
-      return res.status(422).json({
-        error: error.name,
-        details: error.message,
-      });
-    }
-
-    res.status(500).json({
-      message: error.name,
-      details: error.message,
-    });
-
     return next(error);
   }
 }
@@ -87,18 +70,6 @@ async function updateById(req, res, next) {
       data: updatedUser,
     });
   } catch (error) {
-    if (error instanceof ValidationError) {
-      return res.status(422).json({
-        message: error.name,
-        details: error.message,
-      });
-    }
-
-    res.status(500).json({
-      message: error.name,
-      details: error.message,
-    });
-
     return next(error);
   }
 }
@@ -124,18 +95,6 @@ async function deleteById(req, res, next) {
       data: deletedUser,
     });
   } catch (error) {
-    if (error instanceof ValidationError) {
-      return res.status(422).json({
-        message: error.name,
-        details: error.message,
-      });
-    }
-
-    res.status(500).json({
-      message: error.name,
-      details: error.message,
-    });
-
     return next(error);
   }
 }

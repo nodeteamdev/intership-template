@@ -18,11 +18,6 @@ async function countPerCountry(req, res, next) {
 
     res.status(200).json(books);
   } catch (error) {
-    res.status(500).json({
-      error: error.message,
-      details: null,
-    });
-
     next(error);
   }
 }
@@ -42,11 +37,6 @@ async function findNewestBooks(req, res, next) {
       data: books,
     });
   } catch (error) {
-    res.status(500).json({
-      error: error.message,
-      details: null,
-    });
-
     next(error);
   }
 }
@@ -66,11 +56,6 @@ async function findAll(req, res, next) {
       data: books,
     });
   } catch (error) {
-    res.status(500).json({
-      error: error.message,
-      details: null,
-    });
-
     next(error);
   }
 }
@@ -92,23 +77,11 @@ async function findById(req, res, next) {
 
     const book = await BookService.findById(value.id);
 
-    return res.status(200).json({
+    res.status(200).json({
       data: book,
     });
   } catch (error) {
-    if (error instanceof ValidationError) {
-      return res.status(422).json({
-        error: error.name,
-        details: error.message,
-      });
-    }
-
-    res.status(500).json({
-      message: error.name,
-      details: error.message,
-    });
-
-    return next(error);
+    next(error);
   }
 }
 
@@ -133,18 +106,6 @@ async function updateById(req, res, next) {
       data: updatedBook,
     });
   } catch (error) {
-    if (error instanceof ValidationError) {
-      return res.status(422).json({
-        message: error.name,
-        details: error.message,
-      });
-    }
-
-    res.status(500).json({
-      message: error.name,
-      details: error.message,
-    });
-
     return next(error);
   }
 }
@@ -170,18 +131,6 @@ async function deleteById(req, res, next) {
       data: deletedBook,
     });
   } catch (error) {
-    if (error instanceof ValidationError) {
-      return res.status(422).json({
-        message: error.name,
-        details: error.message,
-      });
-    }
-
-    res.status(500).json({
-      message: error.name,
-      details: error.message,
-    });
-
     return next(error);
   }
 }
@@ -201,7 +150,7 @@ async function upload(req, res, next) {
 
     fs.createReadStream(path.resolve(__dirname, '../../', 'resources/uploads', req.file.filename))
       .pipe(csv.parse())
-      .on('error', (error) => { throw new Error(error.details); })
+      .on('error', (error) => { throw error(error.details); })
       .on('data', (row) => {
         const BookLayout = {
           code3: row[0],
@@ -212,16 +161,11 @@ async function upload(req, res, next) {
         BookService.create(BookLayout);
       })
       .on('end', (rowCount) => {
-        console.log(`Parsed ${rowCount} rows`);
-        return res.status(200).json({ data: { message: 'Data from CSV file was been saved on database' } });
+        console.info(`Parsed ${rowCount} rows`);
+        res.status(200).json({ data: { message: 'Data from CSV file was been saved on database' } });
       });
   } catch (error) {
-    res.status(500).json({
-      message: error.name,
-      details: error.message,
-    });
-
-    return next(error);
+    next(error);
   }
 }
 

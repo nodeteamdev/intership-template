@@ -13,5 +13,4 @@ class ValidationError extends Error {
     this.name = 'E_MISSING_OR_INVALID_PARAMS';
   }
 }
-
 module.exports = ValidationError;

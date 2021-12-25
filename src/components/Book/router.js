@@ -18,7 +18,9 @@ const router = Router();
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.post('/upload', upload.single('file'), BookComponent.upload);
+router
+  .get('/upload', AuthMiddleware, (req, res) => res.render('upload'))
+  .post('/upload', upload.single('file'), BookComponent.upload);
 
 /**
  * Route serving list of books.
