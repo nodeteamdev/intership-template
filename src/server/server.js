@@ -1,7 +1,7 @@
 const express = require('express');
 const middleware = require('../config/middleware');
 const routes = require('../config/router');
-const { ValidationError } = require('../error');
+const ErrorHandler = require('../error/ErrorHandler');
 
 /**
  * @type {express}
@@ -20,9 +20,10 @@ middleware.init(app);
 routes.init(app);
 
 /**
- * @description express.Application Error Handler
+ * @description express.Application Routes
  */
-app.use(ValidationError);
+app.use(ErrorHandler);
+
 /**
  * @description sets port 3000 to default or unless otherwise specified in the environment
  */

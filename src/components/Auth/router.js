@@ -59,14 +59,14 @@ router
 
 /**
  * Route serving for reset password
- * @name /v1/auth/password_reset/
+ * @name /v1/auth/password_reset/:token
  * @function
  * @inner
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
 router
-  .get('/password-reset/:token', AuthMiddleware, (req, res) => res.render('reset'))
-  .post('/password-reset/:token', AuthMiddleware, AuthComponent.resetPassword);
+  .get('/password-reset/:token', (req, res) => res.render('reset'))
+  .post('/password-reset/:token', AuthComponent.resetPassword);
 
 module.exports = router;

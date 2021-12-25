@@ -4,11 +4,9 @@ const path = require('path');
 const UserService = require('../User/service');
 const AuthService = require('./service');
 const AuthValidation = require('./validation');
-const {
-  HASH_SALT, BASE_URL, PORT, JWT,
-} = require('../../config/credentials');
+const { HASH_SALT, BASE_URL, PORT } = require('../../config/credentials');
 const { generateTokens, updateOrSaveToken, sendEmail } = require('./helper');
-const { ValidationError } = require('../../error');
+const ValidationError = require('../../error/ValidationError');
 
 /**
  * @function
@@ -32,6 +30,7 @@ async function signUp(req, res, next) {
     }
 
     const hashPassword = bcrypt.hashSync(value.password, HASH_SALT);
+
     const userData = {
       firstName: value.firstName,
       lastName: value.lastName,
@@ -47,18 +46,6 @@ async function signUp(req, res, next) {
       },
     });
   } catch (error) {
-    if (error instanceof ValidationError) {
-      res.status(422).json({
-        message: error.name,
-        details: error.message,
-      });
-    }
-
-    res.status(500).json({
-      message: error.name,
-      details: error.message,
-    });
-
     next(error);
   }
 }
@@ -73,7 +60,6 @@ async function signUp(req, res, next) {
 async function signIn(req, res, next) {
   try {
     const { error, value } = AuthValidation.signIn(req.body);
-
     if (error) {
       throw new ValidationError(error.details);
     }
@@ -100,18 +86,6 @@ async function signIn(req, res, next) {
       .cookie('refreshToken', tokens.refreshToken, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true })
       .redirect(301, '/v1/users');
   } catch (error) {
-    if (error instanceof ValidationError) {
-      res.status(422).json({
-        message: error.name,
-        details: error.message,
-      });
-    }
-
-    res.status(500).json({
-      message: error.name,
-      details: error.message,
-    });
-
     next(error);
   }
 }
@@ -150,18 +124,6 @@ async function refreshToken(req, res, next) {
       .cookie('refreshToken', tokens.refreshToken, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true })
       .redirect('/v1/users');
   } catch (error) {
-    if (error instanceof ValidationError) {
-      res.status(422).json({
-        message: error.name,
-        details: error.message,
-      });
-    }
-
-    res.status(500).json({
-      message: error.name,
-      details: error.message,
-    });
-
     next(error);
   }
 }
@@ -205,18 +167,6 @@ async function forgotPassword(req, res, next) {
         },
       });
   } catch (error) {
-    if (error instanceof ValidationError) {
-      res.status(422).json({
-        message: error.name,
-        details: error.message,
-      });
-    }
-
-    res.status(500).json({
-      message: error.name,
-      details: error.message,
-    });
-
     next(error);
   }
 }
@@ -248,18 +198,6 @@ async function resetPassword(req, res, next) {
       },
     });
   } catch (error) {
-    if (error instanceof ValidationError) {
-      res.status(422).json({
-        message: error.name,
-        details: error.message,
-      });
-    }
-
-    res.status(500).json({
-      message: error.name,
-      details: error.message,
-    });
-
     next(error);
   }
 }
