@@ -4,7 +4,6 @@ const cors = require('cors');
 const express = require('express');
 const helmet = require('helmet');
 const path = require('path');
-const expressLayouts = require('express-ejs-layouts');
 const multer = require('multer');
 
 module.exports = {
@@ -15,13 +14,13 @@ module.exports = {
      * @returns void
      */
   init(app) {
-    app.use(expressLayouts);
     // layout
     app.use('/assets', express.static(path.join(__dirname, '../assets')));
-    app.set('views', path.join(__dirname, '../views/pages'));
+    app.set('views', path.join(__dirname, '../views'));
     app.set('view engine', 'ejs');
+    app.use(express.static(path.join(__dirname, '../assets')));
     // ejs
-    app.use(multer({ dest: path.join(__dirname, '../resources/uploads') }).single('filedata'));
+    // app.use(multer({ dest: path.join(__dirname, '../resources/uploads') }).single('filedata'));
     app.use(express.urlencoded({
       extended: false,
     }));

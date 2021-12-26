@@ -16,6 +16,6 @@ const router = Router();
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/', (req, res) => res.sendFile(path.join(__dirname, '../../views', '/index.html')));
+router.get('/', (req, res) => res.render('index'));
 
 module.exports = router;

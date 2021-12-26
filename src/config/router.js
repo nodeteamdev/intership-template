@@ -2,6 +2,7 @@ const express = require('express');
 const UserRouter = require('../components/User/router');
 const AuthRouter = require('../components/Auth/router');
 const BookRouter = require('../components/Book/router');
+const ChatRouter = require('../components/Chat/router');
 
 module.exports = {
   /**
@@ -12,7 +13,6 @@ module.exports = {
    */
   init(app) {
     const router = express.Router();
-
     /**
      * Forwards any requests to the /v1/users URI to UserRouter.
      * @name /v1/users
@@ -42,6 +42,8 @@ module.exports = {
      * @param {callback} middleware - Express middleware.
      */
     app.use('/v1/books', BookRouter);
+
+    app.use('/', ChatRouter);
 
     /**
      * Wrong route
