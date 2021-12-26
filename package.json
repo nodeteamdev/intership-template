@@ -18,7 +18,7 @@
   "homepage": "https://github.com/alenworld/intership-template#readme",
   "dependencies": {
     "bcrypt": "5.0.1",
-    "commitizen": "^4.2.4",
+    "commitizen": "4.2.4",
     "compression": "1.7.4",
     "cookie-parser": "1.4.6",
     "cors": "2.8.5",
@@ -26,16 +26,17 @@
     "ejs": "3.1.6",
     "express": "4.17.1",
     "express-ejs-layouts": "2.5.1",
-    "fast-csv": "^4.3.6",
+    "fast-csv": "4.3.6",
     "helmet": "4.6.0",
     "joi": "17.1.1",
     "jsonwebtoken": "8.5.1",
     "mongoose": "6.0.14",
-    "multer": "^1.4.4",
-    "nodemailer": "6.7.2"
+    "multer": "1.4.4",
+    "nodemailer": "6.7.2",
+    "socket.io": "4.4.0"
   },
   "devDependencies": {
-    "cz-conventional-changelog": "^3.3.0",
+    "cz-conventional-changelog": "3.3.0",
     "eslint": "8.3.0",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-plugin-import": "2.25.3",

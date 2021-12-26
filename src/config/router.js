@@ -44,7 +44,7 @@ module.exports = {
     app.use('/v1/books', BookRouter);
 
     /**
-     * Wrong auth
+     * Wrong route
      */
     app.use((req, res, next) => {
       try {
