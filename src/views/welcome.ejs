@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <%- include('./partials/head'); %>
+    
+<body class="container">
+
+    <%- include('./partials/header'); %>
+
+<main>
+    <div class="container">
+      <div class="row mt-5">
+        <div class="col-md-6 m-auto">
+          <div class="card card-body text-center">
+            <h1 class="mb-3">
+              <img src="/assets/secure-icon.png" alt="icon" width="20%" />
+            </h1>
+            <h2>
+              <p>Welcome, <%= data.firstName %>!</p>
+            </h2>
+            <p class="mt-4"><a href="/v1/auth/signin">Sign In</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+</main>
+
+    <%- include('./partials/footer'); %>
+
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <%- include('./partials/head'); %>
+    
+<body class="container">
+
+    <%- include('./partials/header'); %>
+
+<main>
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-md-6 m-auto">
+                <div class="card card-body text-center">
+                    <h2>Upload CSV</h2>
+                    <form action="/v1/books/upload" enctype="multipart/form-data" method="post">
+                        <label>File to stash:</label><br>
+                        <input type="file" name="filedata" /><br><br>
+                        <input type="submit" value="Submit" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+    <%- include('./partials/footer'); %>
+
+</body>
+</html>

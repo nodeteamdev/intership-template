@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <%- include('./partials/head'); %>
+    
+<body class="container">
+
+    <%- include('./partials/header'); %>
+
+<main>
+    <div class="container">
+      <div class="row mt-5">
+        <div class="col-md-6 m-auto">
+          <div class="card card-body text-center">
+            <h1 class="mb-3">
+              <img src="/assets/secure-icon.png" alt="icon" width="20%" />
+            </h1>
+            <h2>
+              Register New User
+            </h2>
+            <form action="/v1/auth/signup" method="POST">
+              <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="firstName" id="firstName" name="firstName" class="form-control" placeholder="Enter First Name"
+                  value="<%= typeof firstName != 'undefined' ? firstName : '' %>" />
+              </div>
+              <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="lastName" id="lastName" name="lastName" class="form-control" placeholder="Enter Last Name"
+                  value="<%= typeof lastName != 'undefined' ? lastName : null %>" />
+              </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="Enter Email"
+                  value="<%= typeof email != 'undefined' ? email : '' %>" />
+              </div>
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Enter Password"
+                  value="<%= typeof password != 'undefined' ? password : '' %>" />
+              </div>
+              <div class="form-group">
+                <label for="password2">Confirm Password</label>
+                <input type="password" id="password2" name="password2" class="form-control" placeholder="Confirm Password"
+                  value="<%= typeof password2 != 'undefined' ? password2 : '' %>" />
+              </div>
+              <button type="submit" class="btn btn-primary btn-block">
+                Register
+              </button>
+            </form>
+            <p class="mt-4">Already have an account? <a href="/v1/auth/signin">Sign In</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+</main>
+
+    <%- include('./partials/footer'); %>
+
+</body>
+</html>

@@ -1,5 +1,4 @@
 const { Router } = require('express');
-const path = require('path');
 // const AuthMiddleware = require('../Auth/middleware');
 
 /**
@@ -16,6 +15,6 @@ const router = Router();
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/', (req, res) => res.render('index'));
+router.get('/', (req, res) => res.render('chat'));
 
 module.exports = router;
