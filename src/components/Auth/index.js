@@ -170,8 +170,7 @@ async function resetPassword(req, res, next) {
     if (error) throw new ValidationError(error.details);
 
     const token = await AuthService.searchToken(req.cookies.refreshToken);
-    console.log(req.cookies);
-    console.log(token);
+
     if (token === null) throw new Error('Invalid or expired link');
 
     const hashPassword = bcrypt.hashSync(value.password, HASH_SALT);

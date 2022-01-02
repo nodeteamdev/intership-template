@@ -7,6 +7,7 @@ const { Router } = require('express');
  * @const
  */
 const router = Router();
+
 /**
  * Route serving list of users.
  * @name /chat
@@ -15,6 +16,6 @@ const router = Router();
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/', (req, res) => res.render('chat'));
+router.get('/chatroom', (req, res) => res.render('chat'));
 
 module.exports = router;
