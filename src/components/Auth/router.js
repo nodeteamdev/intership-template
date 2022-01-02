@@ -11,7 +11,7 @@ const router = Router();
 
 /**
  * Route serving a signing up users
- * @name /v1/auth/signUp
+ * @name /auth/signUp
  * @function
  * @inner
  * @param {string} path - Express path
@@ -23,31 +23,29 @@ router
 
 /**
  * Route serving a signing in users
- * @name /v1/auth/signIn
+ * @name /auth/signIn
  * @function
  * @inner
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
 router
-  .get('/signIn', (req, res) => {
-    res.render('signin');
-  })
+  .get('/signIn', (req, res) => res.render('signin'))
   .post('/signIn', AuthComponent.signIn);
 
 /**
  * Route serving for refreshing token
- * @name /v1/auth/refreshtoken
+ * @name /auth/refreshtoken
  * @function
  * @inner
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/refreshtoken', AuthMiddleware, AuthComponent.refreshToken);
+router.get('/refreshtoken', AuthComponent.refreshToken);
 
 /**
  * Route serving forgot password
- * @name /v1/auth/forgot_password
+ * @name /auth/forgot_password
  * @function
  * @inner
  * @param {string} path - Express path
@@ -59,7 +57,7 @@ router
 
 /**
  * Route serving for reset password
- * @name /v1/auth/password_reset/:token
+ * @name /auth/password_reset/:token
  * @function
  * @inner
  * @param {string} path - Express path

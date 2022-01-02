@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const AuthService = require('./service');
-const { tokens } = require('../../config/credentials').JWT;
+const { TOKENS } = require('../../config/credentials');
 
 module.exports = (req, res, next) => {
   const cookieTokens = req.cookies;
@@ -9,7 +9,7 @@ module.exports = (req, res, next) => {
     const access = cookieTokens.accessToken.replace('Bearer ', '');
 
     try {
-      const payload = jwt.verify(access, tokens.access.secret);
+      const payload = jwt.verify(access, TOKENS.access.secret);
 
       const refresh = AuthService.searchTokenByUserId(payload.userId);
 
@@ -25,7 +25,8 @@ module.exports = (req, res, next) => {
       }
     }
   } else {
-    return res.render('middleware-messages', { data: { message: 'Token not provided!' } });
+    return res
+      .render('middleware-messages', { data: { message: 'Token not provided!' } });
   }
-  next();
+  return next();
 };

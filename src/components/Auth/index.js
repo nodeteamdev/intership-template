@@ -1,10 +1,13 @@
 const bcrypt = require('bcrypt');
 const ejs = require('ejs');
+const jwt = require('jsonwebtoken');
 const path = require('path');
 const UserService = require('../User/service');
 const AuthService = require('./service');
 const AuthValidation = require('./validation');
-const { HASH_SALT, BASE_URL, PORT } = require('../../config/credentials');
+const {
+  HASH_SALT, BASE_URL, PORT, TOKENS,
+} = require('../../config/credentials');
 const { generateTokens, updateOrSaveToken, sendEmail } = require('./helper');
 const ValidationError = require('../../error/ValidationError');
 
@@ -76,7 +79,7 @@ async function signIn(req, res, next) {
         maxAge: 1000 * 60 * 30, httpOnly: true,
       })
       .cookie('refreshToken', tokens.refreshToken, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true })
-      .redirect(301, '/v1/users');
+      .redirect(301, '/chatroom');
   } catch (error) {
     next(error);
   }
@@ -99,7 +102,7 @@ async function refreshToken(req, res, next) {
 
     if (requestToken === null) throw new Error('Token is invalid');
 
-    const user = await UserService.findById({ token: requestToken.userId });
+    const user = await UserService.findById(requestToken.userId);
 
     const tokens = generateTokens(user);
 
@@ -111,7 +114,7 @@ async function refreshToken(req, res, next) {
         maxAge: 1000 * 60 * 30, httpOnly: true,
       })
       .cookie('refreshToken', tokens.refreshToken, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true })
-      .redirect('/v1/users');
+      .redirect(301, '/chatroom');
   } catch (error) {
     next(error);
   }

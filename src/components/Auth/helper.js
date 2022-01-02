@@ -1,16 +1,16 @@
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const AuthService = require('./service');
-const { JWT, MAILER } = require('../../config/credentials');
+const { TOKENS, MAILER } = require('../../config/credentials');
 
 function generateTokens(user) {
   const payload = {
-    userId: user._id,
+    userId: user.id,
     firstName: user.firstName,
   };
   return {
-    accessToken: jwt.sign(payload, JWT.tokens.access.secret, { expiresIn: JWT.tokens.access.expiresIn }),
-    refreshToken: jwt.sign(payload, JWT.tokens.refresh.secret, { expiresIn: JWT.tokens.refresh.expiresIn }),
+    accessToken: jwt.sign(payload, TOKENS.access.secret, { expiresIn: TOKENS.access.expiresIn }),
+    refreshToken: jwt.sign(payload, TOKENS.refresh.secret, { expiresIn: TOKENS.refresh.expiresIn }),
   };
 }
 

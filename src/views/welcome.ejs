@@ -11,17 +11,14 @@
     <div class="container">
       <div class="row mt-5">
         <div class="col-md-6 m-auto">
-          <div class="card card-body text-center">
-            <h1 class="mb-3">
-              <img src="/assets/secure-icon.png" alt="icon" width="20%" />
-            </h1>
-            <h2>
-              <p>Welcome, <%= data.firstName %>!</p>
-            </h2>
-            <p class="mt-4"><a href="/v1/auth/signin">Sign In</a></p>
-          </div>
+            <div class="card card-body text-center">
+                <h1><img src="/assets/secure-icon.png" alt="icon" width="20%" /></h1>
+                <p>Login to an existing account or register</p>
+                <a href="/auth/signin" class="btn btn-primary btn-block">Sign In</a>
+                <a href="/auth/signup" class="btn btn-secondary btn-block mb-2">Sign Up</a>
+            </div>
         </div>
-      </div>
+    </div>
     </div>
 </main>
 

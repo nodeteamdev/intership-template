@@ -18,13 +18,14 @@
                     <h2>
                         Forgot Password
                     </h2>
-                    <form action="/v1/auth/forgot-password" method="POST">
+                    <form action="/auth/forgot-password" method="POST">
                         <div class="form-group">
                             <label for="email">Email</label>
                             <input type="email" id="email" name="email" class="form-control" placeholder="Enter Email" />
                         </div>
                         <button type="submit" class="btn btn-primary btn-block">Send me a password reset link</button>
                     </form>
+                    <p class="mt-4">Remember password?<a href="/auth/signin"> Sign In</a></p>
                 </div>
             </div>
         </div>

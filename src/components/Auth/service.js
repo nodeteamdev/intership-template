@@ -19,7 +19,7 @@ function searchTokenByUserId(userId) {
  * @returns
  */
 function searchToken(token) {
-  return TokenModel.findOne({ token });
+  return TokenModel.findOne({ token }).lean();
 }
 
 /**
