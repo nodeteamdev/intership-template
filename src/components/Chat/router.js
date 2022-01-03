@@ -1,5 +1,4 @@
 const { Router } = require('express');
-// const AuthMiddleware = require('../Auth/middleware');
 
 /**
  * Express router to mount user related functions on.
@@ -16,6 +15,9 @@ const router = Router();
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/chatroom', (req, res) => res.render('chat', { user: { firstName: 'Test', lastName: 'fsdafa' } }));
+router.get('/chatroom', (req, res) => {
+  res
+    .render('chat');
+});
 
 module.exports = router;

@@ -72,7 +72,6 @@ async function signIn(req, res, next) {
     const tokens = generateTokens(user);
 
     updateOrSaveToken(user._id, tokens.refreshToken);
-
     res
       .status(200)
       .cookie('accessToken', `Bearer ${tokens.accessToken}`, {
