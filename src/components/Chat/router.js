@@ -16,6 +16,6 @@ const router = Router();
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/chatroom', (req, res) => res.render('chat'));
+router.get('/chatroom', (req, res) => res.render('chat', { user: { firstName: 'Test', lastName: 'fsdafa' } }));
 
 module.exports = router;
