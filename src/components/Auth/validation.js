@@ -78,8 +78,7 @@ class AuthValidation extends Validation {
     return this.Joi
       .object({
         accessToken: this.Joi
-          .string()
-          .required(),
+          .string(),
         refreshToken: this.Joi
           .string()
           .required(),
