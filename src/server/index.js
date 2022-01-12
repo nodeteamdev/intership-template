@@ -5,12 +5,12 @@ const app = require('./app');
 
 const port = app.get('port');
 const events = require('./events');
-const ChatComponent = require('../components/Chat').socketEvents;
+const socketEvents = require('../components/Chat/socket');
 
 const server = http.createServer(app);
 const io = new Server(server);
 
-ChatComponent(io);
+socketEvents(io);
 
 events.bind(
   server.listen(port),

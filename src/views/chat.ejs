@@ -3,7 +3,6 @@
 
 <head>
     <title>SocketsChat</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"></script>
     <link rel='stylesheet' href="assets/css/chat.css">
     <script src="/socket.io/socket.io.js"></script>
 </head>
@@ -13,35 +12,38 @@
         <div class="people-list" id="people-list">
             <ul class="list">
                 <li class="clearfix">
-                    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_01.jpg" alt="avatar" />
+                    <img src="/assets/chat_avatar.jpg" alt="avatar" />
                     <div class="about">
-                        <div class="name"></div>
+                        <div class="name">Vincent Porter</div>
                     </div>
                 </li>
 
                 <li class="clearfix">
-                    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_02.jpg" alt="avatar" />
+                    <img src="/assets/chat_avatar.jpg" alt="avatar" />
                     <div class="about">
                         <div class="name"></div>
                     </div>
                 </li>
             </ul>
+            <div id="user_id" style="text-align: center;"><%- user_id %></div>
         </div>
 
         <div class="chat">
             <div class="chat-header clearfix">
-                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_01_green.jpg" alt="avatar" />
+                <img src="/assets/chat_avatar.jpg" alt="avatar" />
 
                 <div class="chat-about">
                     <div class="chat-with">Chat with Vincent Porter</div>
+
                     <div class="chat-num-messages">already 1 902 messages</div>
                     <div id="typing"></div>
+                    
                 </div>
             </div> <!-- end chat-header -->
 
             <div class="chat-history">
                 <ul>
-                    <!-- <li class="clearfix">
+                    <li class="clearfix">
                         <div class="message-data align-right">
                             <span class="message-data-time">10:10 AM, Today</span> &nbsp; &nbsp;
                             <span class="message-data-name">Olia</span>
@@ -82,7 +84,7 @@
                         <div class="message my-message">
                             Actually everything was fine. I'm very excited to show this to our team.
                         </div>
-                    </li> -->
+                    </li>
                 </ul>
             </div> <!-- end chat-history -->
 

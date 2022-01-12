@@ -1,6 +1,5 @@
 const { Router } = require('express');
 const AuthMiddleware = require('../Auth/middleware');
-const UserService = require('../User/service');
 const ChatComponent = require('.');
 
 /**

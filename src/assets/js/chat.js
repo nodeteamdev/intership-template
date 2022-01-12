@@ -4,31 +4,24 @@
 
 const socket = io();
 const messages = document.querySelector('.chat-history ul');
-const formArea = document.querySelector('.chat-message clearfix');
-const inputArea = document.querySelector('textarea');
-const connectedList = document.getElementById('list');
+// Send message form
+const sendArea = document.querySelector('.chat-message');
+const textArea = document.getElementById('message-to-send');
+const connectedList = document.querySelector('.people-list ul');
 const typing = document.getElementById('typing');
-const nameBlock = document.querySelector('.name');
 
-const userFields = {
-  firstName: '{{ firstName }}',
-  lastName: '{{ lastName }}',
-  email: '{{ email }}',
-  picture: '{{ picture }}',
-  id: '{{ id }}',
-};
-nameBlock.innerTextNode = userFields;
+const idValue = document.getElementById('user_id').textContent;
 
 /**
  * Functions
  */
 
-const appendUser = (userData) => {
+const appendUser = (user) => {
   const connectedUser = document.createElement('li');
   connectedUser.setAttribute('class', 'clearfix');
 
   const imgData = document.createElement('img');
-  imgData.setAttribute('src', 'http://localhost:3000/src/assets/cyber-security-icon.jpg');
+  imgData.setAttribute('src', `${user.picture}`);
 
   connectedUser.appendChild(imgData);
 
@@ -37,6 +30,7 @@ const appendUser = (userData) => {
 
   const tagNameValue = document.createElement('div');
   tagNameValue.setAttribute('class', 'name');
+  tagNameValue.textContent = `${user.firstName} ${user.lastName}`;
 
   nameData.appendChild(tagNameValue);
   connectedUser.appendChild(nameData);
@@ -46,19 +40,25 @@ const appendUser = (userData) => {
 
 const appendMessage = (message, sender) => { // if sender is true, he is own who wrote the message
   const item = document.createElement('li');
+  if (sender === true) {
+    item.classList.add('clearfix');
+  }
 
   const messageData = document.createElement('div');
-  messageData.setAttribute('class', 'message-data');
+  if (sender === true) {
+    messageData.setAttribute('class', 'message-data align-right');
+  } else {
+    messageData.setAttribute('class', 'message-data');
+  }
 
   const dataName = document.createElement('span');
   dataName.setAttribute('class', 'message-data-name');
-  const nameValue = document.createTextNode(`${sender}`);
 
-  // insert name to span
-  dataName.appendChild(nameValue);
-  // insert span elements to div
-  messageData.appendChild(dataName);
+  dataName.innerHTML = `${sender}`;
 
+  if (sender !== true) {
+    messageData.appendChild(dataName);
+  }
   const dataTime = document.createElement('span');
   dataTime.setAttribute('class', 'message-data-time');
   const timeValue = document.createTextNode(`${new Date().toLocaleString('en-US', {
@@ -68,15 +68,26 @@ const appendMessage = (message, sender) => { // if sender is true, he is own who
   })}`);
   // insert time to span
   dataTime.appendChild(timeValue);
+
   // insert span elements to div
   messageData.appendChild(dataTime);
+
+  // if sender === true -> insert before time then name
+  if (sender === true) {
+    dataName.innerHTML = '';
+    messageData.appendChild(dataName);
+  }
 
   // messageData to item li
   item.appendChild(messageData);
 
   // create element for message
   const messageTag = document.createElement('div');
-  messageTag.setAttribute('class', 'message my-message');
+  if (sender === true) {
+    messageTag.setAttribute('class', 'message other-message float-right');
+  } else {
+    messageTag.setAttribute('class', 'message my-message');
+  }
   const messageValue = document.createTextNode(`${message}`);
   // insert message to element
   messageTag.appendChild(messageValue);
@@ -90,6 +101,13 @@ const appendMessage = (message, sender) => { // if sender is true, he is own who
 /**
  * Receiving and sending information from the server
  */
+
+socket.emit('new-connect', idValue);
+
+socket.on('new-connect', (userInfo) => {
+  socket.emit('new-user', userInfo);
+});
+
 socket.on('users-list', (users) => {
   while (connectedList.firstChild) {
     connectedList.firstChild.remove();
@@ -103,17 +121,33 @@ socket.on('chat-message', (data) => {
   appendMessage(data.message, data.name);
 });
 
+socket.on('reload', () => {
+  window.location.reload();
+});
+
+socket.on('user-typing', (data) => {
+  typing.textContent = `${data.firstName} is typing...`;
+  setTimeout(() => { typing.textContent = ''; }, 2000);
+});
+
 /**
  * Event listeners
  */
 
-inputArea.addEventListener('change', (e) => {
-  e.preventDefault();
-  if (e.target.value) {
-    socket.emit('chat-message', {
-      message: e.target.value, name: userName,
-    });
-    e.target.value = '';
+sendArea.querySelector('button').addEventListener('click', (event) => {
+  event.preventDefault();
+
+  const message = textArea.value;
+
+  if (message.length !== 0) {
+    socket.emit('send-chat-message', message);
+    textArea.value = '';
+    appendMessage(`${message}`, true);
   }
-  window.scrollTo(0, document.body.scrollHeight);
+});
+
+textArea.addEventListener('keydown', (event) => {
+  if (event.code) {
+    socket.emit('user-typing', { socket_id: socket.id });
+  }
 });
