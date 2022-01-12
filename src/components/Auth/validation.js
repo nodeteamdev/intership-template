@@ -82,6 +82,9 @@ class AuthValidation extends Validation {
         refreshToken: this.Joi
           .string()
           .required(),
+        user_id: this.Joi
+          .string()
+          .required(),
       })
       .validate(profile);
   }

@@ -70,6 +70,17 @@ function searchByEmail(email) {
 
 /**
  * @exports
+ * @method searchOne
+ * @param {string} field
+ * @summary get a user
+ * @returns {Promise<UserModel>}
+ */
+function searchOne(field) {
+  return UserModel.findOne(field).exec();
+}
+
+/**
+ * @exports
  * @method deleteById
  * @param {string} _id
  * @summary delete a user from database
@@ -87,4 +98,5 @@ module.exports = {
   updateById,
   deleteById,
   isExists,
+  searchOne,
 };

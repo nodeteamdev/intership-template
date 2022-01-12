@@ -78,7 +78,8 @@ async function signIn(req, res, next) {
         maxAge: 1000 * 60 * 30, httpOnly: true,
       })
       .cookie('refreshToken', tokens.refreshToken, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true })
-      .redirect(301, '/chatroom');
+      .cookie('user_id', `${user._id}`)
+      .redirect('/');
   } catch (error) {
     next(error);
   }
