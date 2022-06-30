@@ -2,11 +2,12 @@ const mongoose = require('mongoose');
 
 const MONGODB_URI = 'mongodb://localhost:27017/';
 const MONGODB_DB_MAIN = 'users_db';
+// const MONGODB_DB_SECOND = 'items_db';
 const MONGO_URI = `${MONGODB_URI}${MONGODB_DB_MAIN}`;
 
 const connectOptions = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 };
 
 module.exports = mongoose.createConnection(MONGO_URI, connectOptions);

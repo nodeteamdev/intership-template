@@ -1,11 +1,11 @@
 ### Validation
 ```
-    https://hapi.dev/family/joi/
+    https://joi.dev/
 ```
 
 ### Find User
 ```
-    curl --location --request GET 'localhost:3000/v1/users/find' \
+    curl --location --request GET 'localhost:3000/v1/users' \
     --header 'Content-Type: application/json' \
     --data-raw '{
         "email": "test@gmail.com"
@@ -14,7 +14,7 @@
 
 ### Create User
 ```
-    curl --location --request POST 'localhost:3000/v1/users/create' \
+    curl --location --request POST 'localhost:3000/v1/users' \
     --header 'Content-Type: application/json' \
     --data-raw '{
         "email": "test@gmail.com",
@@ -24,7 +24,7 @@
 
 ### Update User
 ```
-    curl --location --request PUT 'localhost:3000/v1/users/update' \
+    curl --location --request PUT 'localhost:3000/v1/users/:id' \
     --header 'Content-Type: application/json' \
     --data-raw '{
         "fullName": "Update User"
@@ -33,7 +33,7 @@
 
 ### Delete User
 ```
-    curl --location --request DELETE 'localhost:3000/v1/users/delete' \
+    curl --location --request DELETE 'localhost:3000/v1/users/:id' \
     --header 'Content-Type: application/json' \
     --data-raw '{
         "email": "test@gmail.com"
