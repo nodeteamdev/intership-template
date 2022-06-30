@@ -3,39 +3,23 @@
     https://joi.dev/
 ```
 
-### Find User
-```
-    curl --location --request GET 'localhost:3000/v1/users' \
-    --header 'Content-Type: application/json' \
-    --data-raw '{
-        "email": "test@gmail.com"
-    }'
-```
+### POST http://localhost:3000/api/v1/user/register Content-Type: application/json
 
-### Create User
-```
-    curl --location --request POST 'localhost:3000/v1/users' \
-    --header 'Content-Type: application/json' \
-    --data-raw '{
-        "email": "test@gmail.com",
-        "fullName": "Test User"
-    }'
-```
+{ "firstname" : "Test", "lastname" : "Tester", "email": "test@mail.com", "password": "12345678" }
 
-### Update User
-```
-    curl --location --request PUT 'localhost:3000/v1/users/:id' \
-    --header 'Content-Type: application/json' \
-    --data-raw '{
-        "fullName": "Update User"
-    }'
-```
+### POST http://localhost:3000/api/v1/user/login Content-Type: application/json
 
-### Delete User
-```
-    curl --location --request DELETE 'localhost:3000/v1/users/:id' \
-    --header 'Content-Type: application/json' \
-    --data-raw '{
-        "email": "test@gmail.com"
-    }'
-```
+{ "email": "test@mail.com", "password": "12345678" }
+
+### POST http://localhost:3000/api/v1/user/refresh Content-Type: application/json
+
+{
+"refreshToken" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWU2NmY3MTQ2NDZmODMyNTBiYzEyNmYiLCJpYXQiOjE2NDI2NjExMzEsImV4cCI6MTY0MjY2MTQzMX0.v22TieKOBJ149oEepJGcH-6OJg12TUgjjFgILQTfOmQ"
+}
+
+### GET http://localhost:3000/api/v1/user/list Content-Type: application/json
+
+{
+
+"token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWU2NmY3MTQ2NDZmODMyNTBiYzEyNmYiLCJpYXQiOjE2NDI2NjE0MTgsImV4cCI6MTY0MjY2MTUzOH0.DyJpMhBtnAm1eIeWb1uje71_rnPKvoa2xyaVX50T7Rw"
+}
