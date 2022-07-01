@@ -43,7 +43,7 @@ function create(profile) {
  * @returns {Promise<void>}
  */
 function updateById(_id, newProfile) {
-    return UserModel.updateOne({ _id }, newProfile).exec();
+    return UserModel.findOneAndUpdate({ _id }, newProfile, { new: true }).exec();
 }
 
 /**
@@ -54,7 +54,7 @@ function updateById(_id, newProfile) {
  * @returns {Promise<void>}
  */
 function deleteById(_id) {
-    return UserModel.deleteOne({ _id }).exec();
+    return UserModel.findOneAndDelete({ _id }).exec();
 }
 
 module.exports = {
