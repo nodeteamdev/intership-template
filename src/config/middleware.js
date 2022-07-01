@@ -5,6 +5,9 @@ const cors = require('cors');
 const express = require('express');
 const helmet = require('helmet');
 const chechaCors = require('../middleware/chechaCors');
+const clientErrorHandler = require('../middleware/errorHandlers/clientErrorHandler');
+const logErrors = require('../middleware/errorHandlers/logErrors');
+const errorHandler = require('../middleware/errorHandlers/errorHandler');
 
 module.exports = {
     /**
@@ -29,5 +32,22 @@ module.exports = {
         app.use(cors());
         // cors
         app.use(chechaCors);
+    },
+
+    /**
+     * @function
+     * @description express middleware for errors
+     * @param {express.Application} app
+     * @returns void
+     */
+    errors(app) {
+        // displays api friendly error for the clients
+        app.use(clientErrorHandler);
+
+        // logs every unhandled error
+        app.use(logErrors);
+
+        // handles errors and stops propagation
+        app.use(errorHandler);
     },
 };
