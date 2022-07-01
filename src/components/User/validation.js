@@ -20,12 +20,12 @@ class UserValidation extends Validation {
     }
 
     /**
-     * @param {String} profile.email
-     * @param {String} profile.fullName
+     * @param {String} data.email
+     * @param {String} data.fullName
      * @returns
      * @memberof UserValidation
      */
-    create(profile) {
+    create(data) {
         return this.Joi
             .object({
                 email: this.Joi
@@ -38,7 +38,7 @@ class UserValidation extends Validation {
                     .max(30)
                     .required(),
             })
-            .validate(profile);
+            .validate(data);
     }
 
     /**

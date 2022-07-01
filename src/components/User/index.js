@@ -1,6 +1,4 @@
 const UserService = require('./service');
-const UserValidation = require('./validation');
-const ValidationError = require('../../error/ValidationError');
 
 /**
  * @function
@@ -35,12 +33,6 @@ async function findAll(_req, res, next) {
  */
 async function findById(req, res, next) {
     try {
-        const { error } = UserValidation.findById(req.params);
-
-        if (error) {
-            throw new ValidationError(error.details);
-        }
-
         const user = await UserService.findById(req.params.id);
 
         return res.status(200).json({
@@ -60,12 +52,6 @@ async function findById(req, res, next) {
  */
 async function create(req, res, next) {
     try {
-        const { error } = UserValidation.create(req.body);
-
-        if (error) {
-            throw new ValidationError(error.details);
-        }
-
         const user = await UserService.create(req.body);
 
         return res.status(200).json({
@@ -85,12 +71,6 @@ async function create(req, res, next) {
  */
 async function updateById(req, res, next) {
     try {
-        const { error } = UserValidation.updateById(req.body);
-
-        if (error) {
-            throw new ValidationError(error.details);
-        }
-
         const updatedUser = await UserService.updateById(req.body.id, req.body);
 
         return res.status(200).json({
@@ -110,12 +90,6 @@ async function updateById(req, res, next) {
  */
 async function deleteById(req, res, next) {
     try {
-        const { error } = UserValidation.deleteById(req.body);
-
-        if (error) {
-            throw new ValidationError(error.details);
-        }
-
         const deletedUser = await UserService.deleteById(req.body.id);
 
         return res.status(200).json({
