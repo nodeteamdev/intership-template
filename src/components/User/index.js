@@ -9,7 +9,7 @@ const ValidationError = require('../../error/ValidationError');
  * @param {express.NextFunction} next
  * @returns {Promise < void >}
  */
-async function findAll(req, res, next) {
+async function findAll(_req, res, next) {
     try {
         const users = await UserService.findAll();
 
