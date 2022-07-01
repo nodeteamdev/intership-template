@@ -1,6 +1,6 @@
 ### Validation
 ```
-    https://hapi.dev/family/joi/
+    https://joi.dev/
 ```
 
 ### Find User
