@@ -1,8 +1,8 @@
+/* eslint-disable max-len */
 const bodyParser = require('body-parser');
 const compression = require('compression');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const express = require('express');
 const helmet = require('helmet');
 
 module.exports = {

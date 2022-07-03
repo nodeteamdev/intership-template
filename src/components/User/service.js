@@ -8,7 +8,7 @@ const UserModel = require('./model');
  * @returns Promise<UserModel[]>
  */
 function findAll() {
-    return UserModel.find({}).exec();
+    return UserModel.find({}, { password: 0, hash: 0 }).exec();
 }
 
 /**
@@ -20,6 +20,28 @@ function findAll() {
  */
 function findById(id) {
     return UserModel.findById(id).exec();
+}
+
+/**
+ * @exports
+ * @method findByEmail
+ * @param {string} email
+ * @summary get a user by email
+ * @returns {Promise<UserModel>}
+ */
+function findByEmail(email) {
+    return UserModel.findOne(email).exec();
+}
+
+/**
+ * @exports
+ * @method findByHash
+ * @param {string} hash
+ * @summary get a user by hash
+ * @returns {Promise<UserModel>}
+ */
+function findByHash(hash) {
+    return UserModel.findOne({ hash }).exec();
 }
 
 /**
@@ -60,6 +82,8 @@ function deleteById(_id) {
 module.exports = {
     findAll,
     findById,
+    findByEmail,
+    findByHash,
     create,
     updateById,
     deleteById,

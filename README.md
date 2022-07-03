@@ -39,3 +39,41 @@
         "email": "test@gmail.com"
     }'
 ```
+
+### Sign-up
+```
+    curl --location --request POST 'localhost:3000/v1/auth/sign-up' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+        "fullName": "test",
+        "email": "test@gmail.com",
+        "password": 12345678
+    }'
+```
+
+### Sign-in
+```
+    curl --location --request POST 'localhost:3000/v1/auth/sign-in' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+        "email": "test@gmail.com",
+        "password": 12345678
+    }'
+```
+### Logout
+```
+    curl --location --request POST 'localhost:3000/v1/auth/sign-in' \
+    --header 'Content-Type: application/json' \
+    --cookie '{
+        access_token: valid token
+    }'
+```
+
+### Refresh
+```
+    curl --location --request POST 'localhost:3000/v1/auth/refresh' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+        "refreshToken": "tokenExample"
+    }'
+```
