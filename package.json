@@ -4,7 +4,7 @@
   "description": "```     https://hapi.dev/family/joi/ ```",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon ./src/server/server.js"
   },
   "repository": {
     "type": "git",
@@ -17,17 +17,22 @@
   },
   "homepage": "https://github.com/ChechaValerii/intership-template#readme",
   "dependencies": {
-    "@hapi/joi": "^17.1.1",
+    "@hapi/joi": "17.1.1",
+    "bcrypt": "^5.0.1",
+    "body-parser": "1.20.0",
     "compression": "1.7.4",
     "cookie-parser": "1.4.6",
     "cors": "2.8.5",
+    "dotenv": "16.0.1",
     "express": "4.17.1",
     "helmet": "4.6.0",
-    "mongoose": "6.0.14"
+    "jsonwebtoken": "8.5.1",
+    "mongoose": "6.0.14",
+    "nodemon": "2.0.18"
   },
   "devDependencies": {
-    "eslint": "^8.3.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.25.3"
+    "eslint": "8.3.0",
+    "eslint-config-airbnb-base": "15.0.0",
+    "eslint-plugin-import": "2.25.3"
   }
 }
