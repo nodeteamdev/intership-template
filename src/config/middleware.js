@@ -2,7 +2,6 @@ const bodyParser = require('body-parser');
 const compression = require('compression');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const express = require('express');
 const helmet = require('helmet');
 
 module.exports = {
@@ -38,5 +37,8 @@ module.exports = {
             res.header('Access-Control-Allow-Credentials', 'true');
             next();
         });
+        // app.use(logErrors);
+        // app.use(clientErrorHandler);
+        // app.use(errorHandler);
     },
 };

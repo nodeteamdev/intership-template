@@ -37,24 +37,24 @@ function create(profile) {
  * Find a user by id and update his profile
  * @exports
  * @method updateById
- * @param {string} _id
+ * @param {string} email
  * @param {object} newProfile
  * @summary update a user's profile
  * @returns {Promise<void>}
  */
-function updateById(_id, newProfile) {
-    return UserModel.updateOne({ _id }, newProfile).exec();
+function updateById(email, newProfile) {
+    return UserModel.updateOne({ email }, newProfile).exec();
 }
 
 /**
  * @exports
  * @method deleteById
- * @param {string} _id
+ * @param {string} email
  * @summary delete a user from database
  * @returns {Promise<void>}
  */
-function deleteById(_id) {
-    return UserModel.deleteOne({ _id }).exec();
+function deleteById(email) {
+    return UserModel.deleteOne({ email }).exec();
 }
 
 module.exports = {

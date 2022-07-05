@@ -115,7 +115,7 @@ async function updateById(req, res, next) {
             throw new ValidationError(error.details);
         }
 
-        const updatedUser = await UserService.updateById(req.body.id, req.body);
+        const updatedUser = await UserService.updateById(req.body.email, req.body);
 
         return res.status(200).json({
             data: updatedUser,
@@ -152,7 +152,7 @@ async function deleteById(req, res, next) {
             throw new ValidationError(error.details);
         }
 
-        const deletedUser = await UserService.deleteById(req.body.id);
+        const deletedUser = await UserService.deleteById(req.body.email);
 
         return res.status(200).json({
             data: deletedUser,
