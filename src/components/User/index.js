@@ -149,7 +149,7 @@ async function deleteById(req, res, next) {
         const { error } = UserValidation.deleteById(req.body);
 
         if (error) {
-            throw new ValidationError(error.details);
+            throw new ValidationError;
         }
 
         const deletedUser = await UserService.deleteById(req.body.email);
