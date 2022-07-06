@@ -2,8 +2,12 @@ const bodyParser = require('body-parser');
 const compression = require('compression');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const ejs = require('ejs');
 const express = require('express');
 const helmet = require('helmet');
+const logErrors = require('../error/logErrors');
+const clientErrorHandler = require('../error/clientErrorHandler');
+const errorHandler = require('../error/errorHandler');
 
 module.exports = {
     /**
@@ -16,6 +20,8 @@ module.exports = {
         app.use(bodyParser.urlencoded({
             extended: false,
         }));
+        app.set('views', `${__dirname}/../views`);
+        app.set('view engine', 'ejs');
         app.use(bodyParser.json());
         // parse Cookie header and populate req.cookies with an object keyed by the cookie names.
         app.use(cookieParser());
@@ -25,6 +31,9 @@ module.exports = {
         app.use(helmet());
         // providing a Connect/Express middleware that can be used to enable CORS with various options
         app.use(cors());
+        app.use(logErrors);
+        app.use(clientErrorHandler);
+        app.use(errorHandler);
         // cors
         app.use((req, res, next) => {
             res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS ');

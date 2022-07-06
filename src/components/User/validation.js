@@ -29,7 +29,7 @@ class UserValidation extends Validation {
         return this.Joi
             .object({
                 email: this.Joi.string().email(),
-                fullName: this.Joi
+                name: this.Joi
                     .string()
                     .min(1)
                     .max(30)
@@ -48,7 +48,7 @@ class UserValidation extends Validation {
         return this.Joi
             .object({
                 id: this.Joi.objectId(),
-                fullName: this.Joi
+                name: this.Joi
                     .string()
                     .min(1)
                     .max(30)

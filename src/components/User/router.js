@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const UserComponent = require('.');
+const UserComponent = require('./service');
 
 /**
  * Express router to mount user related functions on.
