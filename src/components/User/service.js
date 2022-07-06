@@ -13,13 +13,13 @@ function findAll() {
 
 /**
  * @exports
- * @method findById
- * @param {string} id
+ * @method findByEmail
+ * @param {string} email
  * @summary get a user
  * @returns {Promise<UserModel>}
  */
-function findById(id) {
-    return UserModel.findById(id).exec();
+function findByEmail(email) {
+    return UserModel.findOne({email}).exec();
 }
 
 /**
@@ -36,31 +36,31 @@ function create(profile) {
 /**
  * Find a user by id and update his profile
  * @exports
- * @method updateById
+ * @method updateByEmail
  * @param {string} email
  * @param {object} newProfile
  * @summary update a user's profile
  * @returns {Promise<void>}
  */
-function updateById(email, newProfile) {
+function updateByEmail(email, newProfile) {
     return UserModel.updateOne({ email }, newProfile).exec();
 }
 
 /**
  * @exports
- * @method deleteById
+ * @method deleteByEmail
  * @param {string} email
  * @summary delete a user from database
  * @returns {Promise<void>}
  */
-function deleteById(email) {
+function deleteByEmail(email) {
     return UserModel.deleteOne({ email }).exec();
 }
 
 module.exports = {
     findAll,
-    findById,
+    findByEmail,
     create,
-    updateById,
-    deleteById,
+    updateByEmail,
+    deleteByEmail,
 };
