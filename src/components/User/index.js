@@ -11,12 +11,6 @@ const ValidationError = require('../../error/ValidationError');
  */
 
 async function findAll(req, res, next) {
-    // const headers = {
-    //     Authorization: `Bearer ${accessToken}`,
-    // };
-
-    // req.get('/v1/auth', headers = headers)
-
     try {
         const users = await UserService.findAll();
 
