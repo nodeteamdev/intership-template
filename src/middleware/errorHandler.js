@@ -15,5 +15,10 @@ function errorHandler(err, req, res, next) {
     return res.status(500).json({ message: err.message });
   }
 }
+// function errorHandler(err, req, res, next) {
+//   res.status(500);
+//   res.send(err.message);
+//   next();
+// }
 
 module.exports = errorHandler;

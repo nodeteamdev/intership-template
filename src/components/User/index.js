@@ -1,198 +1,14 @@
-// const UserService = require('./service');
-// const UserValidation = require('./validation');
-// const ValidationError = require('../../error/ValidationError');
-
-// /**
-//  * @function
-//  * @param {express.Request} req
-//  * @param {express.Response} res
-//  * @param {express.NextFunction} next
-//  * @returns {Promise < void >}
-//  */
-// async function findAll(req, res, next) {
-//   try {
-//     const users = await UserService.findAll();
-
-//     res.status(200).json({
-//       data: users,
-//     });
-//   } catch (error) {
-//     res.status(500).json({
-//       error: error.message,
-//       details: null,
-//     });
-
-//     next(error);
-//   }
-// }
-
-// /**
-//  * @function
-//  * @param {express.Request} req
-//  * @param {express.Response} res
-//  * @param {express.NextFunction} next
-//  * @returns {Promise < void >}
-//  */
-// async function findById(req, res, next) {
-//   try {
-//     const { error } = UserValidation.findById(req.params);
-
-//     if (error) {
-//       throw new ValidationError(error.details);
-//     }
-
-//     const user = await UserService.findById(req.params.id);
-
-//     return res.status(200).json({
-//       data: user,
-//     });
-//   } catch (error) {
-//     if (error instanceof ValidationError) {
-//       return res.status(422).json({
-//         error: error.name,
-//         details: error.message,
-//       });
-//     }
-
-//     res.status(500).json({
-//       message: error.name,
-//       details: error.message,
-//     });
-
-//     return next(error);
-//   }
-// }
-
-// /**
-//  * @function
-//  * @param {express.Request} req
-//  * @param {express.Response} res
-//  * @param {express.NextFunction} next
-//  * @returns {Promise < void >}
-//  */
-// async function create(req, res, next) {
-//   try {
-//     const { error } = UserValidation.create(req.body);
-
-//     if (error) {
-//       throw new ValidationError(error.details);
-//     }
-
-//     const user = await UserService.create(req.body);
-
-//     return res.status(200).json({
-//       data: user,
-//     });
-//   } catch (error) {
-//     if (error instanceof ValidationError) {
-//       return res.status(422).json({
-//         message: error.name,
-//         details: error.message,
-//       });
-//     }
-
-//     res.status(500).json({
-//       message: error.name,
-//       details: error.message,
-//     });
-
-//     return next(error);
-//   }
-// }
-
-// /**
-//  * @function
-//  * @param {express.Request} req
-//  * @param {express.Response} res
-//  * @param {express.NextFunction} next
-//  * @returns {Promise<void>}
-//  */
-// async function updateById(req, res, next) {
-//   try {
-//     const { error } = UserValidation.updateById(req.body);
-
-//     if (error) {
-//       throw new ValidationError(error.details);
-//     }
-
-//     const updatedUser = await UserService.updateById(req.body.id, req.body);
-
-//     return res.status(200).json({
-//       data: updatedUser,
-//     });
-//   } catch (error) {
-//     if (error instanceof ValidationError) {
-//       return res.status(422).json({
-//         message: error.name,
-//         details: error.message,
-//       });
-//     }
-
-//     res.status(500).json({
-//       message: error.name,
-//       details: error.message,
-//     });
-
-//     return next(error);
-//   }
-// }
-
-// /**
-//  * @function
-//  * @param {express.Request} req
-//  * @param {express.Response} res
-//  * @param {express.NextFunction} next
-//  * @returns {Promise<void>}
-//  */
-// async function deleteById(req, res, next) {
-//   try {
-//     const { error } = UserValidation.deleteById(req.body);
-
-//     if (error) {
-//       throw new ValidationError(error.details);
-//     }
-
-//     const deletedUser = await UserService.deleteById(req.body.id);
-
-//     return res.status(200).json({
-//       data: deletedUser,
-//     });
-//   } catch (error) {
-//     if (error instanceof ValidationError) {
-//       return res.status(422).json({
-//         message: error.name,
-//         details: error.message,
-//       });
-//     }
-
-//     res.status(500).json({
-//       message: error.name,
-//       details: error.message,
-//     });
-
-//     return next(error);
-//   }
-// }
-
-// module.exports = {
-//   findAll,
-//   findById,
-//   create,
-//   updateById,
-//   deleteById,
-// };
-
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('./model');
+const UserModel = require('./model');
 
-exports.newUser = async (req, res) => {
+exports.newUser = async (req, res, next) => {
   try {
     const {
       firstname, lastname, email, password,
     } = req.body;
 
-    const user = await User.findOne({ email });
+    const user = await UserModel.User.findOne({ email });
 
     if (user) {
       return res.status(400).send({
@@ -200,7 +16,7 @@ exports.newUser = async (req, res) => {
       });
     }
 
-    const newUser = new User({
+    const newUser = new UserModel.User({
       firstname,
       lastname,
       email,
@@ -209,14 +25,27 @@ exports.newUser = async (req, res) => {
 
     await newUser.save();
 
+    const payload = {
+      accessToken: '',
+      refreshToken: '',
+      _id: newUser._id,
+      firstname: newUser.firstname,
+    };
+    const refresh = new UserModel.Refresh({
+      ...payload,
+    });
+    await refresh.save();
+
     res.status(201).send({
       data: newUser,
+      tokens: refresh,
     });
   } catch (error) {
     res.status(500).send({
       status: 500,
       error: error.message,
     });
+    next(error);
   }
 };
 
@@ -224,7 +53,8 @@ exports.getUser = async (req, res) => {
   try {
     const id = req.params._id;
 
-    const user = await User.findById({ _id: id });
+    const user = await UserModel.User.findById({ _id: id });
+    const refresh = await UserModel.Refresh.findById({ _id: id }).exec();
 
     if (!user) {
       return res.status(404).send({
@@ -234,6 +64,7 @@ exports.getUser = async (req, res) => {
 
     res.status(200).send({
       data: user,
+      tokens: refresh,
     });
   } catch (error) {
     res.status(500).send({
@@ -244,7 +75,7 @@ exports.getUser = async (req, res) => {
 
 exports.getUsers = async (req, res) => {
   try {
-    const users = await User.find({});
+    const users = await UserModel.User.find({});
 
     if (!users) {
       return res.status(404).send({
@@ -268,7 +99,7 @@ exports.updateUser = async (req, res) => {
 
     const updates = Object.keys(req.body);
 
-    const user = await User.findById({ _id: id }).exec();
+    const user = await UserModel.User.findById({ _id: id }).exec();
 
     if (!user) {
       return res.status(404).send({
@@ -296,7 +127,8 @@ exports.deleteUser = async (req, res) => {
   try {
     const id = req.params._id;
 
-    const user = await User.findById({ _id: id }).exec();
+    const user = await UserModel.User.findById({ _id: id }).exec();
+    const refresh = await UserModel.Refresh.findById({ _id: id }).exec();
 
     if (!user) {
       return res.status(404).send({
@@ -305,6 +137,7 @@ exports.deleteUser = async (req, res) => {
     }
 
     await user.remove();
+    await refresh.remove();
 
     res.status(200).send({
       message: 'User deleted',
@@ -319,7 +152,7 @@ exports.deleteUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email }).exec();
+    const user = await UserModel.User.findOne({ email }).exec();
 
     if (!user) {
       return res.status(401).send({
@@ -334,11 +167,14 @@ exports.loginUser = async (req, res) => {
       });
     }
 
-    await user.generateAuthToken();
-    await user.generateRefreshToken();
+    const refresh = await UserModel.Refresh.findById({ _id: user.id }).exec();
+    await refresh.generateAuthToken();
+    await refresh.generateRefreshToken();
+    await refresh.save();
 
     res.status(200).send({
       data: user,
+      tokens: refresh,
       message: 'login successful',
     });
   } catch (error) {
@@ -350,26 +186,18 @@ exports.loginUser = async (req, res) => {
 
 exports.refreshTokenUser = async (req, res) => {
   try {
-    const { refreshToken } = req.body;
-
-    if (!refreshToken) {
+    const id = req.params._id;
+    const tokens = await UserModel.Refresh.findById({ _id: id }).exec();
+    if (!tokens.refreshToken) {
       return res.status(401).send({
         message: 'No refresh token provided',
       });
     }
-
-    await jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-    const user = await User.findOne(refreshToken._id).exec();
-
-    if (!user) {
-      return res.status(401).send({
-        message: 'User not found',
-      });
-    }
-
-    await user.generateAuthToken();
+    await jwt.verify(tokens.refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    await tokens.generateAuthToken();
+    await tokens.save();
     res.status(200).send({
-      data: user.token,
+      data: tokens,
       message: 'Refresh token successful',
     });
   } catch (error) {
@@ -383,7 +211,8 @@ exports.refreshTokenUser = async (req, res) => {
 exports.logoutUser = async (req, res) => {
   try {
     const id = req.params._id;
-    const user = await User.findOne({ _id: id }).exec();
+    const user = await UserModel.User.findOne({ _id: id }).exec();
+    const tokens = await UserModel.Refresh.findById({ _id: id }).exec();
 
     if (!user) {
       return res.status(401).send({
@@ -391,11 +220,9 @@ exports.logoutUser = async (req, res) => {
       });
     }
 
-    user.token = '';
-
-    user.refreshToken = '';
-
-    await user.save();
+    tokens.accessToken = '';
+    tokens.refreshToken = '';
+    await tokens.save();
 
     res.status(200).send({
       message: 'Logout successful',

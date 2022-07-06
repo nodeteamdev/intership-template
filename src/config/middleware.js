@@ -3,7 +3,9 @@ const compression = require('compression');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const helmet = require('helmet');
-const errorHandler = require('../error/errorHandler');
+const clientErrorHandler = require('../middleware/clientErrorHandler');
+const logErrors = require('../middleware/logErrors');
+const errorHandler = require('../middleware/errorHandler');
 
 module.exports = {
   /**
@@ -26,7 +28,6 @@ module.exports = {
     // providing a Connect/Express middleware that can be used to enable CORS with various options
     app.use(cors());
     // cors
-    app.use(errorHandler);
     app.use((req, res, next) => {
       res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS ');
       res.header(
@@ -39,5 +40,8 @@ module.exports = {
       res.header('Access-Control-Allow-Credentials', 'true');
       next();
     });
+    app.use(logErrors);
+    app.use(clientErrorHandler);
+    app.use(errorHandler);
   },
 };

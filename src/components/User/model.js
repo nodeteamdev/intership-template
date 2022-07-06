@@ -1,35 +1,28 @@
-// const { Schema } = require('mongoose');
-// const connections = require('../../config/connection');
-
-// const UserSchema = new Schema(
-//   {
-//     fullName: {
-//       type: String,
-//       trim: true,
-//     },
-//     email: {
-//       type: String,
-//       required: true,
-//     },
-//   },
-//   {
-//     collection: 'usermodel',
-//     versionKey: false,
-//   },
-// );
-
-// module.exports = connections.model('UserModel', UserSchema);
-
 const mongoose = require('mongoose');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const connections = require('../../config/connection');
 
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 const { JWT_SECRET } = process.env;
 
 const { REFRESH_TOKEN_SECRET } = process.env;
+
+const RefreshSchema = new Schema({
+  accessToken: {
+    type: String,
+  },
+  refreshToken: {
+    type: String,
+  },
+  _id: {
+    type: String,
+  },
+  firstname: {
+    type: String,
+  },
+});
 
 const UserSchema = new Schema({
   firstname: {
@@ -44,34 +37,13 @@ const UserSchema = new Schema({
   password: {
     type: String,
   },
-
   token: {
     type: String,
   },
-
   refreshToken: {
     type: String,
   },
-
 });
-
-UserSchema.methods.generateAuthToken = function () {
-  const User = this;
-  const secret = JWT_SECRET;
-  const token = jwt.sign({ _id: User._id }, secret, {
-    expiresIn: '2m',
-  });
-  User.token = token;
-};
-
-UserSchema.methods.generateRefreshToken = function () {
-  const User = this;
-  const secret = REFRESH_TOKEN_SECRET;
-  const refreshToken = jwt.sign({ _id: User._id }, secret, {
-    expiresIn: '5m',
-  });
-  User.refreshToken = refreshToken;
-};
 
 UserSchema.pre('save', async function (next) {
   const User = this;
@@ -81,5 +53,32 @@ UserSchema.pre('save', async function (next) {
   next();
 });
 
+RefreshSchema.pre('save', async (next) => {
+  const Refresh = this;
+  next();
+});
+
+RefreshSchema.methods.generateAuthToken = function () {
+  const obj = this;
+  const secret = JWT_SECRET;
+  const token = jwt.sign({ _id: obj._id }, secret, {
+    expiresIn: '2m',
+  });
+  obj.accessToken = token;
+};
+
+RefreshSchema.methods.generateRefreshToken = function () {
+  const obj = this;
+  const secret = REFRESH_TOKEN_SECRET;
+  const refreshToken = jwt.sign({ _id: obj._id }, secret, {
+    expiresIn: '10m',
+  });
+  obj.refreshToken = refreshToken;
+};
+
 const User = connections.model('user', UserSchema);
-module.exports = User;
+const Refresh = connections.model('refresh', RefreshSchema);
+module.exports = {
+  User,
+  Refresh,
+};
