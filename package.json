@@ -1,7 +1,7 @@
 {
   "name": "intership-template",
-  "version": "1.0.0",
-  "description": "```     https://hapi.dev/family/joi/ ```",
+  "version": "1.2.0",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,13 +17,16 @@
   },
   "homepage": "https://github.com/ChechaValerii/intership-template#readme",
   "dependencies": {
-    "body-parser": "^1.20.0",
+    "bcrypt": "5.0.1",
+    "body-parser": "1.20.0",
     "compression": "1.7.4",
     "cookie-parser": "1.4.6",
     "cors": "2.8.5",
+    "dotenv": "16.0.1",
     "express": "4.17.1",
     "helmet": "4.6.0",
     "joi": "17.6.0",
+    "jose": "4.8.3",
     "mongoose": "6.0.14"
   },
   "devDependencies": {
