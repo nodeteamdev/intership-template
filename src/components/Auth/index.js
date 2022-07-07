@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const UserToken = require('./token_model');
 const User = require('../User/model');
 const TokenService = require('./service');
 
@@ -24,7 +25,7 @@ async function logIn(req, res, next) {
         }
 
         const accessToken = await TokenService.generateAccessToken(user);
-        
+
         const refreshToken = await TokenService.generateRefreshToken(user);
 
         return res.status(200).json({
@@ -41,39 +42,37 @@ async function logIn(req, res, next) {
     }
 }
 
-// async function getTokens(req, res, next) {
+async function getAccessToken(req, res) {
+    const { token } = req.body;
+    const decoded = jwt.verify(token, 'REFRESH_TOKEN_PRIVATE_KEY');
+    const accessToken = await TokenService.generateAccessToken(decoded);
 
-//     const accessToken = await TokenService.generateAccessToken(user);
-        
-//         const refreshToken = await TokenService.generateRefreshToken(user);
-
-//         return res.status(200).json({
-//             status: true,
-//             message: 'Logged in sucessfully',
-//             data: { accessToken, refreshToken },
-//         });
-
-// }
+    return res.status(200).json({
+        status: true,
+        message: 'Access token created successfully',
+        data: { accessToken },
+    });
+}
 
 async function logOut(req, res, next) {
     try {
-
         const userToken = await UserToken.findOne({ token: req.body.refreshToken });
-        if (!userToken)
+        if (!userToken) {
             return res
                 .status(200)
-                .json({ error: false, message: "Logged Out Sucessfully" });
+                .json({ error: false, message: 'Logged Out Sucessfully' });
+        }
 
         await userToken.remove();
-        res.status(200).json({ error: false, message: "Logged Out Sucessfully" });
+        return res.status(200).json({ error: false, message: 'Logged Out Sucessfully' });
     } catch (err) {
-        next(err);
+        return next(err);
     }
 }
 
 module.exports = {
     signUp,
     logIn,
-    // getAccessToken,
+    getAccessToken,
     logOut,
 };

@@ -2,8 +2,7 @@ const express = require('express');
 const http = require('http');
 const UserRouter = require('../components/User/router');
 const AuthRouter = require('../components/Auth/router');
-const {getAccessToken} = require('../components/Auth/index');
-const {verifyToken} = require('../components/Auth/service.js');
+const { verifyToken } = require('../components/Auth/service');
 
 module.exports = {
     /**
@@ -32,7 +31,7 @@ module.exports = {
          * @inner
          * @param {callback} middleware - Express middleware.
          */
-        app.use((req, res, next) => {
+        app.use((req, res) => {
             res.status(404).send(http.STATUS_CODES[404]);
         });
 
