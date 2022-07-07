@@ -36,13 +36,12 @@ function logger(dataToLog, context = '', logLevel = 'log') {
 
     logStr = colorString(logStr, logLevel);
 
+    let logData = dataToLog;
     if (dataToLog instanceof Error) {
-        logStr += trimError(dataToLog);
-    } else {
-        logStr += dataToLog.toString();
+        logData = trimError(dataToLog);
     }
 
-    console[logLevel](logStr);
+    console[logLevel](logStr, logData);
 }
 
 module.exports = logger;
