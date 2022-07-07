@@ -8,7 +8,7 @@ const UserModel = require('./model');
  * @returns Promise<UserModel[]>
  */
 function findAll() {
-    return UserModel.find({}).exec();
+    return UserModel.find({}, { password: 0, refreshToken: 0 }).exec();
 }
 
 /**
@@ -18,8 +18,12 @@ function findAll() {
  * @summary get a user
  * @returns {Promise<UserModel>}
  */
-function findById(id) {
-    return UserModel.findById(id).exec();
+function findById(_id, projection) {
+    return UserModel.findOne({ _id }, projection).exec();
+}
+
+function findByEmail(email, projection) {
+    return UserModel.findOne({ email }, projection).exec();
 }
 
 /**
@@ -60,6 +64,7 @@ function deleteById(_id) {
 module.exports = {
     findAll,
     findById,
+    findByEmail,
     create,
     updateById,
     deleteById,

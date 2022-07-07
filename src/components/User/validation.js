@@ -47,7 +47,6 @@ class UserValidation extends Validation {
     updateById(data) {
         return this.Joi
             .object({
-                id: this.Joi.objectId(),
                 fullName: this.Joi
                     .string()
                     .min(1)
@@ -62,13 +61,6 @@ class UserValidation extends Validation {
      * @returns
      * @memberof UserValidation
      */
-    deleteById(data) {
-        return this.Joi
-            .object({
-                id: this.Joi.objectId(),
-            })
-            .validate(data);
-    }
 }
 
 module.exports = new UserValidation();
