@@ -1,3 +1,4 @@
+const { checkResourceIsFound } = require('../../helpers/restResponse');
 const UserService = require('./service');
 
 /**
@@ -22,6 +23,7 @@ async function findAll(_req, res) {
  */
 async function findById(req, res) {
     const user = await UserService.findById(req.params.id);
+    checkResourceIsFound(user);
 
     res.status(200).json({
         data: user,
@@ -37,7 +39,7 @@ async function findById(req, res) {
 async function create(req, res) {
     const user = await UserService.create(req.body);
 
-    res.status(200).json({
+    res.status(201).json({
         data: user,
     });
 }
@@ -50,6 +52,7 @@ async function create(req, res) {
  */
 async function updateById(req, res) {
     const updatedUser = await UserService.updateById(req.body.id, req.body);
+    checkResourceIsFound(updatedUser);
 
     res.status(200).json({
         data: updatedUser,
@@ -64,6 +67,7 @@ async function updateById(req, res) {
  */
 async function deleteById(req, res) {
     const deletedUser = await UserService.deleteById(req.body.id);
+    checkResourceIsFound(deletedUser);
 
     res.status(200).json({
         data: deletedUser,
