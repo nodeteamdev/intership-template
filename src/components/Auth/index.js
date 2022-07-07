@@ -1,90 +1,79 @@
+const jwt = require('jsonwebtoken');
 const User = require('../User/model');
-const UserToken = require('./token_model');
 const TokenService = require('./service');
 
 async function signUp(req, res, next) {
     try {
         const user = await User.findOne({ email: req.body.email });
-        if (user)
-            return res
-                .status(400)
-                .json({ error: true, message: "User with given email already exist" });
-        await  User.create(req.body);
-                res
-                    .status(201)
-                    .json({ error: false, message: "Account created sucessfully" });
-        
-    } catch(error) {
-        next(error)
+        if (user) {
+            return res.status(400).json({ status: false, message: 'User with given email already exist' });
+        }
+        const savedUser = await User.create(req.body);
+        return res.status(201).json({ status: true, message: 'Account created sucessfully', data: savedUser });
+    } catch (error) {
+        res.status(400).json({ status: false, message: 'Something went wrong', data: error });
+        return next(error);
     }
 }
 
 async function logIn(req, res, next) {
-    console.log(req.body);
     try {
-        const user = await User.findOne({ email: req.body.email });
-        if (!user)
-            return res
-                .status(401)
-                .json({ error: true, message: "Invalid user's email" });
+        const user = await User.findOne({ email: req.body.email, fullName: req.body.fullName });
+        if (user === null) {
+            return res.status(401).json({ status: false, message: "Invalid user's email or name" });
+        }
 
-        const { accessToken, refreshToken } = await TokenService.generateTokens(user);
+        const accessToken = await TokenService.generateAccessToken(user);
+        
+        const refreshToken = await TokenService.generateRefreshToken(user);
 
-        res.status(200).json({
-            error: false,
-            accessToken,
-            refreshToken,
-            message: "Logged in sucessfully",
+        return res.status(200).json({
+            status: true,
+            message: 'Logged in sucessfully',
+            data: { accessToken, refreshToken },
         });
     } catch (error) {
-        next(error);
+        res.status(400).json({
+            status: false,
+            message: 'Login fail',
+        });
+        return next(error);
     }
 }
 
-function dashboard(req, res) {
-    return res.json({status: true, message: 'Hello from dashboard'});
-}
+// async function getTokens(req, res, next) {
 
-// async function getAccessToken(req, res, next) {
-
-//     TokenService.verifyRefreshToken(req.body.refreshToken)
-//         .then(({ tokenDetails }) => {
-//             const payload = { _id: tokenDetails._id };
-//             const accessToken = jwt.sign(
-//                 payload,
-//                 'ACCESS_TOKEN_PRIVATE_KEY',
-//                 { expiresIn: "1m" }
-//             );
-//             res.status(200).json({
-//                 error: false,
-//                 accessToken,
-//                 message: "Access token created successfully",
-//             });
-//         })
-//         .catch((err) => next(err));
-
-// }
-
-// async function logOut(req, res, next) {
-//     try {
+//     const accessToken = await TokenService.generateAccessToken(user);
         
-//         const userToken = await UserToken.findOne({ token: req.body.refreshToken });
-//         if (!userToken)
-//             return res
-//                 .status(200)
-//                 .json({ error: false, message: "Logged Out Sucessfully" });
+//         const refreshToken = await TokenService.generateRefreshToken(user);
 
-//         await userToken.remove();
-//         res.status(200).json({ error: false, message: "Logged Out Sucessfully" });
-//     } catch (err) {
-//         next(err);
-//     }
+//         return res.status(200).json({
+//             status: true,
+//             message: 'Logged in sucessfully',
+//             data: { accessToken, refreshToken },
+//         });
+
 // }
+
+async function logOut(req, res, next) {
+    try {
+
+        const userToken = await UserToken.findOne({ token: req.body.refreshToken });
+        if (!userToken)
+            return res
+                .status(200)
+                .json({ error: false, message: "Logged Out Sucessfully" });
+
+        await userToken.remove();
+        res.status(200).json({ error: false, message: "Logged Out Sucessfully" });
+    } catch (err) {
+        next(err);
+    }
+}
 
 module.exports = {
     signUp,
     logIn,
-    dashboard,
     // getAccessToken,
-    // logOut,
-}
+    logOut,
+};

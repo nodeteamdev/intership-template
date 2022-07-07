@@ -4,19 +4,20 @@ const connections = require('../../config/connection');
 const UserTokenSchema = new Schema(
     {
         userId: {
-            type: Schema.Types.ObjectId,
+            type: String,
             required: true,
         },
         token: {
             type: String,
             required: true,
         },
-        createdAt: {
-            type: Date,
-            default: Date.now,
-            expires: 900, // 15 min
-        },
     },
+
+    {
+        collection: 'tokenmodel',
+        versionKey: false,
+    },
+
 );
 
 module.exports = connections.model('UserToken', UserTokenSchema);
