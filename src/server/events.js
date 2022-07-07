@@ -1,3 +1,5 @@
+/* eslint-disable no-shadow */
+/* eslint-disable no-fallthrough */
 /**
  * @function
  * @param  {NodeJS.ErrnoException} error

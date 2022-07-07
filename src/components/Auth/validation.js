@@ -32,11 +32,10 @@ class AuthValidation extends Validation {
     }
 
     /**
-     *
      * @param {String} profile.email
-     * @param {Sting} profile.password
+     * @param {String} profile.password
      * @returns
-     * @memberof UserValidation
+     * @memberof AuthValidation
      */
     signIn(profile) {
         return this.Joi
@@ -49,6 +48,19 @@ class AuthValidation extends Validation {
                     .required(),
             })
             .validate(profile);
+    }
+
+    /**
+     * @param {String} data.refreshToken
+     * @returns
+     * @memberof AuthValidation
+     */
+    refresh(data) {
+        return this.Joi
+            .object({
+                refreshToken: this.Joi.string().required(),
+            })
+            .validate(data);
     }
 }
 

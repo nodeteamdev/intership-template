@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+
 const { Schema } = require('mongoose');
 const connections = require('../../config/connection');
 
@@ -25,5 +27,17 @@ const UserSchema = new Schema(
         versionKey: false,
     },
 );
+
+UserSchema.pre('save', async function (next) {
+    try {
+        const salt = await bcrypt.genSalt(10);
+        console.log(this.password);
+        const hashedPassword = await bcrypt.hash(this.password, salt);
+        this.password = hashedPassword;
+        next();
+    } catch (error) {
+        next(error);
+    }
+});
 
 module.exports = connections.model('UserModel', UserSchema);

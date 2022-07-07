@@ -4,7 +4,7 @@ const connections = require('../../config/connection');
 const TokenSchema = new Schema(
     {
         userId: String,
-        tokenId: String,
+        value: String,
     },
     {
         collection: 'tokenmodel',
