@@ -1,5 +1,5 @@
 const { Schema } = require('mongoose');
-const connections = require('../../config/connection');
+const mongooseConnection = require('../../config/connection');
 
 const UserSchema = new Schema(
     {
@@ -18,4 +18,4 @@ const UserSchema = new Schema(
     },
 );
 
-module.exports = connections.model('UserModel', UserSchema);
+module.exports = mongooseConnection.model('UserModel', UserSchema);
