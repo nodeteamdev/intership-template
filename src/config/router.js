@@ -1,5 +1,6 @@
 const express = require('express');
 const http = require('http');
+const AuthRouter = require('../components/Auth/router');
 const UserRouter = require('../components/User/router');
 
 module.exports = {
@@ -11,6 +12,16 @@ module.exports = {
      */
     init(app) {
         const router = express.Router();
+
+        /**
+         * Forwards any requests to the /v1/auth URI to AuthRouter.
+         * @name /v1/users
+         * @function
+         * @inner
+         * @param {string} path - Express path
+         * @param {callback} middleware - Express middleware.
+         */
+        router.use('/v1/auth', AuthRouter);
 
         /**
          * Forwards any requests to the /v1/users URI to UserRouter.
