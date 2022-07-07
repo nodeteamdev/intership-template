@@ -7,6 +7,7 @@ const chechaCors = require('../middleware/chechaCors');
 const clientErrorHandler = require('../middleware/errorHandlers/clientErrorHandler');
 const logErrors = require('../middleware/errorHandlers/logErrors');
 const errorHandler = require('../middleware/errorHandlers/errorHandler');
+const contentTypeChecker = require('../middleware/contentTypeChecker');
 
 module.exports = {
     /**
@@ -20,7 +21,8 @@ module.exports = {
             extended: false,
         }));
         app.use(bodyParser.json());
-        // IDEA: add content-type checker
+        // content-type checker
+        app.use(contentTypeChecker);
 
         // parse Cookie header and populate req.cookies with an object keyed by the cookie names.
         app.use(cookieParser());

@@ -37,7 +37,6 @@ async function createRefreshTokenForAuthUser(authUser) {
     const refreshTokenData = {
         authUserId: authUser.id,
         token,
-        expiresAt: new Date(), // TODO: extract from jwt?
     };
     await RefreshTokenModel.create(refreshTokenData);
 
