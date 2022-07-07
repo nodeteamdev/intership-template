@@ -4,100 +4,70 @@ const UserService = require('./service');
  * @function
  * @param {express.Request} req
  * @param {express.Response} res
- * @param {express.NextFunction} next
- * @returns {Promise < void >}
- */
-async function findAll(_req, res, next) {
-    try {
-        const users = await UserService.findAll();
-
-        res.status(200).json({
-            data: users,
-        });
-    } catch (error) {
-        res.status(500).json({
-            error: error.message,
-            details: null,
-        });
-
-        next(error);
-    }
-}
-
-/**
- * @function
- * @param {express.Request} req
- * @param {express.Response} res
- * @param {express.NextFunction} next
- * @returns {Promise < void >}
- */
-async function findById(req, res, next) {
-    try {
-        const user = await UserService.findById(req.params.id);
-
-        return res.status(200).json({
-            data: user,
-        });
-    } catch (error) {
-        return next(error);
-    }
-}
-
-/**
- * @function
- * @param {express.Request} req
- * @param {express.Response} res
- * @param {express.NextFunction} next
- * @returns {Promise < void >}
- */
-async function create(req, res, next) {
-    try {
-        const user = await UserService.create(req.body);
-
-        return res.status(200).json({
-            data: user,
-        });
-    } catch (error) {
-        return next(error);
-    }
-}
-
-/**
- * @function
- * @param {express.Request} req
- * @param {express.Response} res
- * @param {express.NextFunction} next
  * @returns {Promise<void>}
  */
-async function updateById(req, res, next) {
-    try {
-        const updatedUser = await UserService.updateById(req.body.id, req.body);
+async function findAll(_req, res) {
+    const users = await UserService.findAll();
 
-        return res.status(200).json({
-            data: updatedUser,
-        });
-    } catch (error) {
-        return next(error);
-    }
+    res.status(200).json({
+        data: users,
+    });
 }
 
 /**
  * @function
  * @param {express.Request} req
  * @param {express.Response} res
- * @param {express.NextFunction} next
  * @returns {Promise<void>}
  */
-async function deleteById(req, res, next) {
-    try {
-        const deletedUser = await UserService.deleteById(req.body.id);
+async function findById(req, res) {
+    const user = await UserService.findById(req.params.id);
 
-        return res.status(200).json({
-            data: deletedUser,
-        });
-    } catch (error) {
-        return next(error);
-    }
+    res.status(200).json({
+        data: user,
+    });
+}
+
+/**
+ * @function
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @returns {Promise<void>}
+ */
+async function create(req, res) {
+    const user = await UserService.create(req.body);
+
+    res.status(200).json({
+        data: user,
+    });
+}
+
+/**
+ * @function
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @returns {Promise<void>}
+ */
+async function updateById(req, res) {
+    const updatedUser = await UserService.updateById(req.body.id, req.body);
+
+    res.status(200).json({
+        data: updatedUser,
+    });
+}
+
+/**
+ * @function
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @returns {Promise<void>}
+ */
+async function deleteById(req, res) {
+    const deletedUser = await UserService.deleteById(req.body.id);
+
+    res.status(200).json({
+        data: deletedUser,
+    });
 }
 
 module.exports = {
