@@ -1,4 +1,5 @@
 const http = require('http');
+require('dotenv').config();
 const events = require('./events');
 const server = require('./server');
 

@@ -1,3 +1,5 @@
+const AuthError = require('../../error/AuthError');
+const ResourceNotFoundError = require('../../error/ResourceNotFoundError');
 const ValidationError = require('../../error/ValidationError');
 
 module.exports = (error, _req, res, next) => {
@@ -7,7 +9,19 @@ module.exports = (error, _req, res, next) => {
             message: error.name,
             details: error.message,
         });
-    } else if (process.env.DEBUG === true) {
+    } else if (error instanceof ResourceNotFoundError) {
+        // 404 Resource not found response
+        res.status(404).json({
+            message: error.name,
+            details: error.message,
+        });
+    } else if (error instanceof AuthError) {
+        // 401 Unauthorized found response
+        res.status(401).json({
+            message: error.name,
+            details: error.message,
+        });
+    } else if (process.env.DEBUG === 'true') {
         // unhandled client error response with DEBUG flag
         res.status(500).json({
             message: error.name,

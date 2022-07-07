@@ -2,7 +2,6 @@ const bodyParser = require('body-parser');
 const compression = require('compression');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const express = require('express');
 const helmet = require('helmet');
 const chechaCors = require('../middleware/chechaCors');
 const clientErrorHandler = require('../middleware/errorHandlers/clientErrorHandler');
@@ -21,6 +20,8 @@ module.exports = {
             extended: false,
         }));
         app.use(bodyParser.json());
+        // IDEA: add content-type checker
+
         // parse Cookie header and populate req.cookies with an object keyed by the cookie names.
         app.use(cookieParser());
         // returns the compression middleware
