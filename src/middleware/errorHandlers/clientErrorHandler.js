@@ -1,7 +1,6 @@
 const ValidationError = require('../../error/ValidationError');
 
 module.exports = (error, _req, res, next) => {
-    console.log(error instanceof ValidationError);
     if (error instanceof ValidationError) {
         // 422 Validation response
         res.status(422).json({

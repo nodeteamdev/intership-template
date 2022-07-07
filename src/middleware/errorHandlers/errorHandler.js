@@ -1,8 +1,10 @@
+const logger = require('../../helpers/logger');
+
 module.exports = (error, _req, _res, _next) => {
     // TODO: handle some errors
     if (error instanceof TypeError) {
-        console.warn('Use TypeScript!');
+        logger('Use TypeScript!', 'errorHandler middleware', 'warn');
     } else {
-        console.warn('The error was not handled..');
+        logger('The error was not handled..', 'errorHandler middleware', 'warn');
     }
 };
