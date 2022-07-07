@@ -1,3 +1,5 @@
+const logger = require('../helpers/logger');
+
 /**
  * @function
  * @param  {NodeJS.ErrnoException} error
@@ -10,11 +12,11 @@ function onError(error) {
 
     switch (error.code) {
     case 'EACCES':
-        console.error('Port requires elevated privileges');
+        logger('Port requires elevated privileges', 'server.onError event', 'error');
         process.exit(1);
         break;
     case 'EADDRINUSE':
-        console.error('Port is already in use');
+        logger('Port is already in use', 'server.onError event', 'error');
         process.exit(1);
         break;
     default:
@@ -30,7 +32,7 @@ function onListening() {
     const addr = this.address();
     const bindStr = (typeof addr === 'string') ? `pipe ${addr}` : `port ${addr.port}`;
 
-    console.log(`Listening on ${bindStr}`);
+    logger(`Listening on ${bindStr}`, 'server.onListening event', 'log');
 }
 
 /**
@@ -38,13 +40,11 @@ function onListening() {
  * @inner
  * @param {http.Server} server
  */
-function bind(server) {
-    server.on('error', (error) => this.onError.bind(server)(error));
-    server.on('listening', this.onListening.bind(server));
+function bindServer(server) {
+    server.on('error', (error) => onError.bind(server)(error));
+    server.on('listening', onListening.bind(server));
 }
 
 module.exports = {
-    onError,
-    onListening,
-    bind,
+    bindServer,
 };

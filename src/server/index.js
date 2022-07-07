@@ -4,6 +4,6 @@ const server = require('./server');
 
 const port = server.get('port');
 
-events.bind(
+events.bindServer(
     http.createServer(server).listen(port),
 );
