@@ -25,7 +25,8 @@
     "express": "4.17.1",
     "helmet": "^4.6.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "6.0.14"
+    "mongoose": "6.0.14",
+    "nodemon": "^2.0.19"
   },
   "devDependencies": {
     "eslint": "^8.3.0",

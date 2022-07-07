@@ -40,3 +40,21 @@
         "email": "test@gmail.com"
     }'
 ```
+### SignUp User
+```
+    curl --location --request POST 'localhost:3000/v1/auth/signUp' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+        "email": "test@gmail.com",
+        "fullName": "Test User"
+    }'
+```
+### LogIn User
+```
+    curl --location --request POST 'localhost:3000/v1/auth/logIn' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+        "email": "test@gmail.com",
+        "fullName": "Test User"
+    }'
+```

@@ -1,0 +1,85 @@
+const jwt = require('jsonwebtoken');
+const UserToken = require('./token_model');
+
+async function generateTokens(user) {
+    try {
+        const payload = { id: user.id };
+        const accessToken = jwt.sign(
+            payload,
+            'ACCESS_TOKEN_PRIVATE_KEY',
+            { expiresIn: '1m' },
+        );
+        const refreshToken = jwt.sign(
+            payload,
+            'REFRESH_TOKEN_PRIVATE_KEY',
+            { expiresIn: '15m' },
+        );
+
+        const userToken = await UserToken.findOne({ userId: user.id });
+        if (userToken) await userToken.remove();
+
+        await UserToken.create({ userId: user.id, token: refreshToken });
+        return Promise.resolve({ accessToken, refreshToken });
+    } catch (err) {
+        return Promise.reject(err);
+    }
+}
+
+function verifyToken(req, res, next) {
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = jwt.verify(token, 'ACCESS_TOKEN_PRIVATE_KEY');
+        req.userData = decoded;
+        next();
+    } catch (error) {
+        return res.status(401).json({status: true, message: 'Your session is not valid.', data: error});
+    }
+}
+
+// async function verifyRefreshToken(refreshToken) {
+//     const privateKey = 'REFRESH_TOKEN_PRIVATE_KEY';
+
+//     return new Promise((resolve, reject) => {
+//         UserToken.findOne({ token: refreshToken }, (err, doc) => {
+//             if (!doc) { return reject({ error: true, message: 'Invalid refresh token' }); }
+
+//             jwt.verify(refreshToken, privateKey, (err, tokenDetails) => {
+//                 if (err) { return reject({ error: true, message: 'Invalid refresh token' }); }
+//                 resolve({
+//                     tokenDetails,
+//                     error: false,
+//                     message: 'Valid refresh token',
+//                 });
+//             });
+//         });
+//     });
+// }
+
+// async function tokenChecker(req, res, next) {
+//     const token = req.body.accessToken || req.query.accessToken || req.headers['x-access-token'];
+//     // decode token
+//     if (token) {
+//     // verifies secret and checks exp
+//         jwt.verify(token, 'ACCESS_TOKEN_PRIVATE_KEY', (err, decoded) => {
+//             if (err) {
+//                 return res.status(401).json({ error: true, message: 'Unauthorized access.' });
+//             }
+//             req.decoded = decoded;
+//             next();
+//         });
+//     } else {
+//     // if there is no token
+//     // return an error
+//         return res.status(403).send({
+//             error: true,
+//             message: 'No token provided.',
+//         });
+//     }
+// }
+
+module.exports = {
+    generateTokens,
+    verifyToken,
+    // verifyRefreshToken,
+    // tokenChecker,
+};
