@@ -40,6 +40,9 @@ module.exports = {
       res.header('Access-Control-Allow-Credentials', 'true');
       next();
     });
+    app.use(logErrors);
+    app.use(clientErrorHandler);
+    app.use(errorHandler);
   },
   after(app) {
     app.use(logErrors);
