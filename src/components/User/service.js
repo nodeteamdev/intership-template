@@ -22,6 +22,22 @@ function findById(id) {
     return UserModel.findById(id).exec();
 }
 
+function findBy_nickName(nickName) {
+    return UserModel.findOne({ nickName: nickName });
+}
+
+function isExistsEmail(email) {
+    return UserModel.exists({ email });
+}
+
+function isExists_nickName(nickName) {
+    return UserModel.exists({ nickName: nickName });
+}
+
+function findByEmail(email) {
+    return UserModel.findOne({ email: email })
+}
+
 /**
  * @exports
  * @method create
@@ -60,7 +76,11 @@ function deleteById(_id) {
 module.exports = {
     findAll,
     findById,
+    findBy_nickName,
     create,
     updateById,
     deleteById,
+    isExistsEmail,
+    isExists_nickName,
+    findByEmail,
 };

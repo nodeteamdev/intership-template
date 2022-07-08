@@ -3,7 +3,7 @@ const connections = require('../../config/connection');
 
 const UserSchema = new Schema(
     {
-        fullName: {
+        nickName: {
             type: String,
             trim: true,
         },
@@ -11,6 +11,10 @@ const UserSchema = new Schema(
             type: String,
             required: true,
         },
+        password: {
+            type: String,
+            required: true,
+        }
     },
     {
         collection: 'usermodel',

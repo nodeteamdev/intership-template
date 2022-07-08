@@ -1,6 +1,8 @@
 const express = require('express');
 const http = require('http');
 const UserRouter = require('../components/User/router');
+const AuthRouter = require('../components/Auth/router');
+const authMiddleware = require('./middlewares/authMiddleware');
 
 module.exports = {
     /**
@@ -20,7 +22,9 @@ module.exports = {
          * @param {string} path - Express path
          * @param {callback} middleware - Express middleware.
          */
-        app.use('/v1/users', UserRouter);
+        app.use('/v1/users', authMiddleware, UserRouter);
+
+        app.use('/v1/auth', AuthRouter);
 
         /**
          * @description No results returned mean the object is not found

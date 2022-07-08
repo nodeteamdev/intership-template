@@ -100,6 +100,36 @@ async function create(req, res, next) {
     }
 }
 
+async function findByEmail(req, res, next) {
+    try {
+        const { error, value } = UserValidation.findByEmail(req.body.email);
+
+        if (error) {
+            throw new ValidationError(error.details);
+        }
+
+        const user = await UserService.findByEmail(value);
+
+        return res.status(200).json({
+            data: user,
+        });
+    } catch (error) {
+        if (error instanceof ValidationError) {
+            return res.status(422).json({
+                message: error.name,
+                details: error.message,
+            });
+        }
+
+        res.status(500).json({
+            message: error.name,
+            details: error.message,
+        });
+
+        return next(error);
+    }
+}
+
 /**
  * @function
  * @param {express.Request} req
@@ -180,4 +210,5 @@ module.exports = {
     create,
     updateById,
     deleteById,
+    findByEmail,
 };

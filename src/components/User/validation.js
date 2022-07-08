@@ -29,13 +29,21 @@ class UserValidation extends Validation {
         return this.Joi
             .object({
                 email: this.Joi.string().email(),
-                fullName: this.Joi
+                nickName: this.Joi
                     .string()
                     .min(1)
                     .max(30)
                     .required(),
             })
             .validate(profile);
+    }
+
+    findByEmail(email) {
+        return this.Joi
+            .object({
+                email: this.Joi.string().email(),
+            })
+            .validate(email);
     }
 
     /**
@@ -48,7 +56,7 @@ class UserValidation extends Validation {
         return this.Joi
             .object({
                 id: this.Joi.objectId(),
-                fullName: this.Joi
+                nickName: this.Joi
                     .string()
                     .min(1)
                     .max(30)
