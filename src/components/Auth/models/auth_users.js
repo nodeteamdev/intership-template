@@ -1,18 +1,20 @@
 const { Schema } = require('mongoose');
-const mongooseConnection = require('../../config/connection');
+const mongooseConnection = require('../../../config/connection');
 
-const COLLECTION_NAME = 'usermodel';
-const MODEL_NAME = 'UserModel';
+const COLLECTION_NAME = 'auth_users';
+const MODEL_NAME = 'AuthUserModel';
 
 const schema = new Schema(
     {
-        fullName: {
-            type: String,
-            trim: true,
-        },
         email: {
             type: String,
+            unique: true,
             required: true,
+        },
+        passwordHash: {
+            type: String,
+            required: true,
+            select: false,
         },
     },
     {

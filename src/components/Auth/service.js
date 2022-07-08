@@ -1,6 +1,6 @@
 const jwtFacade = require('./jwt.facade');
-
-const { AuthUserModel, RefreshTokenModel } = require('./models');
+const AuthUserModel = require('./models/auth_users');
+const RefreshTokenModel = require('./models/refresh_tokens');
 const { getPasswordHash, isPasswordCorrect } = require('./password.helper');
 
 async function getAuthUserById(authUserId) {

@@ -1,7 +1,10 @@
 const { Schema } = require('mongoose');
 const mongooseConnection = require('../../config/connection');
 
-const ProductSchema = new Schema(
+const COLLECTION_NAME = 'products';
+const MODEL_NAME = 'ProductModel';
+
+const schema = new Schema(
     {
         name: {
             type: String,
@@ -14,9 +17,9 @@ const ProductSchema = new Schema(
         },
     },
     {
-        collection: 'products',
+        collection: COLLECTION_NAME,
         versionKey: false,
     },
 );
 
-module.exports = mongooseConnection.model('ProductModel', ProductSchema);
+module.exports = mongooseConnection.model(MODEL_NAME, schema);
