@@ -24,6 +24,17 @@ function findById(id) {
 
 /**
  * @exports
+ * @method findByEmail
+ * @param {string} email
+ * @summary get list of all users
+ * @returns Promise<UserModel[]>
+ */
+function userFindByEmail(email) {
+  return UserModel.findOne(email).exec();
+}
+
+/**
+ * @exports
  * @method create
  * @param {object} profile
  * @summary create a new user
@@ -63,4 +74,5 @@ module.exports = {
   create,
   updateById,
   deleteById,
+  userFindByEmail,
 };

@@ -5,18 +5,19 @@ const { Router } = require('express');
 const router = Router();
 
 const {
-  verifyToken,
   getUser,
-  getTokens,
-  getRefreshToken,
+  logIn,
+  refreshTokens,
   deleteToken,
 } = require('./index');
 
+const { verifyToken } = require('./policy');
+
 router.get('/posts', verifyToken, getUser);
 
-router.post('/login', getTokens);
+router.post('/login', logIn);
 
-router.post('/token', getRefreshToken);
+router.post('/token', refreshTokens);
 
 router.delete('/logout', deleteToken);
 

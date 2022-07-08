@@ -15,11 +15,18 @@ const Auth = new Schema(
       type: String,
       required: true,
     },
-    accessToken: {
-      type: String,
-    },
     refreshToken: {
       type: String,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+      timestamp: true,
+    },
+    updatedAt: {
+      type: Date,
+      default: Date.now,
+      timestamp: true,
     },
   },
   {

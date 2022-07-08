@@ -1,72 +1,38 @@
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
 
-const UserModel = require('../User/model');
 const AuthModel = require('./model');
+const { generateAccessToken, generateRefreshToken } = require('./service');
 
-function generateAccessToken(user) {
-  return jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30s' });
-}
-
-function generateRefreshToken(user) {
-  return jwt.sign({ user }, process.env.REFRESH_TOKEN_SECRET);
-}
-
-async function verifyToken(req, res, next) {
-  try {
-    const authHeader = await req.headers.authorization;
-    const token = await authHeader && authHeader.split(' ')[1];
-
-    if (token == null) {
-      return res.sendStatus(401);
-    }
-
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, authData) => {
-      if (err) {
-        return res.sendStatus(403);
-      }
-
-      req.authData = authData;
-
-      return null;
-    });
-  } catch (err) {
-    res.sendStatus(err);
-  }
-
-  return next();
-}
+const { userFindByEmail } = require('../User/service');
+const { authFindByEmail } = require('./service');
 
 async function getUser(req, res, next) {
   try {
-    const user = await UserModel.findOne({ fullName: 'John Hey' }).exec();
+    const user = await userFindByEmail(req.params.email);
 
-    return res.json(user) || res.json();
+    res.json(user);
   } catch (err) {
-    return next(err);
+    next(err);
   }
 }
 
-async function getTokens(req, res, next) {
+async function logIn(req, res, next) {
   try {
-    const user = await UserModel.findOne({ fullName: 'John Hey' }).exec();
+    const user = await userFindByEmail(req.params.email);
 
     if (!user) {
       return res.status(401).json({
-        message: 'Invalid credentials',
+        message: 'The user wasn\'t found',
       });
     }
 
     const accToken = generateAccessToken(user);
     const refToken = generateRefreshToken(user);
 
-    const hashedPassword = await bcrypt.hash(user.password, 10);
-
     AuthModel.insertMany({
       fullName: user.fullName,
       email: user.email,
-      password: hashedPassword,
-      accessToken: accToken,
+      password: user.password,
       refreshToken: refToken,
     });
 
@@ -81,25 +47,25 @@ async function getTokens(req, res, next) {
   }
 }
 
-async function getRefreshToken(req, res, next) {
+async function refreshTokens(req, res, next) {
   try {
-    const user = await AuthModel.findOne({ fullName: 'John Hey' }).exec();
+    const user = await authFindByEmail(req.params.email);
 
     if (!user) {
       res.status(401).json({
-        message: 'Invalid credentials',
+        message: 'The user wasn\'t found',
       });
     }
 
     const { refreshToken } = user;
 
     if (refreshToken == null) {
-      res.sendStatus(401);
+      res.status(401).json({ message: 'Token not found' });
     }
 
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, authData) => {
       if (err) {
-        return res.sendStatus(403);
+        return res.status(403).json({ message: 'Not found' });
       }
 
       const accToken = generateAccessToken({ fullName: authData.fullName });
@@ -121,9 +87,8 @@ async function deleteToken(req, res, next) {
 }
 
 module.exports = {
-  verifyToken,
   getUser,
-  getTokens,
-  getRefreshToken,
+  logIn,
+  refreshTokens,
   deleteToken,
 };

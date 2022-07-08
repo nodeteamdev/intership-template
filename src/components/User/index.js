@@ -1,6 +1,11 @@
+const bcrypt = require('bcrypt');
+
+const User = require('./model');
 const UserService = require('./service');
 const UserValidation = require('./validation');
 const ValidationError = require('../../error/ValidationError');
+
+const { clientErrorHandler } = require('../../error/errors');
 
 /**
  * @function
@@ -54,10 +59,7 @@ async function findById(req, res, next) {
       });
     }
 
-    res.status(500).json({
-      message: error.name,
-      details: error.message,
-    });
+    clientErrorHandler(error);
 
     return next(error);
   }
@@ -72,16 +74,18 @@ async function findById(req, res, next) {
  */
 async function create(req, res, next) {
   try {
-    const { error } = UserValidation.create(req.body);
+    const { error, value } = UserValidation.create(req.body);
 
     if (error) {
       throw new ValidationError(error.details);
     }
 
-    const user = await UserService.create(req.body);
+    const hashedPassword = await bcrypt.hash(value.password, 10);
+
+    await new User({ ...value, password: hashedPassword }).save();
 
     return res.status(200).json({
-      data: user,
+      message: 'user created',
     });
   } catch (error) {
     if (error instanceof ValidationError) {
@@ -91,10 +95,7 @@ async function create(req, res, next) {
       });
     }
 
-    res.status(500).json({
-      message: error.name,
-      details: error.message,
-    });
+    clientErrorHandler(error);
 
     return next(error);
   }
@@ -109,13 +110,13 @@ async function create(req, res, next) {
  */
 async function updateById(req, res, next) {
   try {
-    const { error } = UserValidation.updateById(req.body);
+    const { error, value } = UserValidation.updateById(req.body);
 
     if (error) {
       throw new ValidationError(error.details);
     }
 
-    const updatedUser = await UserService.updateById(req.body.id, req.body);
+    const updatedUser = await UserService.updateById(value.id, req.body);
 
     return res.status(200).json({
       data: updatedUser,
@@ -128,10 +129,7 @@ async function updateById(req, res, next) {
       });
     }
 
-    res.status(500).json({
-      message: error.name,
-      details: error.message,
-    });
+    clientErrorHandler(error);
 
     return next(error);
   }
@@ -146,13 +144,13 @@ async function updateById(req, res, next) {
  */
 async function deleteById(req, res, next) {
   try {
-    const { error } = UserValidation.deleteById(req.body);
+    const { error, value } = UserValidation.deleteById(req.body);
 
     if (error) {
       throw new ValidationError(error.details);
     }
 
-    const deletedUser = await UserService.deleteById(req.body.id);
+    const deletedUser = await UserService.deleteById(value.id);
 
     return res.status(200).json({
       data: deletedUser,
@@ -165,10 +163,7 @@ async function deleteById(req, res, next) {
       });
     }
 
-    res.status(500).json({
-      message: error.name,
-      details: error.message,
-    });
+    clientErrorHandler(error);
 
     return next(error);
   }
