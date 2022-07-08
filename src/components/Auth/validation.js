@@ -14,7 +14,7 @@ class UserValidation extends Validation {
     login(data) {
         return this.Joi
             .object({
-                email: this.Joi.string().email(),
+                email: this.Joi.string().email().trim().lowercase(),
                 password: this.Joi.string()
                     .pattern(/^[a-zA-Z ]{3,20}$/)
                     .trim()
@@ -32,7 +32,7 @@ class UserValidation extends Validation {
     signUp(profile) {
         return this.Joi
             .object({
-                email: this.Joi.string().email(),
+                email: this.Joi.string().email().trim().lowercase(),
                 password: this.Joi.string()
                     .pattern(/^[a-zA-Z ]{3,20}$/)
                     .trim()

@@ -12,11 +12,10 @@ async function signUp(req, res) {
     if (error) {
         throw new ValidationError(error.details);
     }
-    if (value.email !== value.email.toLowerCase()) throw new ValidationError('Email must be in lowercase');
 
     const userExistens = await UsersService.findByEmail(value.email);
     if (userExistens) throw new ConflictError('such user already exists');
-    const user = await UsersService.create(req.body);
+    const user = await UsersService.create(value);
 
     return res.status(201).json({
         data: user,
@@ -26,12 +25,11 @@ async function signUp(req, res) {
 async function login(req, res) {
     const { error, value } = AuthValidation.login(req.body);
 
-    if (value.email !== value.email.toLowerCase()) throw new ValidationError('Email must be in lowercase');
     if (error) {
         throw new ValidationError(error.details);
     }
 
-    const { email, password } = req.body;
+    const { email, password } = value;
     const user = await UsersService.findByEmail(email);
 
     if (!user) throw new NotFoundError('user not found');
@@ -62,6 +60,8 @@ async function refreshTokens(req, res) {
     const { _id } = AuthSevice.verifyRefresh(oldToken);
 
     const user = await UsersService.findById(_id, { email: 1, refreshToken: 1 });
+
+    if (!user) throw new NotFoundError('user not found');
     if (user?.refreshToken === oldToken) {
         const { accessToken, refreshToken } = AuthSevice.parseTokens(_id);
         await UsersService.updateById(_id, { $set: { refreshToken } });
@@ -83,6 +83,7 @@ async function refreshTokens(req, res) {
 async function logout(req, res) {
     const { _id } = req.user;
     const user = await UsersService.findById(_id, { refreshToken: 1 });
+    if (!user) throw new NotFoundError('user not found');
     if (user?.refreshToken) {
         await UsersService.updateById(_id, { $set: { refreshToken: null } });
     }
