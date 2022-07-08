@@ -1,28 +1,25 @@
 const jwt = require('jsonwebtoken');
-
-require('dotenv').config();
+const RefreshModel = require('../components/User/models/refreshModel');
 
 const { JWT_SECRET } = process.env;
 
 exports.auth = async (req, res, next) => {
   try {
-    const token = req.body.token || req.query.token || req.headers.token;
-
-    if (!token) {
-      return res.send({ status: 403, message: 'A token is required for authentication' });
+    const id = req.params.id;
+    const token = await RefreshModel.refresh.findById({ _id: id }).exec();
+    if (!token.accessToken) {
+      throw new Error('A token is required for authentication');
     }
     try {
-      const decoded = jwt.verify(token, JWT_SECRET);
+      const decoded = jwt.verify(token.accessToken, JWT_SECRET);
       req.user = decoded;
     } catch (err) {
-      return res.send({ status: 401, message: 'Invalid Token' });
+      next(err);
+      // message: 'Invalid Token'
     }
     return next();
   } catch (error) {
-    res.send({
-      status: 401,
-      error,
-      message: 'User session expired,Log in to continue',
-    });
+    next(error);
+    //  message: 'User session expired, Log in to continue'
   }
 };

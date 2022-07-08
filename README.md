@@ -11,15 +11,10 @@
 
 { "email": "test@mail.com", "password": "12345678" }
 
-### POST http://localhost:3000/api/v1/user/refresh Content-Type: application/json
+### POST http://localhost:3000/api/v1/user/refresh/:_id Content-Type: application/json
 
-{
-"refreshToken" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWU2NmY3MTQ2NDZmODMyNTBiYzEyNmYiLCJpYXQiOjE2NDI2NjExMzEsImV4cCI6MTY0MjY2MTQzMX0.v22TieKOBJ149oEepJGcH-6OJg12TUgjjFgILQTfOmQ"
-}
+### GET http://localhost:3000/api/v1/user/list/:_id Content-Type: application/json
 
-### GET http://localhost:3000/api/v1/user/list Content-Type: application/json
+### GET http://localhost:3000/api/v1/user/logout/:_id Content-Type: application/json
 
-{
-
-"token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWU2NmY3MTQ2NDZmODMyNTBiYzEyNmYiLCJpYXQiOjE2NDI2NjE0MTgsImV4cCI6MTY0MjY2MTUzOH0.DyJpMhBtnAm1eIeWb1uje71_rnPKvoa2xyaVX50T7Rw"
-}
+### DELETE http://localhost:3000/api/v1/user/delete/:_id Content-Type: application/json

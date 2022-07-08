@@ -1,65 +1,123 @@
-const UserModel = require('./model');
+const jwt = require('jsonwebtoken');
+const bcryptjs = require('bcryptjs');
+const UserModel = require('./models/userModel');
+const RefreshModel = require('./models/refreshModel');
 
-/**
- * @exports
- * @method findAll
- * @param {}
- * @summary get list of all users
- * @returns Promise<UserModel[]>
- */
-function findAll() {
-  return UserModel.find({}).exec();
+async function newUser(userInfo) {
+  const {
+    firstname, lastname, email, password,
+  } = userInfo;
+  const user = await UserModel.user.findOne({ email });
+
+  if (user) {
+    throw new Error('User already exists');
+  }
+
+  const newUser = new UserModel.user({
+    firstname, lastname, email, password,
+  });
+
+  await newUser.save();
+
+  const payload = {
+    accessToken: '',
+    refreshToken: '',
+    _id: newUser._id,
+    firstname: newUser.firstname,
+  };
+  const refresh = new RefreshModel.refresh({
+    ...payload,
+  });
+  await refresh.save();
+  console.log(newUser);
+  const data = {
+    data: newUser,
+    tokens: refresh,
+  };
+
+  return data;
 }
 
-/**
- * @exports
- * @method findById
- * @param {string} id
- * @summary get a user
- * @returns {Promise<UserModel>}
- */
-function findById(id) {
-  return UserModel.findById(id).exec();
+async function getUser(id) {
+  const user = await UserModel.user.findById({ _id: id });
+  return user;
 }
 
-/**
- * @exports
- * @method create
- * @param {object} profile
- * @summary create a new user
- * @returns {Promise<UserModel>}
- */
-function create(profile) {
-  return UserModel.create(profile);
-}
-/**
- * Find a user by id and update his profile
- * @exports
- * @method updateById
- * @param {string} _id
- * @param {object} newProfile
- * @summary update a user's profile
- * @returns {Promise<void>}
- */
-function updateById(_id, newProfile) {
-  return UserModel.updateOne({ _id }, newProfile).exec();
+async function getUsers() {
+  const users = await UserModel.user.find({});
+  return users;
 }
 
-/**
- * @exports
- * @method deleteById
- * @param {string} _id
- * @summary delete a user from database
- * @returns {Promise<void>}
- */
-function deleteById(_id) {
-  return UserModel.deleteOne({ _id }).exec();
+async function updateUser(id, updates, body) {
+  const user = await UserModel.user.findById({ _id: id }).exec();
+  const refresh = await RefreshModel.refresh.findById({ _id: id }).exec();
+  refresh.firstname = body.firstname;
+  updates.forEach((update) => {
+    user[update] = body[update];
+  });
+  await refresh.save();
+  await user.save();
+  return user;
+}
+
+async function deleteUser(id) {
+  const user = await UserModel.user.findById({ _id: id }).exec();
+  const refresh = await RefreshModel.refresh.findById({ _id: id }).exec();
+  if (!user) {
+    throw new Error('User not found');
+  }
+  await user.remove();
+  await refresh.remove();
+  return 'User deleted';
+}
+
+async function loginUser(body) {
+  const { email, password } = body;
+  const user = await UserModel.user.findOne({ email }).exec();
+  if (!user) {
+    throw new Error('User not found');
+  }
+  const isMatch = await bcryptjs.compare(password, user.password);
+  if (!isMatch) {
+    throw new Error('Incorrect Password, Try again!');
+  }
+  const refresh = await RefreshModel.refresh.findById({ _id: user.id }).exec();
+  await refresh.generateAuthToken();
+  await refresh.generateRefreshToken();
+  await refresh.save();
+  return { data: user, tokens: refresh };
+}
+
+async function refreshTokenUser(id) {
+  const tokens = await RefreshModel.refresh.findById({ _id: id }).exec();
+  if (!tokens.refreshToken) {
+    throw new Error('No refresh token provided');
+  }
+  await jwt.verify(tokens.refreshToken, process.env.REFRESH_TOKEN_SECRET);
+  await tokens.generateAuthToken();
+  await tokens.save();
+  return tokens;
+}
+
+async function logoutUser(id) {
+  const user = await UserModel.user.findOne({ _id: id }).exec();
+  const tokens = await RefreshModel.refresh.findById({ _id: id }).exec();
+  if (!user) {
+    throw new Error('User not found');
+  }
+  tokens.accessToken = '';
+  tokens.refreshToken = '';
+  await tokens.save();
+  return 'Logout successful';
 }
 
 module.exports = {
-  findAll,
-  findById,
-  create,
-  updateById,
-  deleteById,
+  newUser,
+  getUser,
+  getUsers,
+  updateUser,
+  deleteUser,
+  loginUser,
+  refreshTokenUser,
+  logoutUser,
 };
