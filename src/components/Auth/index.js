@@ -30,7 +30,8 @@ async function loginUsingEmailAndPassword(req, res) {
 }
 
 async function getNewAccessAndRefreshToken(req, res) {
-    const authUser = await AuthService.getAuthUserUsingRefreshToken(req.body);
+    const { id: authUserId, refreshToken: token } = req.body;
+    const authUser = await AuthService.getAuthUserUsingRefreshToken(authUserId, token);
     if (authUser === null) {
         throw new AuthError();
     }
@@ -45,8 +46,8 @@ async function getNewAccessAndRefreshToken(req, res) {
 }
 
 async function removeRefreshToken(req, res) {
-    const { id, refreshToken } = req.body;
-    const authUser = await AuthService.getAuthUserUsingRefreshToken(id, refreshToken);
+    const { id: authUserId, refreshToken: token } = req.body;
+    const authUser = await AuthService.getAuthUserUsingRefreshToken(authUserId, token);
     if (authUser === null) {
         throw new AuthError();
     }
