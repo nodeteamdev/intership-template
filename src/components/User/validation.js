@@ -11,7 +11,7 @@ class UserValidation extends Validation {
      * @returns
      * @memberof UserValidation
      */
-  findById(data) {
+  getUser(data) {
     return this.Joi
       .object({
         id: this.Joi.objectId(),
@@ -25,11 +25,21 @@ class UserValidation extends Validation {
      * @returns
      * @memberof UserValidation
      */
-  create(profile) {
+  newUser(profile) {
     return this.Joi
       .object({
+        firstname: this.Joi
+          .string()
+          .min(1)
+          .max(30)
+          .required(),
+        lastname: this.Joi
+          .string()
+          .min(1)
+          .max(30)
+          .required(),
         email: this.Joi.string().email(),
-        fullName: this.Joi
+        password: this.Joi
           .string()
           .min(1)
           .max(30)
@@ -44,11 +54,21 @@ class UserValidation extends Validation {
      * @returns
      * @memberof UserValidation
      */
-  updateById(data) {
+  updateUser(data) {
     return this.Joi
       .object({
-        id: this.Joi.objectId(),
-        fullName: this.Joi
+        firstname: this.Joi
+          .string()
+          .min(1)
+          .max(30)
+          .required(),
+        lastname: this.Joi
+          .string()
+          .min(1)
+          .max(30)
+          .required(),
+        email: this.Joi.string().email(),
+        password: this.Joi
           .string()
           .min(1)
           .max(30)
@@ -62,7 +82,36 @@ class UserValidation extends Validation {
      * @returns
      * @memberof UserValidation
      */
-  deleteById(data) {
+  deleteUser(data) {
+    return this.Joi
+      .object({
+        id: this.Joi.objectId(),
+      })
+      .validate(data);
+  }
+
+  loginUser(data) {
+    return this.Joi
+      .object({
+        email: this.Joi.string().email(),
+        password: this.Joi
+          .string()
+          .min(1)
+          .max(30)
+          .required(),
+      })
+      .validate(data);
+  }
+
+  refreshTokenUser(data) {
+    return this.Joi
+      .object({
+        id: this.Joi.objectId(),
+      })
+      .validate(data);
+  }
+
+  logoutUser(data) {
     return this.Joi
       .object({
         id: this.Joi.objectId(),

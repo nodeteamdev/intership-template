@@ -1,408 +1,158 @@
-// const UserService = require('./service');
-// const UserValidation = require('./validation');
-// const ValidationError = require('../../error/ValidationError');
+const UserService = require('./service');
+const UserValidation = require('./validation');
+const ValidationError = require('../../error/ValidationError');
 
-// /**
-//  * @function
-//  * @param {express.Request} req
-//  * @param {express.Response} res
-//  * @param {express.NextFunction} next
-//  * @returns {Promise < void >}
-//  */
-// async function findAll(req, res, next) {
-//   try {
-//     const users = await UserService.findAll();
-
-//     res.status(200).json({
-//       data: users,
-//     });
-//   } catch (error) {
-//     res.status(500).json({
-//       error: error.message,
-//       details: null,
-//     });
-
-//     next(error);
-//   }
-// }
-
-// /**
-//  * @function
-//  * @param {express.Request} req
-//  * @param {express.Response} res
-//  * @param {express.NextFunction} next
-//  * @returns {Promise < void >}
-//  */
-// async function findById(req, res, next) {
-//   try {
-//     const { error } = UserValidation.findById(req.params);
-
-//     if (error) {
-//       throw new ValidationError(error.details);
-//     }
-
-//     const user = await UserService.findById(req.params.id);
-
-//     return res.status(200).json({
-//       data: user,
-//     });
-//   } catch (error) {
-//     if (error instanceof ValidationError) {
-//       return res.status(422).json({
-//         error: error.name,
-//         details: error.message,
-//       });
-//     }
-
-//     res.status(500).json({
-//       message: error.name,
-//       details: error.message,
-//     });
-
-//     return next(error);
-//   }
-// }
-
-// /**
-//  * @function
-//  * @param {express.Request} req
-//  * @param {express.Response} res
-//  * @param {express.NextFunction} next
-//  * @returns {Promise < void >}
-//  */
-// async function create(req, res, next) {
-//   try {
-//     const { error } = UserValidation.create(req.body);
-
-//     if (error) {
-//       throw new ValidationError(error.details);
-//     }
-
-//     const user = await UserService.create(req.body);
-
-//     return res.status(200).json({
-//       data: user,
-//     });
-//   } catch (error) {
-//     if (error instanceof ValidationError) {
-//       return res.status(422).json({
-//         message: error.name,
-//         details: error.message,
-//       });
-//     }
-
-//     res.status(500).json({
-//       message: error.name,
-//       details: error.message,
-//     });
-
-//     return next(error);
-//   }
-// }
-
-// /**
-//  * @function
-//  * @param {express.Request} req
-//  * @param {express.Response} res
-//  * @param {express.NextFunction} next
-//  * @returns {Promise<void>}
-//  */
-// async function updateById(req, res, next) {
-//   try {
-//     const { error } = UserValidation.updateById(req.body);
-
-//     if (error) {
-//       throw new ValidationError(error.details);
-//     }
-
-//     const updatedUser = await UserService.updateById(req.body.id, req.body);
-
-//     return res.status(200).json({
-//       data: updatedUser,
-//     });
-//   } catch (error) {
-//     if (error instanceof ValidationError) {
-//       return res.status(422).json({
-//         message: error.name,
-//         details: error.message,
-//       });
-//     }
-
-//     res.status(500).json({
-//       message: error.name,
-//       details: error.message,
-//     });
-
-//     return next(error);
-//   }
-// }
-
-// /**
-//  * @function
-//  * @param {express.Request} req
-//  * @param {express.Response} res
-//  * @param {express.NextFunction} next
-//  * @returns {Promise<void>}
-//  */
-// async function deleteById(req, res, next) {
-//   try {
-//     const { error } = UserValidation.deleteById(req.body);
-
-//     if (error) {
-//       throw new ValidationError(error.details);
-//     }
-
-//     const deletedUser = await UserService.deleteById(req.body.id);
-
-//     return res.status(200).json({
-//       data: deletedUser,
-//     });
-//   } catch (error) {
-//     if (error instanceof ValidationError) {
-//       return res.status(422).json({
-//         message: error.name,
-//         details: error.message,
-//       });
-//     }
-
-//     res.status(500).json({
-//       message: error.name,
-//       details: error.message,
-//     });
-
-//     return next(error);
-//   }
-// }
-
-// module.exports = {
-//   findAll,
-//   findById,
-//   create,
-//   updateById,
-//   deleteById,
-// };
-
-const bcryptjs = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const User = require('./model');
-
-exports.newUser = async (req, res) => {
+async function newUser(req, res, next) {
   try {
-    const {
-      firstname, lastname, email, password,
-    } = req.body;
-
-    const user = await User.findOne({ email });
-
-    if (user) {
-      return res.status(400).send({
-        message: 'User already exists',
-      });
+    const { error } = UserValidation.newUser(req.body);
+    if (error) {
+      throw new ValidationError(error.details);
     }
 
-    const newUser = new User({
-      firstname,
-      lastname,
-      email,
-      password,
-    });
-
-    await newUser.save();
-
+    const data = await UserService.newUser(req.body);
     res.status(201).send({
-      data: newUser,
+      data,
     });
   } catch (error) {
-    res.status(500).send({
-      status: 500,
-      error: error.message,
-    });
+    next(error);
   }
-};
+}
 
-exports.getUser = async (req, res) => {
+async function getUser(req, res, next) {
   try {
-    const id = req.params._id;
+    const { error } = UserValidation.getUser(req.params);
+    if (error) {
+      throw new ValidationError(error.details);
+    }
 
-    const user = await User.findById({ _id: id });
+    const id = req.params.id;
+    const user = await UserService.getUser(id);
 
     if (!user) {
-      return res.status(404).send({
-        message: 'User not found',
-      });
+      throw new Error('User not found');
     }
 
     res.status(200).send({
       data: user,
     });
   } catch (error) {
-    res.status(500).send({
-      error,
-    });
+    next(error);
   }
-};
+}
 
-exports.getUsers = async (req, res) => {
+async function getUsers(req, res, next) {
   try {
-    const users = await User.find({});
+    const users = await UserService.getUsers();
 
     if (!users) {
-      return res.status(404).send({
-        message: 'No users found',
-      });
+      throw new Error('Users not found');
     }
 
     res.status(200).send({
       data: users,
     });
   } catch (error) {
-    res.status(500).send({
-      error,
-    });
+    next(error);
   }
-};
+}
 
-exports.updateUser = async (req, res) => {
+async function updateUser(req, res, next) {
   try {
-    const id = req.params._id;
+    const { error } = UserValidation.updateUser(req.body);
+    if (error) {
+      throw new ValidationError(error.details);
+    }
 
+    const id = req.params.id;
     const updates = Object.keys(req.body);
-
-    const user = await User.findById({ _id: id }).exec();
-
+    const user = await UserService.updateUser(id, updates, req.body);
     if (!user) {
-      return res.status(404).send({
-        message: 'User not found',
-      });
+      throw new Error('User not found');
     }
-
-    updates.forEach((update) => {
-      user[update] = req.body[update];
-    });
-
-    await user.save();
-
     res.status(200).send({
       data: user,
     });
   } catch (error) {
-    res.status(500).send({
-      error,
-    });
+    next(error);
   }
-};
+}
 
-exports.deleteUser = async (req, res) => {
+async function deleteUser(req, res, next) {
   try {
-    const id = req.params._id;
-
-    const user = await User.findById({ _id: id }).exec();
-
-    if (!user) {
-      return res.status(404).send({
-        message: 'User not found',
-      });
+    const { error } = UserValidation.deleteUser(req.params);
+    if (error) {
+      throw new ValidationError(error.details);
     }
 
-    await user.remove();
-
+    const id = req.params.id;
+    const result = await UserService.deleteUser(id);
     res.status(200).send({
-      message: 'User deleted',
+      message: result,
     });
   } catch (error) {
-    res.status(500).send({
-      error,
-    });
+    next(error);
   }
-};
+}
 
-exports.loginUser = async (req, res) => {
+async function loginUser(req, res, next) {
   try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email }).exec();
-
-    if (!user) {
-      return res.status(401).send({
-        message: 'User not found',
-      });
+    const { error } = UserValidation.loginUser(req.body);
+    if (error) {
+      throw new ValidationError(error.details);
     }
 
-    const isMatch = await bcryptjs.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).send({
-        message: 'Incorrect Password, Try again!',
-      });
-    }
-
-    await user.generateAuthToken();
-    await user.generateRefreshToken();
-
+    const result = await UserService.loginUser(req.body);
     res.status(200).send({
-      data: user,
+      ...result,
       message: 'login successful',
     });
   } catch (error) {
-    res.status(500).send({
-      error,
-    });
+    next(error);
   }
-};
+}
 
-exports.refreshTokenUser = async (req, res) => {
+async function refreshTokenUser(req, res, next) {
   try {
-    const { refreshToken } = req.body;
-
-    if (!refreshToken) {
-      return res.status(401).send({
-        message: 'No refresh token provided',
-      });
+    const { error } = UserValidation.refreshTokenUser(req.params);
+    if (error) {
+      throw new ValidationError(error.details);
     }
 
-    await jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-    const user = await User.findOne(refreshToken._id).exec();
-
-    if (!user) {
-      return res.status(401).send({
-        message: 'User not found',
-      });
-    }
-
-    await user.generateAuthToken();
+    const id = req.params.id;
+    const tokens = await UserService.refreshTokenUser(id);
     res.status(200).send({
-      data: user.token,
+      data: tokens,
       message: 'Refresh token successful',
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).send({
-      error,
-    });
+    next(error);
   }
-};
+}
 
-exports.logoutUser = async (req, res) => {
+async function logoutUser(req, res, next) {
   try {
-    const id = req.params._id;
-    const user = await User.findOne({ _id: id }).exec();
-
-    if (!user) {
-      return res.status(401).send({
-        message: 'User not found',
-      });
+    const { error } = UserValidation.logoutUser(req.params);
+    if (error) {
+      throw new ValidationError(error.details);
     }
 
-    user.token = '';
-
-    user.refreshToken = '';
-
-    await user.save();
-
+    const id = req.params.id;
+    const result = await UserService.logoutUser(id);
     res.status(200).send({
-      message: 'Logout successful',
+      message: result,
     });
   } catch (error) {
-    res.status(500).send({
-      error,
-    });
+    next(error);
   }
+}
+
+module.exports = {
+  newUser,
+  getUser,
+  getUsers,
+  updateUser,
+  deleteUser,
+  loginUser,
+  refreshTokenUser,
+  logoutUser,
 };

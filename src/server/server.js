@@ -17,7 +17,7 @@ middleware.init(app);
  * @description express.Application Routes
  */
 routes.init(app);
-
+middleware.after(app);
 /**
  * @description sets port 3000 to default or unless otherwise specified in the environment
  */
