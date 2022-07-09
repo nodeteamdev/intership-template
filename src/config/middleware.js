@@ -33,8 +33,11 @@ module.exports = {
             res.header('Access-Control-Allow-Credentials', 'true');
             next();
         });
+    },
+    errors(app) {
         app.use(logErrors);
         app.use(clientErrorHandler);
         app.use(errorHandler);
     },
+
 };

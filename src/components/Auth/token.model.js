@@ -12,7 +12,6 @@ const UserTokenSchema = new Schema(
             required: true,
         },
     },
-
     {
         collection: 'tokenmodel',
         versionKey: false,
