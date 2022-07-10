@@ -78,6 +78,10 @@ async function create(req, res, next) {
             throw new ValidationError(error.details);
         }
 
+        // const olduser = await UserService.findByEmail(req.body.email);
+        // if (olduser) {
+        //     return res.status(400).json({ message: 'User with given email already exist' });
+        // }
         const user = await UserService.create(req.body);
 
         return res.status(200).json({

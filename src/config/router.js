@@ -2,7 +2,7 @@ const express = require('express');
 const http = require('http');
 const UserRouter = require('../components/User/router');
 const AuthRouter = require('../components/Auth/router');
-const { verifyToken } = require('../components/Auth/service');
+const AuthComponent = require('../components/Auth/index');
 
 module.exports = {
     /**
@@ -22,7 +22,7 @@ module.exports = {
          * @param {string} path - Express path
          * @param {callback} middleware - Express middleware.
          */
-        app.use('/v1/users', verifyToken, UserRouter);
+        app.use('/v1/users', AuthComponent.verifyAccessToken, UserRouter);
         app.use('/v1/auth', AuthRouter);
 
         /**

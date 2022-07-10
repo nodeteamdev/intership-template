@@ -1,10 +1,9 @@
 const { Router } = require('express');
-const TokenComponent = require('.');
-const { verifyToken, verifyRefreshToken, getAccessToken } = require('./service');
+const AuthComponent = require('.');
 
 const router = Router();
-router.post('/signUp', TokenComponent.signUp);
-router.post('/logIn', TokenComponent.logIn);
-router.post('/token', verifyRefreshToken, getAccessToken);
-router.delete('/logOut', verifyToken, TokenComponent.logOut);
+router.post('/signup', AuthComponent.signUp);
+router.post('/login', AuthComponent.logIn);
+router.post('/token', AuthComponent.verifyRefreshToken, AuthComponent.getTokens);
+router.delete('/logout', AuthComponent.verifyAccessToken, AuthComponent.logOut);
 module.exports = router;

@@ -42,7 +42,7 @@
 ```
 ### SignUp User
 ```
-    curl --location --request POST 'localhost:3000/v1/auth/signUp' \
+    curl --location --request POST 'localhost:3000/v1/auth/signup' \
     --header 'Content-Type: application/json' \
     --data-raw '{
         "email": "test@gmail.com",
@@ -51,7 +51,7 @@
 ```
 ### LogIn User
 ```
-    curl --location --request POST 'localhost:3000/v1/auth/logIn' \
+    curl --location --request POST 'localhost:3000/v1/auth/login' \
     --header 'Content-Type: application/json' \
     --data-raw '{
         "email": "test@gmail.com",

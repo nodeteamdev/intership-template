@@ -15,7 +15,7 @@ class UserValidation extends Validation {
         return this.Joi
             .object({
                 // id: this.Joi.objectId(),
-                email: this.Joi.string().email(),
+                email: this.Joi.string().email().required(),
             })
             .validate(data);
     }
@@ -29,7 +29,7 @@ class UserValidation extends Validation {
     create(profile) {
         return this.Joi
             .object({
-                email: this.Joi.string().email(),
+                email: this.Joi.string().email().required(),
                 fullName: this.Joi
                     .string()
                     .min(1)
@@ -49,7 +49,7 @@ class UserValidation extends Validation {
         return this.Joi
             .object({
                 // id: this.Joi.objectId(),
-                email: this.Joi.string().email(),
+                email: this.Joi.string().email().required(),
                 fullName: this.Joi
                     .string()
                     .min(1)
@@ -68,7 +68,7 @@ class UserValidation extends Validation {
         return this.Joi
             .object({
                 // id: this.Joi.objectId(),
-                email: this.Joi.string().email(),
+                email: this.Joi.string().email().required(),
             })
             .validate(data);
     }

@@ -19,7 +19,7 @@ function findAll() {
  * @returns {Promise<UserModel>}
  */
 function findByEmail(email) {
-    return UserModel.findOne({email}).exec();
+    return UserModel.findOne({ email }).exec();
 }
 
 /**

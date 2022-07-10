@@ -3,7 +3,7 @@ const compression = require('compression');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const helmet = require('helmet');
-const { clientErrorHandler, logErrors, errorHandler } = require('../error/error');
+const { clientErrorHandler, logErrors, errorHandler } = require('../error/errorHandlers');
 
 module.exports = {
     /**
