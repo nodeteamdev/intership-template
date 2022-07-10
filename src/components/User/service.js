@@ -19,7 +19,7 @@ function findAll() {
  * @returns {Promise<UserModel>}
  */
 function findById(id) {
-    return UserModel.findById(id).exec();
+    return UserModel.findById(id).lean();
 }
 
 /**

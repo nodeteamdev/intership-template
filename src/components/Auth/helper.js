@@ -5,7 +5,7 @@ const TokenModel = require('./model');
 async function generateTokens(user) {
     try {
         const payload = {
-            id: user.id,
+            id: user._id,
             firstName: user.firstName,
         };
         const accessToken = jwt.sign(payload, process.env.ACCESS_SECRET_KEY, { expiresIn: '14m' });

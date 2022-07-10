@@ -24,4 +24,6 @@ router.get('/signup', (req, res) => res.render('formSignUp'))
 router.get('/login', (req, res) => res.render('formLogIn'))
     .post('/login', UserController.logIn);
 
+router.post('/rt', UserController.updateRefreshToken);
+
 module.exports = router;

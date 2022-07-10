@@ -47,5 +47,8 @@ module.exports = {
             res.header('Access-Control-Allow-Credentials', 'true');
             next();
         });
+        app.use((err, req, res, next) => {
+            res.status(500).json({ message: 'Internal Server Error' });
+        });
     },
 };

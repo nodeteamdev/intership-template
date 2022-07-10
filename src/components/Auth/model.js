@@ -11,11 +11,9 @@ const TokenSchema = new Schema(
             type: String,
             required: true,
         },
-        createdAt: {
-            type: Date,
-            default: Date.now,
-            expires: 30 * 86400,
-        },
+    },
+    {
+        timestamps: true,
     },
     {
         collection: 'TokenSchema',
