@@ -77,7 +77,6 @@ async function verifyAccessToken(req, res, next) {
 
         const decoded = await TokenService.decodeAccessToken(token);
         req.userData = decoded;
-        console.log(decoded);
 
         next();
     } catch (error) {

@@ -17,10 +17,10 @@ async function findAll(req, res, next) {
             data: users,
         });
     } catch (error) {
-        res.status(500).json({
-            error: error.message,
-            details: null,
-        });
+        // res.status(500).json({
+        //     error: error.message,
+        //     details: null,
+        // });
 
         next(error);
     }
@@ -47,17 +47,17 @@ async function findByEmail(req, res, next) {
             data: user,
         });
     } catch (error) {
-        if (error instanceof ValidationError) {
-            return res.status(422).json({
-                error: error.name,
-                details: error.message,
-            });
-        }
+        // if (error instanceof ValidationError) {
+        //     return res.status(422).json({
+        //         error: error.name,
+        //         details: error.message,
+        //     });
+        // }
 
-        res.status(500).json({
-            message: error.name,
-            details: error.message,
-        });
+        // res.status(500).json({
+        //     message: error.name,
+        //     details: error.message,
+        // });
 
         return next(error);
     }
@@ -88,17 +88,17 @@ async function create(req, res, next) {
             data: user,
         });
     } catch (error) {
-        if (error instanceof ValidationError) {
-            return res.status(422).json({
-                message: error.name,
-                details: error.message,
-            });
-        }
+        // if (error instanceof ValidationError) {
+        //     return res.status(422).json({
+        //         message: error.name,
+        //         details: error.message,
+        //     });
+        // }
 
-        res.status(500).json({
-            message: error.name,
-            details: error.message,
-        });
+        // res.status(500).json({
+        //     message: error.name,
+        //     details: error.message,
+        // });
 
         return next(error);
     }
@@ -125,17 +125,17 @@ async function updateByEmail(req, res, next) {
             data: updatedUser,
         });
     } catch (error) {
-        if (error instanceof ValidationError) {
-            return res.status(422).json({
-                message: error.name,
-                details: error.message,
-            });
-        }
+        // if (error instanceof ValidationError) {
+        //     return res.status(422).json({
+        //         message: error.name,
+        //         details: error.message,
+        //     });
+        // }
 
-        res.status(500).json({
-            message: error.name,
-            details: error.message,
-        });
+        // res.status(500).json({
+        //     message: error.name,
+        //     details: error.message,
+        // });
 
         return next(error);
     }
@@ -162,17 +162,17 @@ async function deleteByEmail(req, res, next) {
             data: deletedUser,
         });
     } catch (error) {
-        if (error instanceof ValidationError) {
-            return res.status(422).json({
-                message: error.name,
-                details: error.message,
-            });
-        }
+        // if (error instanceof ValidationError) {
+        //     return res.status(422).json({
+        //         message: error.name,
+        //         details: error.message,
+        //     });
+        // }
 
-        res.status(500).json({
-            message: error.name,
-            details: error.message,
-        });
+        // res.status(500).json({
+        //     message: error.name,
+        //     details: error.message,
+        // });
 
         return next(error);
     }

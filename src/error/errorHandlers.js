@@ -1,17 +1,14 @@
 const ValidationError = require('./ValidationError');
 
 function logErrors(err, req, res, next) {
-    console.error('logErrors Wow Yay!', err.toString());
+    console.error('logErrors', err.toString());
     next(err);
 }
 
 function clientErrorHandler(err, req, res, next) {
-    console.error('clientErrors ', err.toString());
-    res.send(500, { error: err.toString() });
-    if (req.xhr) {
-        console.error(err);
-        res.send(500, { error: err.toString() });
-    } else if (err instanceof ValidationError) {
+    console.error('clientError', err.toString());
+
+    if (err instanceof ValidationError) {
         res.status(422).json({
             error: err.name,
             details: err.message,
@@ -22,8 +19,12 @@ function clientErrorHandler(err, req, res, next) {
 }
 
 function errorHandler(err, req, res) {
-    console.error('lastErrors ', err.toString());
-    res.send(500, { error: err.toString() });
+    console.error('lastErrors', err.toString());
+
+    res.status(500).json({
+        message: err.name,
+        details: err.message,
+    });
 }
 
 module.exports = {
