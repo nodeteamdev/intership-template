@@ -31,11 +31,7 @@ async function logIn(req, res, next) {
         if (error) {
             throw new ValidationError(error.details);
         }
-
         const user = await User.findOne({ email: req.body.email, fullName: req.body.fullName });
-        // if (user === null) {
-        //     return res.status(401).json({ message: "Invalid user's email or name" });
-        // }
 
         const accessToken = await TokenService.generateAccessToken(user.id);
 
@@ -46,14 +42,20 @@ async function logIn(req, res, next) {
             data: { accessToken, refreshToken },
         });
     } catch (error) {
-        // res.status(400).json({
-        //     message: 'Login fail',
-        // });
+        res.status(400).json({
+            message: 'Login fail',
+        });
         return next(error);
     }
 }
 
 async function getTokens(req, res) {
+    const { error } = AuthValidation.validateToken(req.body);
+
+    if (error) {
+        throw new ValidationError(error.details);
+    }
+
     const { token } = req.body;
     const decoded = await TokenService.decodeRefreshToken(token);
     const accessToken = await TokenService.generateAccessToken(decoded.userId);
@@ -69,18 +71,12 @@ async function verifyAccessToken(req, res, next) {
     try {
         const [, token] = req.headers.authorization.split(' ');
 
-        // const { error } = AuthValidation.validateToken(token);
-
-        // if (error) {
-        //     throw new ValidationError(error.details);
-        // }
-
         const decoded = await TokenService.decodeAccessToken(token);
         req.userData = decoded;
 
         next();
     } catch (error) {
-        // res.status(401).json({ message: 'Your session is not valid.', data: error });
+        res.status(401).json({ message: 'Your session is not valid.', data: error });
         next(error);
     }
 }
@@ -105,8 +101,10 @@ async function verifyRefreshToken(req, res, next) {
 }
 
 async function logOut(req, res, next) {
+    const { userId } = req.userData;
+
     try {
-        const userToken = await UserToken.findOne({ token: req.body.refreshToken });
+        const userToken = await UserToken.findOne({ userId });
         if (!userToken) {
             return res
                 .status(200)

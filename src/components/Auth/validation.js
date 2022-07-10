@@ -33,7 +33,10 @@ class AuthValidation extends Validation {
     validateToken(data) {
         return this.Joi
             .object({
-                token: this.Joi.string().required(),
+                token: [
+                    this.Joi.string(),
+                    this.Joi.number(),
+                ],
             })
             .validate(data);
     }
