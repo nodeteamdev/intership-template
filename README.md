@@ -77,3 +77,17 @@
         "refreshToken": "tokenExample"
     }'
 ```
+
+## Sum of books of each country
+```
+    curl --location --request GET 'localhost:3000/v1/books/count-per-country' \
+    --header 'Content-Type: application/json' \
+    --cookie 'accessToken: token for access getting' \
+```
+
+## List of newest books
+```
+    curl --location --request GET 'localhost:3000/v1/books/new-books \
+    --header 'Content-Type: application/json' \
+    --cookie 'accessToken: token for access getting' \
+```
