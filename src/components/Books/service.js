@@ -9,6 +9,11 @@ function countPerCountry() {
     ]);
 }
 
+function getNewBooks() {
+    return BooksModel.aggregate();
+}
+
 module.exports = {
     countPerCountry,
+    getNewBooks,
 };
