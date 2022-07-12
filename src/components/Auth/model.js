@@ -18,20 +18,11 @@ const Auth = new Schema(
     refreshToken: {
       type: String,
     },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-      timestamp: true,
-    },
-    updatedAt: {
-      type: Date,
-      default: Date.now,
-      timestamp: true,
-    },
   },
   {
     collection: 'authmodel',
     versionKey: false,
+    timestamps: true,
   },
 );
 

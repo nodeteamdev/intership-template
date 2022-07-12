@@ -23,6 +23,7 @@
     "compression": "1.7.4",
     "cookie-parser": "1.4.6",
     "cors": "2.8.5",
+    "csvtojson": "2.0.10",
     "dotenv": "16.0.1",
     "express": "4.17.1",
     "helmet": "4.6.0",

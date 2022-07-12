@@ -82,3 +82,19 @@
   }'
 
 ```
+
+### Get books count per country
+```
+
+  curl --location --request GET 'localhost:3000/v1/books/count-per-country' \
+  --header 'Content-Type: application/json' \
+
+```
+
+### Get new books
+```
+
+  curl --location --request GET 'localhost:3000/v1/books/new-books' \
+  --header 'Content-Type: application/json' \
+
+```
