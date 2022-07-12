@@ -2,6 +2,7 @@ const express = require('express');
 const http = require('http');
 const UserRouter = require('../components/User/router');
 const AuthRouter = require('../components/Auth/router');
+const BooksRouter = require('../components/Books/router');
 const AuthComponent = require('../components/Auth/index');
 
 module.exports = {
@@ -24,6 +25,7 @@ module.exports = {
          */
         app.use('/v1/users', AuthComponent.verifyAccessToken, UserRouter);
         app.use('/v1/auth', AuthRouter);
+        app.use('/v1/books', BooksRouter);
 
         /**
          * @description No results returned mean the object is not found
