@@ -14,18 +14,18 @@ async function generateAccessToken(userId) {
     return accessToken;
 }
 
-async function generateRefreshToken(userId) {
-    const payload = { userId };
+async function generateRefreshToken(id) {
+    const payload = { id };
     const refreshToken = jwt.sign(
         payload,
         refreshKey,
         { expiresIn: '1h' },
     );
-    const oldRefreshToken = await UserToken.findOne({ userId }).exec();
+    const oldRefreshToken = await UserToken.findOne({ userId: id }).exec();
     if (oldRefreshToken === null) {
-        await UserToken.create({ userId, refreshToken });
+        await UserToken.create({ userId: id, token: refreshToken }).exec();
     } else {
-        await UserToken.updateOne({ userId }, { token: refreshToken }).exec();
+        await UserToken.updateOne({ id }, { token: refreshToken }).exec();
     }
     return refreshToken;
 }
