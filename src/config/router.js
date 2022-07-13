@@ -1,6 +1,7 @@
 const express = require('express');
 const http = require('http');
 const UserRouter = require('../components/User/router');
+const BookRouter = require('../components/Book/router');
 
 module.exports = {
   /**
@@ -22,6 +23,7 @@ module.exports = {
          */
     app.use('/v1/users', UserRouter);
 
+    app.use('/v1/books', BookRouter);
     /**
          * @description No results returned mean the object is not found
          * @function

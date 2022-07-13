@@ -12,9 +12,9 @@ async function newUser(userInfo) {
   if (user) {
     throw new Error('User already exists');
   }
-
+  const viewedBooks = [];
   const newUser = new UserModel.user({
-    firstname, lastname, email, password,
+    firstname, lastname, email, password, viewedBooks,
   });
 
   await newUser.save();
