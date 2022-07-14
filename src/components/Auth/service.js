@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const TokenModel = require('./model');
 const { TOKENS } = require('../../config/dotenvConstants');
+const UserService = require('../User/service');
 
 function generateTokens(user) {
     const payload = {
@@ -20,6 +22,11 @@ async function findUserData(userId) {
 
 function searchToken(refreshToken) {
     return TokenModel.findOne({ refreshToken }).lean();
+}
+
+
+function comparePassword(incomingPassword, existingPassword) {
+    return bcrypt.compareSync(incomingPassword, existingPassword);
 }
 
 function createRefreshToken(userId, refreshToken) {
@@ -44,6 +51,8 @@ module.exports = {
     generateTokens,
     createRefreshToken,
     findUserData,
+    comparePassword,
     removeRefreshToken,
     updateOrSaveToken,
+    searchToken,
 }

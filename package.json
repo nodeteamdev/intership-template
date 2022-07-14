@@ -4,8 +4,7 @@
   "description": "```     https://hapi.dev/family/joi/ ```",
   "main": "index.js",
   "scripts": {
-    "build": "nodemon ./src/server/index.js",
-    "try": "node ./src/components/Auth/try.js"
+    "dev": "nodemon ./src/server/index.js"
   },
   "repository": {
     "type": "git",
@@ -23,11 +22,15 @@
     "compression": "1.7.4",
     "cookie-parser": "1.4.6",
     "cors": "2.8.5",
+    "csvtojson": "2.0.10",
     "dotenv": "16.0.1",
     "express": "4.17.1",
+    "fast-csv": "4.3.6",
     "helmet": "4.6.0",
     "jsonwebtoken": "8.5.1",
-    "mongoose": "6.0.14"
+    "migrate-mongo": "9.0.0",
+    "mongoose": "6.0.14",
+    "multer": "1.4.5-lts.1"
   },
   "devDependencies": {
     "commitizen": "4.2.4",

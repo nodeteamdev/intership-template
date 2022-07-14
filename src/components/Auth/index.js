@@ -10,14 +10,13 @@ async function signUp(req, res, next) {
     try {
         const { error, value } = AuthValidation.signUp(req.body);
         if (error) throw new ValidationError(error.details);
+        if (value.email !== value.email.toLowerCase()) throw new ValidationError('Email must be in lowercase');
 
         const emailIsExist = await UserService.isExistsEmail(value.email);
         const nickNameIsExist = await UserService.isExists_nickName(value.nickName);
 
         if (emailIsExist === true) throw new Error('email is taken by another user!'); 
         if (nickNameIsExist === true) throw new Error('nickName is taken by another user!');
-
-        const hashedPassword = bcrypt.hashSync(value.password, HASH_SALT);
 
         const userData = {
             nickName: value.nickName,
@@ -57,10 +56,10 @@ async function logIn(req, res, next) {
         const existingUser = await UserService.findBy_nickName(value.nickName);
         
         if (existingUser === null) throw new Error('User does not exists!');
-
-        if (!bcrypt.compareSync(value.password, existingUser.password)) {
-            throw new Error(`Invalid password`); //here Auth error
-        };
+        
+        if (!AuthService.comparePassword(value.password, existingUser.password)) {
+            throw new Error('You entered an invalid password')
+        }
 
         const tokens = AuthService.generateTokens(existingUser);
 

@@ -2,6 +2,8 @@ const express = require('express');
 const middleware = require('../config/middlewares/middleware');
 const UserRoutes = require('../config/router');
 
+require('dotenv').config();
+
 /**
  * @type {express}
  * @constant {express.Application}

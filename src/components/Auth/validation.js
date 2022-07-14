@@ -17,6 +17,8 @@ class AuthValidation extends Validation {
                     .string()
                     .min(6)
                     .max(100)
+                    .pattern(/^[a-zA-Z ]/)
+                    .trim()
                     .required()
             })
             .validate(newProfile);
