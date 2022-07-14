@@ -13,12 +13,7 @@
     "rules": {
         "indent": ["error", 4],
         "no-unused-vars": "warn",
-        "no-console": "off",
-        "func-names": "off",
-        "no-process-exit": "off",
-        "object-shorthand": "off",
-        "class-methods-use-this": "off",
-        "no-else-return" : "off",
+        "no-console": "warn",
         "no-plusplus" : "off"
     }
 }

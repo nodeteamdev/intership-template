@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const jwtSecret = 'secret key access token jwt';
+const { SECRET } = require('./constants').JWTS;
 
 module.exports = (req, res, next) => {
     const authHeader = req.get('Authorization');
@@ -11,7 +11,7 @@ module.exports = (req, res, next) => {
 
     const token = authHeader;
     try {
-        const payload = jwt.verify(token, jwtSecret);
+        const payload = jwt.verify(token, SECRET);
         if (payload.type !== 'access') {
             res.status(401).json({ message: 'Invalid token!' });
             return;

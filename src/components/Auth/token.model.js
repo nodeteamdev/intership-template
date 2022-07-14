@@ -6,7 +6,7 @@ const TokenSchema = Schema({
     userId: String,
 },
 {
-    collection: 'usermodel',
+    collection: 'refreshtokens',
     versionKey: false,
 },);
 
