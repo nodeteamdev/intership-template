@@ -61,7 +61,7 @@ async function getGroupedByCountry(req, res) {
  * @returns {Promise < void >}
  */
 async function getNewBooks(req, res) {
-    const books = await BooksService.getNewBooks();
+    const books = await BooksService.getNewBooks(req.query);
 
     return res.status(200).json({ data: books });
 }

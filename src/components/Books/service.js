@@ -4,7 +4,7 @@ const BooksModel = require('./model');
  * @exports
  * @method findAll
  * @param {}
- * @summary get list of all users
+ * @summary get list of all books
  * @returns {Promise<BooksModel[]>}
  */
 function findAll() {
@@ -15,7 +15,7 @@ function findAll() {
  * @exports
  * @method findById
  * @param {string} id
- * @summary get a user
+ * @summary get a book
  * @returns {Promise<BooksModel>}
  */
 function findById(_id, projection) {
@@ -26,7 +26,7 @@ function findById(_id, projection) {
  * @exports
  * @method getGroupedByCountry
  * @param {}
- * @summary get list of all users
+ * @summary get list of all books
  * @returns {Promise<BooksModel[]>}
  */
 function getGroupedByCountry() {
@@ -41,20 +41,32 @@ function getGroupedByCountry() {
 
 /**
  * @exports
- * @method getGroupedByCountry
+ * @method getNewBooks
  * @param {}
  * @summary get list of all users
  * @returns {Promise<BooksModel[]>}
  */
-function getNewBooks() {
-    return BooksModel.find({}).sort({ updatedAt: -1 });
+function getNewBooks({ skip, limit }) {
+    return BooksModel.aggregate(
+        [
+            {
+                $sort: { updatedAt: -1 },
+            },
+            {
+                $skip: Number(skip),
+            },
+            {
+                $limit: Number(limit),
+            },
+        ],
+    );
 }
 
 /**
  * @exports
  * @method create
  * @param {object} profile
- * @summary create a new user
+ * @summary create a new book
  * @returns {Promise<BooksModel>}
  */
 function create(book) {
@@ -66,8 +78,8 @@ function create(book) {
  * @exports
  * @method updateById
  * @param {string} _id
- * @param {object} newProfile
- * @summary update a user's profile
+ * @param {object} newBook
+ * @summary update a book's profile
  * @returns {Promise<void>}
  */
 function updateById(_id, newBook) {
@@ -78,7 +90,7 @@ function updateById(_id, newBook) {
  * @exports
  * @method deleteById
  * @param {string} _id
- * @summary delete a user from database
+ * @summary delete a book from database
  * @returns {Promise<void>}
  */
 function deleteById(_id) {
