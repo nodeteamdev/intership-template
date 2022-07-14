@@ -44,6 +44,7 @@ UserSchema.methods.addViewedBooks = function (viewedBooksObject) {
 };
 
 const user = connections.model('user', UserSchema);
+
 module.exports = {
   user,
 };

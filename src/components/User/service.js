@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs');
-const UserModel = require('./models/userModel');
-const RefreshModel = require('./models/refreshModel');
+const UserModel = require('./models/user.model');
+const RefreshModel = require('./models/refresh.model');
 
 async function newUser(userInfo) {
   const {

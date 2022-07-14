@@ -47,6 +47,7 @@ RefreshSchema.methods.generateRefreshToken = function () {
 };
 
 const refresh = connections.model('refresh', RefreshSchema);
+
 module.exports = {
   refresh,
 };

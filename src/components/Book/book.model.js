@@ -16,15 +16,8 @@ const BookSchema = new Schema({
   },
 }, { timestamps: true });
 
-// BookSchema.pre('save', async function (next) {
-//   const books = this;
-//   if (user.isModified('password')) {
-//     user.password = await bcryptjs.hash(user.password, 12);
-//   }
-//   next();
-// });
-
 const book = connections.model('book', BookSchema);
+
 module.exports = {
   book,
 };

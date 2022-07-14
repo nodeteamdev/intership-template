@@ -1,16 +1,13 @@
 const BookModel = require('./book.model');
-const UserModel = require('../User/models/userModel');
+const UserModel = require('../User/models/user.model');
 
-async function addBooks(csvData) {
-  BookModel.book.insertMany(csvData).then(() => {
-    console.log('Data inserted successfully');
-  }).catch((err) => {
-    throw new Error(err);
-  });
+function addBooks(csvData) {
+  BookModel.book.insertMany(csvData);
+  return 'Data inserted successfully';
 }
 
 async function countPerCountry() {
-  const aggregate = await BookModel.book.aggregate([
+  return BookModel.book.aggregate([
     {
       $group: {
         _id: '$code3',
@@ -25,7 +22,6 @@ async function countPerCountry() {
       $project: { _id: 0 },
     },
   ]);
-  return aggregate;
 }
 
 async function searchByCode(userId, code3) {
@@ -53,10 +49,10 @@ async function searchByCode(userId, code3) {
 
 async function newBooks(userId) {
   const user = await UserModel.user.findById({ _id: userId });
-  let books = await BookModel.book.find({});
   if (!user) {
     throw new Error('User not found');
   }
+  let books = await BookModel.book.find({});
   for (let i = 0; i < user.viewedBooks.length; i++) {
     if (books.find((item) => item.title === user.viewedBooks[i].title)) {
       books = books.filter((item) => item.title !== user.viewedBooks[i].title);

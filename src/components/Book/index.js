@@ -6,13 +6,11 @@ async function addBooks(req, res, next) {
     csvtojson()
       .fromFile('books.csv')
       .then((csvData) => {
-        BookService.addBooks(csvData);
-      }).catch((err) => {
-        throw new Error(err);
+        const result = BookService.addBooks(csvData);
+        res.status(200).send({
+          message: result,
+        });
       });
-    res.status(200).send({
-      message: 'Books were added successfully',
-    });
   } catch (error) {
     next(error);
   }

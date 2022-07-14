@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const RefreshModel = require('../components/User/models/refreshModel');
+const RefreshModel = require('../components/User/models/refresh.model');
 
 const { JWT_SECRET } = process.env;
 
