@@ -25,17 +25,17 @@ class UserValidation extends Validation {
      * @returns
      * @memberof UserValidation
      */
-    create(profile) {
+    create(book) {
         return this.Joi
             .object({
-                email: this.Joi.string().email(),
-                fullName: this.Joi
+                code3: this.Joi.string().min(3).max(10),
+                title: this.Joi
                     .string()
                     .min(1)
-                    .max(30)
-                    .required(),
+                    .max(30),
+                description: this.Joi.string().min(10).max(300),
             })
-            .validate(profile);
+            .validate(book);
     }
 
     /**
@@ -47,14 +47,22 @@ class UserValidation extends Validation {
     updateById(data) {
         return this.Joi
             .object({
-                fullName: this.Joi
+                _id: this.Joi.objectId(),
+                code3: this.Joi.string().min(3).max(10),
+                title: this.Joi
                     .string()
                     .min(1)
-                    .max(30)
-                    .required(),
+                    .max(30),
+                description: this.Joi.string().min(10).max(300),
             })
             .validate(data);
     }
+
+    /**
+     * @param {String} data.id - objectId
+     * @returns
+     * @memberof UserValidation
+     */
 }
 
 module.exports = new UserValidation();

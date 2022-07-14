@@ -5,7 +5,9 @@
   "main": "./src/server/index.js",
   "scripts": {
     "start": "node ./src/server/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate-up": "migrate-mongo up",
+    "migrate-down": "migrate-mongo down"
   },
   "repository": {
     "type": "git",
@@ -25,15 +27,19 @@
     "compression": "1.7.4",
     "cookie-parser": "1.4.6",
     "cors": "2.8.5",
+    "csv-parser": "3.0.0",
+    "dotenv": "16.0.1",
     "express": "4.17.1",
     "helmet": "4.6.0",
     "jsonwebtoken": "8.5.1",
+    "lodash": "4.17.21",
     "mongoose": "6.0.14"
   },
   "devDependencies": {
     "eslint": "8.3.0",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-plugin-import": "2.25.3",
+    "migrate-mongo": "9.0.0",
     "nodemon": "2.0.19"
   },
   "config": {

@@ -26,13 +26,13 @@ async function findAll(req, res) {
  * @returns {Promise < void >}
  */
 async function findById(req, res) {
-    const { error } = UserValidation.findById(req.params);
+    const { error, value } = UserValidation.findById(req.params);
 
     if (error) {
         throw new ValidationError(error.details);
     }
 
-    const user = await UserService.findById(req.params.id, { password: 0, refreshToken: 0 });
+    const user = await UserService.findById(value.id, { password: 0, refreshToken: 0 });
     if (!user) throw new NotFoundError('user not found');
 
     return res.status(200).json({
@@ -48,13 +48,13 @@ async function findById(req, res) {
  * @returns {Promise < void >}
  */
 async function create(req, res) {
-    const { error } = UserValidation.create(req.body);
+    const { error, value } = UserValidation.create(req.body);
 
     if (error) {
         throw new ValidationError(error.details);
     }
 
-    const user = await UserService.create(req.body);
+    const user = await UserService.create(value);
 
     return res.status(200).json({
         data: user,
@@ -69,14 +69,14 @@ async function create(req, res) {
  * @returns {Promise<void>}
  */
 async function updateById(req, res) {
-    const { error } = UserValidation.updateById(req.body);
+    const { error, value } = UserValidation.updateById(req.body);
 
     if (error) {
         throw new ValidationError(error.details);
     }
 
     const { _id } = req.user;
-    const updatedUser = await UserService.updateById(_id, req.body);
+    const updatedUser = await UserService.updateById(_id, value);
     if (!updatedUser.modifiedCount) throw new NotFoundError('document not found');
 
     return res.status(200).json({

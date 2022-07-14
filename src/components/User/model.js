@@ -19,8 +19,9 @@ const UserSchema = new Schema(
         refreshToken: String,
     },
     {
-        collection: 'usermodel',
+        collection: 'users',
         versionKey: false,
+        tymestamp: true,
     },
 ).pre('save', async function passwordHashing(next) {
     try {
