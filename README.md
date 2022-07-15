@@ -1,41 +1,4 @@
-### Validation
-```
-    https://joi.dev/
-```
+## Lesson5
 
-### Find User
-```
-    curl --location --request GET 'localhost:3000/v1/users/find' \
-    --header 'Content-Type: application/json' \
-    --data-raw '{
-        "email": "test@gmail.com"
-    }'
-```
-
-### Create User
-```
-    curl --location --request POST 'localhost:3000/v1/users/create' \
-    --header 'Content-Type: application/json' \
-    --data-raw '{
-        "email": "test@gmail.com",
-        "fullName": "Test User"
-    }'
-```
-
-### Update User
-```
-    curl --location --request PUT 'localhost:3000/v1/users/update' \
-    --header 'Content-Type: application/json' \
-    --data-raw '{
-        "fullName": "Update User"
-    }'
-```
-
-### Delete User
-```
-    curl --location --request DELETE 'localhost:3000/v1/users/delete' \
-    --header 'Content-Type: application/json' \
-    --data-raw '{
-        "email": "test@gmail.com"
-    }'
-```
+Before running migrations with `npm run migrate_up` (or `migrate-mongo up` if you have it installed globally),
+make sure your `.env` file has all variables like `MONGODB_URI` etc.
