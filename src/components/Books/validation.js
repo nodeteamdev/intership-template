@@ -5,11 +5,27 @@ const Validation = require('../validation');
  * @class
  * @extends Validation
  */
-class UserValidation extends Validation {
+class BooksValidation extends Validation {
+    /**
+     * @param {String} data.skip
+     * @param {String} data.limit
+     * @returns
+     * @memberof BooksValidation
+     */
+
+    findAll(data) {
+        return this.Joi
+            .object({
+                skip: this.Joi.number().min(0).default(0),
+                limit: this.Joi.number().min(1).default(10),
+            })
+            .validate(data);
+    }
+
     /**
      * @param {String} data.id - objectId
      * @returns
-     * @memberof UserValidation
+     * @memberof BooksValidation
      */
     findById(data) {
         return this.Joi
@@ -20,10 +36,10 @@ class UserValidation extends Validation {
     }
 
     /**
-     * @param {String} profile.email
-     * @param {String} profile.fullName
+     * @param {String} book.code3
+     * @param {String} book.title
      * @returns
-     * @memberof UserValidation
+     * @memberof BooksValidation
      */
     create(book) {
         return this.Joi
@@ -39,10 +55,42 @@ class UserValidation extends Validation {
     }
 
     /**
-     * @param {String} data.id - objectId
-     * @param {String} data.fullName
+     * @param {String} data.skip
+     * @param {String} data.limit
      * @returns
-     * @memberof UserValidation
+     * @memberof BooksValidation
+     */
+    getNewBooks(data) {
+        return this.Joi
+            .object({
+                skip: this.Joi.number().min(0).default(0),
+                limit: this.Joi.number().min(1).default(10),
+            })
+            .validate(data);
+    }
+
+    /**
+     * @param {String} data.skip
+     * @param {String} data.limit
+     * @returns
+     * @memberof BooksValidation
+     */
+    getGroupedByCountry(data) {
+        return this.Joi
+            .object({
+                skip: this.Joi.number().min(0).default(0),
+                limit: this.Joi.number().min(1).default(10),
+            })
+            .validate(data);
+    }
+
+    /**
+     * @param {String} data.id - objectId
+     * @param {String} data.code3
+     * @param {String} data.title
+     * @param {String} data.description
+     * @returns
+     * @memberof BooksValidation
      */
     updateById(data) {
         return this.Joi
@@ -57,12 +105,6 @@ class UserValidation extends Validation {
             })
             .validate(data);
     }
-
-    /**
-     * @param {String} data.id - objectId
-     * @returns
-     * @memberof UserValidation
-     */
 }
 
-module.exports = new UserValidation();
+module.exports = new BooksValidation();

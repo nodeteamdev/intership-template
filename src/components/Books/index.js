@@ -11,7 +11,13 @@ const NotFoundError = require('../../error/NotFoundError');
  * @returns {Promise < void >}
  */
 async function findAll(req, res) {
-    const books = await BooksService.findAll();
+    const { error, value } = BooksValidation.findAll(req.query);
+
+    if (error) {
+        throw new ValidationError(error.details);
+    }
+
+    const books = await BooksService.findAll(value);
 
     res.status(200).json({
         data: books,
@@ -48,7 +54,12 @@ async function findById(req, res) {
  * @returns {Promise < void >}
  */
 async function getGroupedByCountry(req, res) {
-    const books = await BooksService.getGroupedByCountry();
+    const { error, value } = BooksValidation.getGroupedByCountry(req.query);
+
+    if (error) {
+        throw new ValidationError(error.details);
+    }
+    const books = await BooksService.getGroupedByCountry(value);
 
     return res.status(200).json({ data: books });
 }
@@ -61,7 +72,12 @@ async function getGroupedByCountry(req, res) {
  * @returns {Promise < void >}
  */
 async function getNewBooks(req, res) {
-    const books = await BooksService.getNewBooks(req.query);
+    const { error, value } = BooksValidation.getNewBooks(req.query);
+
+    if (error) {
+        throw new ValidationError(error.details);
+    }
+    const books = await BooksService.getNewBooks(value);
 
     return res.status(200).json({ data: books });
 }
@@ -95,11 +111,11 @@ async function create(req, res) {
  * @returns {Promise<void>}
  */
 async function updateById(req, res) {
-    const { error, value } = BooksValidation.updateById(req.body);
+    const value = BooksValidation.updateById(req.body);
 
-    if (error) {
-        throw new ValidationError(error.details);
-    }
+    // if (error) {
+    //     throw new ValidationError(error.details);
+    // }
 
     const { _id } = value;
     const updatedBook = await BooksService.updateById(_id, value);

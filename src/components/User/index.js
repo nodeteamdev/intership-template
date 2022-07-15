@@ -11,7 +11,13 @@ const NotFoundError = require('../../error/NotFoundError');
  * @returns {Promise < void >}
  */
 async function findAll(req, res) {
-    const users = await UserService.findAll();
+    const { error, value } = UserValidation.findAll(req.query);
+
+    if (error) {
+        throw new ValidationError(error.details);
+    }
+
+    const users = await UserService.findAll(value);
 
     res.status(200).json({
         data: users,

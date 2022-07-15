@@ -7,8 +7,8 @@ const BooksModel = require('./model');
  * @summary get list of all books
  * @returns {Promise<BooksModel[]>}
  */
-function findAll() {
-    return BooksModel.find({}).exec();
+function findAll({ skip, limit }) {
+    return BooksModel.find({}).skip(skip).limit(limit).exec();
 }
 
 /**
@@ -29,11 +29,17 @@ function findById(_id, projection) {
  * @summary get list of all books
  * @returns {Promise<BooksModel[]>}
  */
-function getGroupedByCountry() {
+function getGroupedByCountry({ skip, limit }) {
     return BooksModel.aggregate(
         [
             {
                 $group: { _id: '$code3', count: { $sum: 1 } },
+            },
+            {
+                $skip: skip,
+            },
+            {
+                $limit: limit,
             },
         ],
     );
@@ -53,10 +59,10 @@ function getNewBooks({ skip, limit }) {
                 $sort: { updatedAt: -1 },
             },
             {
-                $skip: Number(skip),
+                $skip: skip,
             },
             {
-                $limit: Number(limit),
+                $limit: limit,
             },
         ],
     );

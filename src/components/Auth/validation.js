@@ -5,11 +5,12 @@ const Validation = require('../validation');
  * @class
  * @extends Validation
  */
-class UserValidation extends Validation {
+class AuthValidation extends Validation {
     /**
-     * @param {String} data.id - objectId
+     * @param {String} data.email
+     * @param {String} data.password
      * @returns
-     * @memberof UserValidation
+     * @memberof AuthValidation
      */
     login(data) {
         return this.Joi
@@ -25,9 +26,9 @@ class UserValidation extends Validation {
 
     /**
      * @param {String} profile.email
-     * @param {String} profile.fullName
+     * @param {String} profile.password
      * @returns
-     * @memberof UserValidation
+     * @memberof AuthValidation
      */
     signUp(profile) {
         return this.Joi
@@ -42,4 +43,4 @@ class UserValidation extends Validation {
     }
 }
 
-module.exports = new UserValidation();
+module.exports = new AuthValidation();
