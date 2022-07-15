@@ -21,6 +21,7 @@ module.exports = {
          * @param {callback} middleware - Express middleware.
          */
         app.use('/v1/users', UserRouter);
+        
 
         /**
          * @description No results returned mean the object is not found

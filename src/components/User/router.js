@@ -26,6 +26,7 @@ router.get('/', UserComponent.findAll);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
+
 router.get('/:id', UserComponent.findById);
 
 /**
