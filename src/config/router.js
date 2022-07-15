@@ -3,6 +3,7 @@ const http = require('http');
 const AuthRouter = require('../components/Auth/router');
 const UserRouter = require('../components/User/router');
 const ProductRouter = require('../components/Product/router');
+const BookRouter = require('../components/Book/router');
 const isAuthUser = require('../middleware/isAuthUser');
 
 module.exports = {
@@ -44,6 +45,16 @@ module.exports = {
          * @param {callback} middleware - Express middleware.
          */
         router.use('/v1/products', isAuthUser, ProductRouter);
+
+        /**
+         * Forwards any requests to the /v1/books URI to BookRouter.
+         * @name /v1/books
+         * @function
+         * @inner
+         * @param {string} path - Express path
+         * @param {callback} middleware - Express middleware.
+         */
+        router.use('/v1/books', BookRouter);
 
         /**
          * @description No results returned mean the object is not found
