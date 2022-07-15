@@ -1,9 +1,13 @@
 const CSVToJSON = require('csvtojson');
 
-async function convertation() {
-  const convertToJson = await CSVToJSON().fromFile('./src/components/Books/mocks/books.csv');
+class ConvertationAdapter {
+  static async convertation() {
+    const csvToJson = await CSVToJSON().fromFile('./books.csv');
 
-  return convertToJson;
+    return csvToJson;
+  }
 }
 
-module.exports = { convertation };
+const adapter = ConvertationAdapter.convertation();
+
+module.exports = { adapter };

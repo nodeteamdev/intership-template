@@ -1,12 +1,27 @@
 const BooksModel = require('./model');
 
-const { convertation } = require('./convertation');
+function getBooksCountPerCountryService() {
+  return BooksModel.aggregate(
+    [
+      { $group: { _id: '$code3', total: { $sum: 1 } } },
+      { $project: { _id: 0, code3: '$_id', value: '$total' } },
+      { $limit: 3 },
+    ],
+  );
+}
+
+function getNewBooksService() {
+  return BooksModel.aggregate(
+    [
+      { $group: { _id: '$code3', total: { $sum: 1 } } },
+      { $project: { _id: 0, code3: '$_id', value: '$total' } },
+      { $sort: { createdAt: -1 } },
+      { $limit: 3 },
+    ],
+  );
+}
 
 module.exports = {
-  async up() {
-    await BooksModel.create(convertation);
-  },
-  async down() {
-    await BooksModel.deleteOne({});
-  },
+  getBooksCountPerCountryService,
+  getNewBooksService,
 };
