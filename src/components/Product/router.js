@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const { validateParams, validateBody } = require('../../middleware/validationHandler');
 const asyncErrorCatcher = require('../../middleware/errorHandlers/asyncErrorCatcher');
-const UserComponent = require('.');
+const ProductComponent = require('.');
 const ProductValidation = require('./validation');
 
 const router = Router();
@@ -11,7 +11,7 @@ const router = Router();
  */
 router.get(
     '/',
-    asyncErrorCatcher(UserComponent.findAll),
+    asyncErrorCatcher(ProductComponent.findAll),
 );
 
 /**
@@ -20,7 +20,7 @@ router.get(
 router.get(
     '/:id',
     validateParams(ProductValidation.findById.bind(ProductValidation)),
-    asyncErrorCatcher(UserComponent.findById),
+    asyncErrorCatcher(ProductComponent.findById),
 );
 
 /**
@@ -29,7 +29,7 @@ router.get(
 router.post(
     '/',
     validateBody(ProductValidation.create.bind(ProductValidation)),
-    asyncErrorCatcher(UserComponent.create),
+    asyncErrorCatcher(ProductComponent.create),
 );
 
 /**
@@ -38,7 +38,7 @@ router.post(
 router.put(
     '/',
     validateBody(ProductValidation.updateById.bind(ProductValidation)),
-    asyncErrorCatcher(UserComponent.updateById),
+    asyncErrorCatcher(ProductComponent.updateById),
 );
 
 /**
@@ -47,7 +47,7 @@ router.put(
 router.delete(
     '/',
     validateBody(ProductValidation.deleteById.bind(ProductValidation)),
-    asyncErrorCatcher(UserComponent.deleteById),
+    asyncErrorCatcher(ProductComponent.deleteById),
 );
 
 module.exports = router;
