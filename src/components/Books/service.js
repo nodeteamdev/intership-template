@@ -10,14 +10,7 @@ function countPerCountry() {
 
 function getNewBooks() {
     return BooksModel.aggregate([
-        {
-            $match: {
-                $or: [
-                    { createdAt: { $gte: new Date(new Date() - 7 * 24 * 60 * 60 * 1000) } },
-                    { updatedAt: { $gte: new Date(new Date() - 7 * 24 * 60 * 60 * 1000) } },
-                ],
-            },
-        },
+        { $sort: { createdAt: -1 } },
     ]);
 }
 

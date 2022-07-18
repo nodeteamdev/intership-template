@@ -18,6 +18,7 @@ const BooksSchema = new Schema(
         createdAt: {
             type: Date,
             required: true,
+            timestamp: true,
         },
         updatedAt: {
             type: Date,

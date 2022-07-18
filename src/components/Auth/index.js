@@ -12,14 +12,9 @@ async function signUp(req, res, next) {
             throw new ValidationError(error.details);
         }
 
-        // const user = await User.findOne({ email: req.body.email });
-        // if (user) {
-        //     return res.status(400).json({ message: 'User with given email already exist' });
-        // }
         const savedUser = await User.create(req.body);
         return res.status(201).json({ message: 'Account created sucessfully', data: savedUser });
     } catch (error) {
-        // res.status(400).json({ message: 'Something went wrong', data: error });
         return next(error);
     }
 }
@@ -42,9 +37,6 @@ async function logIn(req, res, next) {
             data: { accessToken, refreshToken },
         });
     } catch (error) {
-        res.status(400).json({
-            message: 'Login fail',
-        });
         return next(error);
     }
 }
