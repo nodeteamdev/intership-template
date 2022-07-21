@@ -1,4 +1,4 @@
-const { adapter } = require('./convertation');
+const { adapter } = require('./adapters/convertation');
 
 const BooksModel = require('./model');
 
