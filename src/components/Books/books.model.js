@@ -18,7 +18,6 @@ const BooksSchema = new Schema(
         createdAt: {
             type: Date,
             required: true,
-            timestamp: true,
         },
         updatedAt: {
             type: Date,
@@ -27,6 +26,7 @@ const BooksSchema = new Schema(
     },
     {
         collection: 'booksmodel',
+        timestamp: true,
         versionKey: false,
     },
 );
