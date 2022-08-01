@@ -111,11 +111,11 @@ async function create(req, res) {
  * @returns {Promise<void>}
  */
 async function updateById(req, res) {
-    const value = BooksValidation.updateById(req.body);
+    const { error, value } = BooksValidation.updateById(req.body);
 
-    // if (error) {
-    //     throw new ValidationError(error.details);
-    // }
+    if (error) {
+        throw new ValidationError(error.details);
+    }
 
     const { _id } = value;
     const updatedBook = await BooksService.updateById(_id, value);

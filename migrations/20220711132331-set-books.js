@@ -36,8 +36,10 @@ function parseCsvToArray(pathToFile) {
 module.exports = {
     async up(db) {
         const books = await parseCsvToArray(pathToMigrationFile);
+
+        // eslint-disable-next-line no-restricted-syntax
         for (const bookChunk of _.chunk(books, 100)) {
-            
+            // eslint-disable-next-line no-await-in-loop
             await db.collection(collection).insertMany(bookChunk);
         }
 
