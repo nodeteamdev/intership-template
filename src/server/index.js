@@ -1,9 +1,15 @@
 const http = require('http');
+const { Server } = require('socket.io');
 const events = require('./events');
-const server = require('./server');
+const app = require('./server');
+const socketEvents = require('../components/Chat/socket');
 
-const port = server.get('port');
+const server = http.createServer(app);
+const port = app.get('port');
+const io = new Server(server);
+
+socketEvents(io);
 
 events.bind(
-    http.createServer(server).listen(port),
+    server.listen(port),
 );

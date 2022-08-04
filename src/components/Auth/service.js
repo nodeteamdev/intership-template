@@ -17,7 +17,7 @@ function generateTokens(user) {
 };
 
 async function findUserData(userId) {
-    return TokenModel.findOne({ userId });  // why const { refreshToken } = undefined ?
+    return TokenModel.findOne({ userId }); 
 }
 
 function searchToken(refreshToken) {
@@ -38,7 +38,7 @@ function removeRefreshToken(userId) {
 }
 
 async function updateOrSaveToken(id, Token) {
-    const refreshToken = await findRefreshToken(id);
+    const refreshToken = await searchToken(Token);
     if(!refreshToken) {
         return createRefreshToken(id, Token);
     }

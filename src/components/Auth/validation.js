@@ -40,6 +40,16 @@ class AuthValidation extends Validation {
             })
             .validate(credentials);
     }
+
+    Token(headers) {
+        return this.Joi
+          .object({
+            authorization: this.Joi
+              .string()
+              .required(),
+          })
+          .validate(headers);
+      }
 }
 
 module.exports = new AuthValidation();

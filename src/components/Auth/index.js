@@ -4,7 +4,6 @@ const AuthValidation = require('./validation');
 const ValidationError = require('../../error/ValidationError');
 const UserService = require('../User/service');
 const AuthService = require('./service');
-const { HASH_SALT } = require('../../config/dotenvConstants');
 
 async function signUp(req, res, next) {
     try {
@@ -21,7 +20,7 @@ async function signUp(req, res, next) {
         const userData = {
             nickName: value.nickName,
             email: value.email,
-            password: hashedPassword,
+            password: value.password,
         };
 
         const registeredUser = await UserService.create(userData);
@@ -90,7 +89,7 @@ async function logIn(req, res, next) {
 
 async function refreshToken (req, res, next) {
     try {
-        const { error, value } = AuthValidation.Tokens(req.headers);
+        const { error, value } = AuthValidation.Token(req.headers.authorization.replace('Bearer ', ''));
 
         if(error) throw new ValidationError(error.details);
 

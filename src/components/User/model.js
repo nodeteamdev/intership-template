@@ -1,7 +1,7 @@
-const { Schema } = require('mongoose');
+const bcrypt = require('bcrypt');
 const connections = require('../../config/connection');
-const { HASH_SALT } = require('../../config/dotenvConstants');
 const AuthService = require('../Auth/service');
+const { Schema } = require('mongoose');
 
 const UserSchema = new Schema(
     {
@@ -22,13 +22,14 @@ const UserSchema = new Schema(
         collection: 'usermodel',
         versionKey: false,
     },
-).pre('save', async (next) => {
+).pre('save', async function passwordHashing(next) {
     try {
-        const user = this;
-        const hash = await bcrypt.hashSync(password, HASH_SALT);
+        const HASH_SALT = await bcrypt.genSalt(3);
+        const hash = await bcrypt.hashSync(this.password, HASH_SALT);
 
-        user.password = hash;
-        next();
+        this.password = hash;
+
+        return next();
     } catch (error) { 
         return next(error);
     }

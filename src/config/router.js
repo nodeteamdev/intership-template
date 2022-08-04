@@ -3,6 +3,7 @@ const http = require('http');
 const UserRouter = require('../components/User/router');
 const AuthRouter = require('../components/Auth/router');
 const authMiddleware = require('./middlewares/authMiddleware');
+const ChatRouter = require('../components/Chat/router');
 
 module.exports = {
     /**
@@ -25,6 +26,8 @@ module.exports = {
         app.use('/v1/users', authMiddleware, UserRouter);
 
         app.use('/v1/auth', AuthRouter);
+
+        app.use('/', ChatRouter);
 
         /**
          * @description No results returned mean the object is not found
