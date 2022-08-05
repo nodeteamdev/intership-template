@@ -12,8 +12,8 @@ function createToken(userId, value) {
     return TokenModel.create({ userId, value });
 }
 
-function findToken(token) {
-    return TokenModel.findOne(token).exec();
+function findToken(value) {
+    return TokenModel.findOne({ value });
 }
 
 function findTokenById(userId) {

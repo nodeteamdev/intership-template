@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const http = require('http');
+const bcrypt = require('bcrypt');
 
 const AuthService = require('./service');
 const UserService = require('../User/service');
@@ -14,11 +15,13 @@ async function signUp(req, res, next) {
         if (error) {
             throw new ValidationError(error.details);
         }
-
-        const user = await UserService.create(value);
-        return res.status(201).json({
-            data: user,
-        });
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(value.password, salt);
+        value.password = hashedPassword;
+        await UserService.create(value);
+        return res
+            .status(201)
+            .redirect('/v1/auth/sign-in');
     } catch (error) {
         return next(error);
     }
@@ -39,7 +42,6 @@ async function signIn(req, res, next) {
                 message: http.STATUS_CODES[401],
             });
         }
-
         const validPassword = await AuthService.verifyUserByPassword(value.password, user.password);
         if (!validPassword) {
             return res.status(401).json({
@@ -47,16 +49,14 @@ async function signIn(req, res, next) {
             });
         }
         user.hash = AuthUtils.randomString(10);
-        user.save();
+        await user.save();
         const tokens = await AuthService.generateSignInTokens(user);
-
         return res
             .cookie('access_token', `Bearer ${tokens.accessToken.token}`, { httpOnly: true, maxAge: 60 * 1000 })
             .cookie('refresh_token', tokens.refreshToken.token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
+            .cookie('id', user.id)
             .status(200)
-            .json({
-                tokens,
-            });
+            .redirect('/v1/chat/');
     } catch (error) {
         return next(error);
     }

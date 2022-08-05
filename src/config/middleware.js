@@ -4,6 +4,7 @@ const compression = require('compression');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const helmet = require('helmet');
+const express = require('express');
 
 module.exports = {
     /**
@@ -13,6 +14,8 @@ module.exports = {
      * @returns void
      */
     init(app) {
+        app.set('view engine', 'ejs');
+        app.use(express.static('assets'));
         app.use(bodyParser.urlencoded({
             extended: false,
         }));
@@ -22,7 +25,9 @@ module.exports = {
         // returns the compression middleware
         app.use(compression());
         // helps you secure your Express apps by setting various HTTP headers
-        app.use(helmet());
+        app.use(helmet({
+            contentSecurityPolicy: false,
+        }));
         // providing a Connect/Express middleware that can be used to enable CORS with various options
         app.use(cors());
         // cors

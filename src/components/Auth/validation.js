@@ -58,8 +58,9 @@ class AuthValidation extends Validation {
     refresh(data) {
         return this.Joi
             .object({
-                refreshToken: this.Joi.string().required(),
+                refresh_token: this.Joi.string().required(),
             })
+            .options({ allowUnknown: true })
             .validate(data);
     }
 }

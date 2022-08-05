@@ -4,9 +4,15 @@ const isAuth = require('./middleware');
 
 const router = Router();
 
-router.post('/sign-up', AuthComponent.signUp);
+router
+    .get('/sign-up', (req, res) => res.render('signup'));
+router
+    .post('/sign-up', AuthComponent.signUp);
 
-router.post('/sign-in', AuthComponent.signIn);
+router
+    .get('/sign-in', (req, res) => res.render('signin'));
+router
+    .post('/sign-in', AuthComponent.signIn);
 
 router.post('/refresh', AuthComponent.refresh);
 

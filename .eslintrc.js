@@ -3,6 +3,7 @@ module.exports = {
         commonjs: true,
         es2021: true,
         node: true,
+        browser: true,
     },
     extends: [
         'airbnb-base',
@@ -12,5 +13,9 @@ module.exports = {
     },
     rules: {
         indent: ['error', 4],
+    },
+    globals: {
+        io: true,
+        variables: true,
     },
 };

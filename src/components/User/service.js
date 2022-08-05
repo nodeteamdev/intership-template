@@ -35,6 +35,17 @@ function findByEmail(email) {
 
 /**
  * @exports
+ * @method findBySocket
+ * @param {string} socketId
+ * @summary get a user by email
+ * @returns {Promise<UserModel>}
+ */
+function findBySocket(socket) {
+    return UserModel.findOne(socket).exec();
+}
+
+/**
+ * @exports
  * @method findByHash
  * @param {string} hash
  * @summary get a user by hash
@@ -84,6 +95,7 @@ module.exports = {
     findById,
     findByEmail,
     findByHash,
+    findBySocket,
     create,
     updateById,
     deleteById,

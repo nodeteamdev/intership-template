@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>SocketsChat</title>
+    <link rel="stylesheet" href="/css/chat.css">
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+    <div class="container clearfix">
+        <div class="people-list">
+            <ul class="list" id="people-list">
+
+            </ul>
+        </div>
+
+        <div class="chat">
+            <div class="chat-header clearfix">
+                <img src="/images/logo.jpg" alt="avatar" />
+
+                <div class="chat-about">
+                    <div class="chat-with">Onix Academy Chat</div>
+                    <div class="chat-num-messages" id="num-messages"></div>
+                    <div id="typing"></div>
+                </div>
+            </div> <!-- end chat-header -->
+
+            <div class="chat-history" id="chat-history">
+                <ul id="messages">
+                    <li class="clearfix">
+                    </li>
+                </ul>
+
+            </div> <!-- end chat-history -->
+
+            <div class="chat-message clearfix">
+                <textarea name="message-to-send" id="message-to-send" placeholder="Type your message"
+                    rows="3"></textarea>
+                <button id="button">Send</button>
+
+            </div> <!-- end chat-message -->
+
+        </div> <!-- end chat -->
+
+    </div> <!-- end container -->
+    <script>
+        const variables = {
+            id: '<%= user_id %>',
+            userName: '<%= user_name %>'
+        }
+    </script>
+    <script src="/js/chat.js"></script>
+</body>
+
+</html>

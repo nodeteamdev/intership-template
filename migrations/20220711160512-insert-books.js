@@ -14,6 +14,10 @@ module.exports = {
     },
 
     async down(db) {
-        return db.collection('bookmodel').deleteMany({});
+        try {
+            return db.collection('bookmodel').deleteMany({});
+        } catch (error) {
+            throw new Error(error.details);
+        }
     },
 };

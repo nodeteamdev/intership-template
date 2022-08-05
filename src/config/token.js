@@ -1,5 +1,7 @@
-require('dotenv').config();
+require('dotenv').config({ path: `${process.cwd()}../../.env` });
 
+console.log(process.env.ACCESS_TOKEN_SECRET);
+console.log(process.env.REFRESH_TOKEN_SECRET);
 module.exports = {
     tokens: {
         access: {

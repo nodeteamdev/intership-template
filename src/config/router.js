@@ -3,6 +3,7 @@ const http = require('http');
 const UserRouter = require('../components/User/router');
 const AuthRouter = require('../components/Auth/router');
 const BooksRouter = require('../components/Book/router');
+const ChatRouter = require('../components/Chat/router');
 
 module.exports = {
     /**
@@ -43,6 +44,16 @@ module.exports = {
          * @param {callback} middleware - Express middleware.
          */
         app.use('/v1/books', BooksRouter);
+
+        /**
+         * Forwards any requests to the /v1/books URI to BooksRouter.
+         * @name /v1/chat
+         * @function
+         * @inner
+         * @param {string} path - Express path
+         * @param {callback} middleware - Express middleware.
+         */
+        app.use('/v1/chat', ChatRouter);
 
         /**
          * @description No results returned mean the object is not found
