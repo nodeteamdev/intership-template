@@ -17,7 +17,7 @@ async function findAll(req, res) {
         throw new ValidationError(error.details);
     }
 
-    const users = await UserService.findAll(value);
+    const users = await UserService.findAll({}, value);
 
     res.status(200).json({
         data: users,

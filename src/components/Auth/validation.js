@@ -38,6 +38,7 @@ class AuthValidation extends Validation {
                     .pattern(/^[a-zA-Z ]{3,20}$/)
                     .trim()
                     .required(),
+                fullName: this.Joi.string().trim(),
             })
             .validate(profile);
     }

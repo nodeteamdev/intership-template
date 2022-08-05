@@ -3,6 +3,7 @@ const compression = require('compression');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const helmet = require('helmet');
+const express = require('express');
 
 module.exports = {
     /**
@@ -21,7 +22,7 @@ module.exports = {
         // returns the compression middleware
         app.use(compression());
         // helps you secure your Express apps by setting various HTTP headers
-        app.use(helmet());
+        app.use(helmet({ contentSecurityPolicy: false }));
         // providing a Connect/Express middleware that can
         //  be used to enable CORS with various options
         app.use(cors());
@@ -38,5 +39,6 @@ module.exports = {
             res.header('Access-Control-Allow-Credentials', 'true');
             next();
         });
+        app.use(express.static('public'));
     },
 };

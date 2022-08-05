@@ -17,6 +17,8 @@ const UserSchema = new Schema(
             required: true,
         },
         refreshToken: String,
+        onlineAt: Date,
+        isOnline: Boolean,
     },
     {
         collection: 'users',

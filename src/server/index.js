@@ -1,23 +1,11 @@
 const http = require('http');
-const { Server } = require('socket.io');
-// const events = require('./events');
-// const server = require('./server');
-// const io = require('./socket');
 
-// const port = server.get('port');
-const httpServer = http.createServer();
+const events = require('./events');
+const server = require('./server');
+const io = require('../config/socket');
 
-const io = new Server(httpServer, { cors: { origin: '*', methods: ['GET', 'POST'] }, allowEIO3: true, maxHttpBufferSize: 1e6 });
+const httpServer = http.createServer(server);
 
-io.on('connection', (socket) => {
-    socket.on('message', () => {});
+io.init(httpServer);
 
-    socket.on('disconnect', () => {
-        console.log('socket.id disconnected:>> ', socket.id);
-    });
-});
-
-// events.bind(httpServer.listen(port));
-httpServer.listen(3000, () => {
-    console.log('listen :>> ');
-});
+events.bind(httpServer.listen(process.env.PORT || 3000));

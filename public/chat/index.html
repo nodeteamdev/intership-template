@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>SocketsChat</title>
+    <link href='./style.css' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+    <div class="container clearfix">
+        <div class="people-list">
+            <ul class="list" id="people-list">
+            </ul>
+        </div>
+
+        <div class="chat">
+            <div class="chat-header clearfix">
+                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_01_green.jpg" alt="avatar" />
+
+                <div class="chat-about">
+                    <div class="chat-with">Chat with Vincent Porter</div>
+                    <div class="chat-num-messages">already 1 902 messages</div>
+                </div>
+            </div>
+
+            <div class="chat-history">
+                <ul id="chatHistory">
+                </ul>
+
+            </div>
+
+            <div class="typing" id="typing"></div>
+            <div class="chat-message clearfix">
+                <textarea name="message-to-send" id="message-to-send" placeholder="Type your message"
+                    rows="3"></textarea>
+                <button id="sendButton">Send</button>
+
+            </div> 
+
+        </div> 
+
+    </div> 
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./index.js"></script>
+</body>
+
+</html>

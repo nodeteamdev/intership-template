@@ -7,8 +7,8 @@ const UserModel = require('./model');
  * @summary get list of all users
  * @returns Promise<UserModel[]>
  */
-function findAll({ skip, limit }) {
-    return UserModel.find({}, { password: 0, refreshToken: 0 }).skip(skip).limit(limit).exec();
+function findAll(query, { skip, limit }) {
+    return UserModel.find(query, { password: 0, refreshToken: 0 }).skip(skip).limit(limit).exec();
 }
 
 /**

@@ -40,8 +40,11 @@ async function login(req, res) {
     }
     const { _id } = user;
     const { accessToken, refreshToken } = AuthSevice.parseTokens(_id);
-
-    await UsersService.updateById(_id, { $set: { refreshToken } });
+    await UsersService.updateById(_id, {
+        $set: {
+            refreshToken, onlineAt: new Date(), isOnline: true,
+        },
+    });
 
     return res.status(200).json({
         data: {
@@ -85,7 +88,7 @@ async function logout(req, res) {
     const user = await UsersService.findById(_id, { refreshToken: 1 });
     if (!user) throw new NotFoundError('user not found');
     if (user?.refreshToken) {
-        await UsersService.updateById(_id, { $set: { refreshToken: null } });
+        await UsersService.updateById(_id, { $set: { refreshToken: null, isOnline: false } });
     }
 
     return res.status(204).json({ data: { message: 'logout' } });
