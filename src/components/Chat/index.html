@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>SocketsChat</title>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"></script> -->
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Lato:400,700);
+
+        *,
+        *:before,
+        *:after {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #c5ddeb;
+            font: 14px/20px "Lato", Arial, sans-serif;
+            padding: 40px 0;
+            color: white;
+        }
+
+        ul li {
+            list-style: none;
+        }
+
+        .container {
+            margin: 0 auto;
+            width: 750px;
+            background: #444753;
+            border-radius: 5px;
+        }
+
+        .people-list {
+            width: 260px;
+            float: left;
+        }
+
+        .people-list input {
+            border-radius: 3px;
+            border: none;
+            padding: 14px;
+            color: white;
+            background: #6a6c75;
+            width: 90%;
+            font-size: 14px;
+        }
+
+        .people-list ul {
+            padding: 20px;
+            height: 770px;
+        }
+
+        .people-list ul li {
+            padding-bottom: 20px;
+        }
+
+        .people-list img {
+            float: left;
+        }
+
+        .people-list .about {
+            float: left;
+            margin-top: 8px;
+        }
+
+        .people-list .about {
+            padding-left: 8px;
+        }
+
+        .people-list .status {
+            color: #92959e;
+        }
+
+        .chat {
+            width: 490px;
+            float: left;
+            background: #f2f5f8;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+            color: #434651;
+        }
+
+        .chat .chat-header {
+            padding: 20px;
+            border-bottom: 2px solid white;
+        }
+
+        .chat .chat-header img {
+            float: left;
+        }
+
+        .chat .chat-header .chat-about {
+            float: left;
+            padding-left: 10px;
+            margin-top: 6px;
+        }
+
+        .chat .chat-header .chat-with {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .chat .chat-header .chat-num-messages {
+            color: #92959e;
+        }
+
+        .chat .chat-header .fa-star {
+            float: right;
+            /* color: #d8dadf; */
+            font-size: 20px;
+            margin-top: 12px;
+        }
+
+        .chat .chat-history {
+            padding: 30px 30px 20px;
+            border-bottom: 2px solid white;
+            overflow-y: scroll;
+            height: 575px;
+        }
+
+        .chat .chat-history .message-data {
+            margin-bottom: 15px;
+        }
+
+        .chat .chat-history .message-data-time {
+            color: #a8aab1;
+            padding-left: 6px;
+        }
+
+        .chat .chat-history .message {
+            color: white;
+            padding: 18px 20px;
+            line-height: 26px;
+            font-size: 16px;
+            border-radius: 7px;
+            margin-bottom: 30px;
+            width: 90%;
+            position: relative;
+        }
+
+        .chat .chat-history .message:after {
+            bottom: 100%;
+            left: 7%;
+            border: solid transparent;
+            content: " ";
+            height: 0;
+            width: 0;
+            position: absolute;
+            pointer-events: none;
+            border-bottom-color: #86bb71;
+            border-width: 10px;
+            margin-left: -10px;
+        }
+
+        .chat .chat-history .my-message {
+            background: #86bb71;
+        }
+
+        .chat .chat-history .other-message {
+            background: #94c2ed;
+        }
+
+        .chat .chat-history .other-message:after {
+            border-bottom-color: #94c2ed;
+            left: 93%;
+        }
+
+        .chat .chat-message {
+            padding: 30px;
+        }
+
+        .chat .chat-message textarea {
+            width: 100%;
+            border: none;
+            padding: 10px 20px;
+            font: 14px/22px "Lato", Arial, sans-serif;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            resize: none;
+        }
+
+        .chat .chat-message form {
+            width: 100%;
+            border: none;
+            padding: 10px 20px;
+            font: 14px/22px "Lato", Arial, sans-serif;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            resize: none;
+        }
+
+        .chat .chat-message .fa-file-o,
+        .chat .chat-message .fa-file-image-o {
+            font-size: 16px;
+            color: gray;
+            cursor: pointer;
+        }
+
+        .chat .chat-message button {
+            float: right;
+            color: #94c2ed;
+            font-size: 16px;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            background: #f2f5f8;
+        }
+
+        .chat .chat-message button:hover {
+            color: #75b1e8;
+        }
+
+        .online,
+        .offline,
+        .me {
+            margin-right: 3px;
+            font-size: 10px;
+        }
+
+        .online {
+            color: #86bb71;
+        }
+
+        .offline {
+            color: #e38968;
+        }
+
+        .me {
+            color: #94c2ed;
+        }
+
+        .align-left {
+            text-align: left;
+        }
+
+        .align-right {
+            text-align: right;
+        }
+
+        .float-right {
+            float: right;
+        }
+
+        .clearfix:after {
+            visibility: hidden;
+            display: block;
+            font-size: 0;
+            content: " ";
+            clear: both;
+            height: 0;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="container clearfix">
+        <div class="people-list" id="people-list">
+            <ul class="list" id="list">
+                
+            </ul>
+        </div>
+
+        <div class="chat">
+            <div class="chat-header clearfix" id="my info">
+                
+            </div> <!-- end chat-header -->
+
+            <div class="chat-history" id="chat-history">
+                <ul id="messages">
+                    
+                </ul>
+
+            </div> <!-- end chat-history -->
+
+            <div class="chat-message clearfix">
+                <form id="form" action="">
+                <textarea name="message-to-send" id="message-to-send" placeholder="Type your message"
+                    rows="3"></textarea>
+                <button>Send</button>
+            </form>
+            </div> <!-- end chat-message -->
+
+        </div> <!-- end chat -->
+
+    </div> <!-- end container -->
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+      var peopleList = document.getElementById('list');
+      var myInfo = document.getElementById('my info');
+      var chat = document.getElementById('chat-history');
+      var messages = document.getElementById('messages');
+      var form = document.getElementById('form');
+      var input = document.getElementById('message-to-send');
+      const userName = prompt('Send your name:');
+
+    socket.on('error', (data) => {
+        document.write(data);
+        setTimeout(() => location.href=location.href, 3000);
+    });
+
+    socket.on('user connected', function() {
+        if (userName) {
+            socket.emit('new user', userName);
+        } else {
+            location.href=location.href;
+        }
+    });
+      
+    form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (input.value) {
+      socket.emit('chat message', {
+        msg: input.value,
+        name: userName,
+        time: new Date().toLocaleString('en-us', { hour: '2-digit', minute: '2-digit' }),
+        date: new Date().toLocaleString('en-us', { day: 'numeric', month: 'short' }),
+    });
+      input.value = '';
+    }
+  });
+
+  input.addEventListener('keypress', () => {
+    socket.emit('typing', userName);
+  });
+
+  socket.on('add typing', (data) => {
+    let feedback = document.createElement('li');
+    feedback.classList.add('clearfix');
+    feedback.innerHTML = `<p><i>${data} is typing a message...</i></p>`;
+    setTimeout(() => feedback.innerHTML = '', 100);
+    messages.append(feedback);
+  });
+
+  socket.on('my message', function(data) {
+    var item = document.createElement('li');
+    item.classList.add('clearfix');
+    let today = (data.date === new Date().toLocaleString('en-us', { day: 'numeric', month: 'short' })) ? 
+    'Today' : 
+    data.date;
+    item.innerHTML = `<div class="message-data align-right">
+        <span class="message-data-time">${data.time}, ${today}</span> &nbsp; &nbsp;
+        <span class="message-data-name">${data.name}</span>
+        </div>
+        <div class="message other-message float-right">${data.msg}</div>`;
+    messages.appendChild(item);
+    chat.scrollTo(0, chat.scrollHeight);
+  });
+
+  socket.on('other message', function(data) {
+    var item = document.createElement('li');
+    item.classList.add('clearfix');
+    let today = (data.date === new Date().toLocaleString('en-us', { day: 'numeric', month: 'short' })) ? 
+    'Today' : 
+    data.date;
+    item.innerHTML = `<div class="message-data">
+        <span class="message-data-name"> ${data.name}</span> 
+        <span class="message-data-time">${data.time}, ${today}</span> &nbsp; &nbsp;
+        </div>
+        <div class="message my-message">${data.msg}</div>`;
+    messages.appendChild(item);
+    chat.scrollTo(0, chat.scrollHeight);
+  });
+
+  socket.on('joining user', function (user) {
+    let feedback = document.createElement('li');
+    feedback.classList.add('clearfix');
+    feedback.innerHTML = `<b>${user.userName}</b> <i>joined to chat</i>`;
+    setTimeout(() => feedback.innerHTML = '', 3000);
+    messages.append(feedback);
+  });
+
+  socket.on('display users', function (users) {
+    peopleList.innerHTML = '';
+    users.forEach(function (user) {
+    if (user.userName !== userName) {
+    let li = document.createElement('li');
+    li.classList.add('clearfix');
+    let status = lastOnline(user);
+    let avatar = (user.status === 'Offline') ? 0 : 1;
+    li.innerHTML = `<img src='/images/chat_avatar_0${avatar}${user.avatar}.jpg' alt="avatar" />
+                    <div class="about">
+                        <div class="name">${user.userName}</div>
+                        <div class="status">${status}</div>
+                    </div>`;
+    peopleList.appendChild(li);
+    }
+  });
+  });
+
+  const lastOnline = (data) => {
+    if (data.status === 'Offline') {
+        const time = Date.now() - data.joinDate;
+    if (time < 60000) {
+      const sec = Math.trunc(time / 1000);
+      return `online ${sec} sec ago`;
+    }
+    if (time < 3600000) {
+      const mins = Math.trunc(time / 60000);
+      return `online ${mins} mins ago`;
+    }
+    if (time < 86400000) {
+      const hours = Math.trunc(time / 3600000);
+      return `online ${hours} hours ago`;
+   }
+    const date = Date(data.joinDate);
+    return `offline since ${date.split(' ')[1]} ${date.split(' ')[2]}`;
+    }
+    return data.status;
+  };
+
+  socket.on('display messages', function (data) {
+    messages.innerHTML = '';
+    data.forEach(function (message) {
+    let today = (message.date === new Date().toLocaleString('en-us', { day: 'numeric', month: 'short' })) ? 
+    'Today' : 
+    message.date;
+    let item = document.createElement('li');
+    item.classList.add('clearfix');
+
+    item.innerHTML = (message.name === userName) ? 
+       `<div class="message-data align-right">
+        <span class="message-data-time">${message.time}, ${today}</span> &nbsp; &nbsp;
+        <span class="message-data-name">${message.name}</span>
+        </div>
+        <div class="message other-message float-right">${message.msg}</div>`:
+      `<div class="message-data">
+        <span class="message-data-name"> ${message.name}</span> 
+        <span class="message-data-time">${message.time}, ${today}</span> &nbsp; &nbsp;
+        </div>
+        <div class="message my-message">${message.msg}</div>`;
+    messages.appendChild(item);
+    chat.scrollTo(0, chat.scrollHeight);
+  });
+  });
+
+  socket.on('get my info', function (user) {
+    myInfo.innerHTML = `<img src='/images/chat_avatar_11${user.avatar}.jpg' alt="avatar" />
+                    <div class="chat-about">
+                        <div class="chat-with"> Chat with ${user.userName}</div>
+                        <div class="chat-num-messages">already ${user.messageCount} messages</div>
+                    </div>`;
+  });
+  
+    </script>
+</body>
+</html>
