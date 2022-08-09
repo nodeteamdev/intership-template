@@ -1,12 +1,12 @@
-const { Router } = require('express');
-const UserComponent = require('.');
+import { Router } from 'express';
+import UserComponent from '.';
 
 /**
  * Express router to mount user related functions on.
  * @type {Express.Router}
  * @const
  */
-const router = Router();
+const router: Router = Router();
 
 /**
  * Route serving list of users.
@@ -58,4 +58,4 @@ router.put('/', UserComponent.updateById);
  */
 router.delete('/', UserComponent.deleteById);
 
-module.exports = router;
+export default router;
