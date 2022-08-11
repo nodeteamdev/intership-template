@@ -1,6 +1,6 @@
-const express = require('express');
-const middleware = require('../config/middleware');
-const routes = require('../config/router');
+import express from 'express';
+import middleware from '../config/middleware';
+import routes from '../config/router';
 
 /**
  * @type {express}
@@ -28,4 +28,4 @@ middleware.errors(app);
  */
 app.set('port', process.env.PORT || 3000);
 
-module.exports = app;
+export default app;

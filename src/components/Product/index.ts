@@ -1,7 +1,8 @@
-const { checkResourceIsFound } = require('../../helpers/restResponse');
-const ProductService = require('./service');
+import { Request, Response } from 'express';
+import { checkResourceIsFound } from '../../helpers/restResponse';
+import * as ProductService from './service';
 
-async function findAll(_req, res) {
+async function findAll(_req: Request, res: Response) {
     const resources = await ProductService.findAll();
 
     res.status(200).json({
@@ -9,7 +10,7 @@ async function findAll(_req, res) {
     });
 }
 
-async function findById(req, res) {
+async function findById(req: Request, res: Response) {
     const resource = await ProductService.findById(req.params.id);
     checkResourceIsFound(resource);
 
@@ -18,7 +19,7 @@ async function findById(req, res) {
     });
 }
 
-async function create(req, res) {
+async function create(req: Request, res: Response) {
     const resource = await ProductService.create(req.body);
 
     res.status(201).json({
@@ -26,7 +27,7 @@ async function create(req, res) {
     });
 }
 
-async function updateById(req, res) {
+async function updateById(req: Request, res: Response) {
     const resource = await ProductService.updateById(req.body.id, req.body);
     checkResourceIsFound(resource);
 
@@ -35,7 +36,7 @@ async function updateById(req, res) {
     });
 }
 
-async function deleteById(req, res) {
+async function deleteById(req: Request, res: Response) {
     const resource = await ProductService.deleteById(req.body.id);
     checkResourceIsFound(resource);
 
@@ -44,7 +45,7 @@ async function deleteById(req, res) {
     });
 }
 
-module.exports = {
+export {
     findAll,
     findById,
     create,

@@ -1,4 +1,4 @@
-const BookModel = require('./model');
+import BookModel from './model';
 
 async function getAllBooksCountPerCountry() {
     return BookModel
@@ -20,7 +20,7 @@ async function getAllBooksCountPerCountry() {
         .exec();
 }
 
-async function getNewBooks(limit) {
+async function getNewBooks(limit: number) {
     return BookModel
         .find({})
         .sort({ createdAt: -1 })
@@ -28,7 +28,7 @@ async function getNewBooks(limit) {
         .exec();
 }
 
-module.exports = {
+export {
     getAllBooksCountPerCountry,
     getNewBooks,
 };

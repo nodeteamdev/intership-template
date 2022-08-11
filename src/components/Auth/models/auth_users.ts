@@ -1,5 +1,5 @@
-const { Schema } = require('mongoose');
-const mongooseConnection = require('../../../config/connection');
+import { Types, Schema, InferSchemaType } from 'mongoose';
+import mongooseConnection from '../../../config/connection';
 
 const COLLECTION_NAME = 'auth_users';
 const MODEL_NAME = 'AuthUserModel';
@@ -23,4 +23,8 @@ const schema = new Schema(
     },
 );
 
-module.exports = mongooseConnection.model(MODEL_NAME, schema);
+export type AuthUser = InferSchemaType<typeof schema>
+    & {id: Types.ObjectId | string}
+    & {_id: Types.ObjectId | string};
+
+export default mongooseConnection.model(MODEL_NAME, schema);

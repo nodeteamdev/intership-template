@@ -1,6 +1,6 @@
-const { Router } = require('express');
-const asyncErrorCatcher = require('../../middleware/errorHandlers/asyncErrorCatcher');
-const BookComponent = require('.');
+import { Router } from 'express';
+import asyncErrorCatcher from '../../middleware/errorHandlers/asyncErrorCatcher';
+import * as BookComponent from '.';
 
 const router = Router();
 
@@ -20,4 +20,4 @@ router.get(
     asyncErrorCatcher(BookComponent.getNewBooks),
 );
 
-module.exports = router;
+export default router;

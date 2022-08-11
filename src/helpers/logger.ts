@@ -11,21 +11,27 @@ const logLevelToConsoleColorCode = {
     warn: consoleColorCodes.fgMagenta,
 };
 
-function colorString(string, logLevel) {
+type LogLevel = keyof typeof logLevelToConsoleColorCode;
+
+function colorString(string: string, logLevel: LogLevel) {
     return (logLevelToConsoleColorCode[logLevel] || consoleColorCodes.reset)
         + string
         + consoleColorCodes.reset;
 }
 
 const TAKE_N_FIRST_FROM_STACK = 2;
-function trimError(error) {
+function trimError(error: Error) {
+    if (error.stack === undefined) {
+        return error.message;
+    }
     const errorStackAsArray = error.stack.split('\n');
     return errorStackAsArray
         .splice(0, Math.min(TAKE_N_FIRST_FROM_STACK, errorStackAsArray.length))
         .join('\n');
 }
 
-function logger(dataToLog, context = '', logLevel = 'log') {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function logger(dataToLog: any, context = '', logLevel: LogLevel = 'log') {
     const timeStr = (new Date()).toJSON();
 
     let logStr = `[${timeStr}]:`;
@@ -41,7 +47,8 @@ function logger(dataToLog, context = '', logLevel = 'log') {
         logData = trimError(dataToLog);
     }
 
+    // eslint-disable-next-line no-console
     console[logLevel](logStr, logData);
 }
 
-module.exports = logger;
+export default logger;

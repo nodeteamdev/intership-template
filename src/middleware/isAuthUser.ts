@@ -1,13 +1,18 @@
-const jwtFacade = require('../components/Auth/jwt.facade');
-const AuthService = require('../components/Auth/service');
-const AuthError = require('../error/AuthError');
+import { Request, Response, NextFunction } from 'express';
+import * as jwtFacade from '../components/Auth/jwt.facade';
+import * as AuthService from '../components/Auth/service';
+import AuthError from '../error/AuthError';
 
-module.exports = async (req, _res, next) => {
+const isAuthUser = async (req: Request, _res: Response, next: NextFunction) => {
     const accessToken = req.headers.authorization?.replace('Bearer ', '');
+    if (accessToken === undefined) {
+        return next(new AuthError());
+    }
+
     const payload = await jwtFacade.getPayloadFromJWT(accessToken);
     if (
         payload === null
-        || payload.tokenType !== jwtFacade.tokenTypes.access
+        || payload.tokenType !== jwtFacade.TokenType.access
         || !payload.authUserId
     ) {
         return next(new AuthError());
@@ -17,7 +22,8 @@ module.exports = async (req, _res, next) => {
     if (authUser === null) {
         return next(new AuthError());
     }
-    req.authUser = authUser;
 
     return next();
 };
+
+export default isAuthUser;

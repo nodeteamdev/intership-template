@@ -7,11 +7,11 @@ class AuthError extends Error {
      * @constructor
      * @param {object} message
      */
-    constructor(message) {
+    constructor(message = '') {
         super();
         this.message = message;
         this.name = 'E_AUTH_ERROR';
     }
 }
 
-module.exports = AuthError;
+export default AuthError;

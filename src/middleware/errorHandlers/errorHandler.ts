@@ -1,7 +1,12 @@
-const logger = require('../../helpers/logger');
+import { Request, Response, NextFunction } from 'express';
+import logger from '../../helpers/logger';
 
-// eslint-disable-next-line no-unused-vars
-module.exports = (error, _req, _res, _next) => {
+const errorHandler = (
+    error: Error,
+    _req: Request,
+    _res: Response,
+    _next: NextFunction,
+) => {
     // TODO: handle some errors
     if (error instanceof TypeError) {
         logger('Use TypeScript!', 'errorHandler middleware', 'warn');
@@ -9,3 +14,5 @@ module.exports = (error, _req, _res, _next) => {
         logger('The error was not handled..', 'errorHandler middleware', 'warn');
     }
 };
+
+export default errorHandler;

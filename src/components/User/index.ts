@@ -1,5 +1,6 @@
-const { checkResourceIsFound } = require('../../helpers/restResponse');
-const UserService = require('./service');
+import { Request, Response } from 'express';
+import { checkResourceIsFound } from '../../helpers/restResponse';
+import * as UserService from './service';
 
 /**
  * @function
@@ -7,7 +8,7 @@ const UserService = require('./service');
  * @param {express.Response} res
  * @returns {Promise<void>}
  */
-async function findAll(_req, res) {
+async function findAll(_req: Request, res: Response) {
     const users = await UserService.findAll();
 
     res.status(200).json({
@@ -21,7 +22,7 @@ async function findAll(_req, res) {
  * @param {express.Response} res
  * @returns {Promise<void>}
  */
-async function findById(req, res) {
+async function findById(req: Request, res: Response) {
     const user = await UserService.findById(req.params.id);
     checkResourceIsFound(user);
 
@@ -36,7 +37,7 @@ async function findById(req, res) {
  * @param {express.Response} res
  * @returns {Promise<void>}
  */
-async function create(req, res) {
+async function create(req: Request, res: Response) {
     const user = await UserService.create(req.body);
 
     res.status(201).json({
@@ -50,7 +51,7 @@ async function create(req, res) {
  * @param {express.Response} res
  * @returns {Promise<void>}
  */
-async function updateById(req, res) {
+async function updateById(req: Request, res: Response) {
     const updatedUser = await UserService.updateById(req.body.id, req.body);
     checkResourceIsFound(updatedUser);
 
@@ -65,7 +66,7 @@ async function updateById(req, res) {
  * @param {express.Response} res
  * @returns {Promise<void>}
  */
-async function deleteById(req, res) {
+async function deleteById(req: Request, res: Response) {
     const deletedUser = await UserService.deleteById(req.body.id);
     checkResourceIsFound(deletedUser);
 
@@ -74,7 +75,7 @@ async function deleteById(req, res) {
     });
 }
 
-module.exports = {
+export {
     findAll,
     findById,
     create,

@@ -1,11 +1,12 @@
-const logger = require('../helpers/logger');
+import http from 'http';
+import logger from '../helpers/logger';
 
 /**
  * @function
  * @param  {NodeJS.ErrnoException} error
  * @returns throw error
  */
-function onError(error) {
+function onError(error: NodeJS.ErrnoException) {
     if (error.syscall !== 'listen') {
         throw error;
     }
@@ -28,9 +29,12 @@ function onError(error) {
  * @inner
  * @description log port to console
  */
-function onListening() {
+function onListening(this: http.Server) {
     const addr = this.address();
-    const bindStr = (typeof addr === 'string') ? `pipe ${addr}` : `port ${addr.port}`;
+    let bindStr = '-not detected-';
+    if (addr !== null) {
+        bindStr = (typeof addr === 'string') ? `pipe ${addr}` : `port ${addr.port}`;
+    }
 
     logger(`Listening on ${bindStr}`, 'server.onListening event', 'log');
 }
@@ -40,11 +44,12 @@ function onListening() {
  * @inner
  * @param {http.Server} server
  */
-function bindServer(server) {
-    server.on('error', (error) => onError.bind(server)(error));
+function bindServer(server: http.Server) {
+    server.on('error', (error: NodeJS.ErrnoException) => onError.bind(server)(error));
     server.on('listening', onListening.bind(server));
 }
 
-module.exports = {
+export {
+    // eslint-disable-next-line import/prefer-default-export
     bindServer,
 };

@@ -1,8 +1,8 @@
-const { Router } = require('express');
-const { validateParams, validateBody } = require('../../middleware/validationHandler');
-const asyncErrorCatcher = require('../../middleware/errorHandlers/asyncErrorCatcher');
-const ProductComponent = require('.');
-const ProductValidation = require('./validation');
+import { Router } from 'express';
+import { validateParams, validateBody } from '../../middleware/validationHandler';
+import asyncErrorCatcher from '../../middleware/errorHandlers/asyncErrorCatcher';
+import * as ProductComponent from '.';
+import ProductValidation from './validation';
 
 const router = Router();
 
@@ -50,4 +50,4 @@ router.delete(
     asyncErrorCatcher(ProductComponent.deleteById),
 );
 
-module.exports = router;
+export default router;

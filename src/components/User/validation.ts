@@ -1,4 +1,4 @@
-const Validation = require('../validation');
+import Validation, { DataToValidate } from '../validation';
 
 /**
  * @exports
@@ -11,7 +11,7 @@ class UserValidation extends Validation {
      * @returns
      * @memberof UserValidation
      */
-    findById(data) {
+    findById(data: DataToValidate) {
         return this.Joi
             .object({
                 id: this.Joi.objectId(),
@@ -25,7 +25,7 @@ class UserValidation extends Validation {
      * @returns
      * @memberof UserValidation
      */
-    create(data) {
+    create(data: DataToValidate) {
         return this.Joi
             .object({
                 email: this.Joi
@@ -47,7 +47,7 @@ class UserValidation extends Validation {
      * @returns
      * @memberof UserValidation
      */
-    updateById(data) {
+    updateById(data: DataToValidate) {
         return this.Joi
             .object({
                 id: this.Joi.objectId(),
@@ -65,7 +65,7 @@ class UserValidation extends Validation {
      * @returns
      * @memberof UserValidation
      */
-    deleteById(data) {
+    deleteById(data: DataToValidate) {
         return this.Joi
             .object({
                 id: this.Joi.objectId(),
@@ -74,4 +74,4 @@ class UserValidation extends Validation {
     }
 }
 
-module.exports = new UserValidation();
+export default new UserValidation();

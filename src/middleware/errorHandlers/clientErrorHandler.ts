@@ -1,13 +1,19 @@
-const AuthError = require('../../error/AuthError');
-const ResourceNotFoundError = require('../../error/ResourceNotFoundError');
-const ValidationError = require('../../error/ValidationError');
+import { Request, Response, NextFunction } from 'express';
+import AuthError from '../../error/AuthError';
+import ResourceNotFoundError from '../../error/ResourceNotFoundError';
+import ValidationError from '../../error/ValidationError';
 
-module.exports = (error, _req, res, next) => {
+const clientErrorHandler = (
+    error: Error,
+    _req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
     if (error instanceof ValidationError) {
         // 422 Validation response
         res.status(422).json({
             message: error.name,
-            details: error.message,
+            details: error.details,
         });
     } else if (error instanceof ResourceNotFoundError) {
         // 404 Resource not found response
@@ -38,3 +44,5 @@ module.exports = (error, _req, res, next) => {
     // pass to the next error middleware
     next(error);
 };
+
+export default clientErrorHandler;

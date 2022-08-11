@@ -1,13 +1,13 @@
-const jwtFacade = require('./jwt.facade');
-const AuthUserModel = require('./models/auth_users');
-const RefreshTokenModel = require('./models/refresh_tokens');
-const { getPasswordHash, isPasswordCorrect } = require('./password.helper');
+import * as jwtFacade from './jwt.facade';
+import AuthUserModel, { AuthUser } from './models/auth_users';
+import RefreshTokenModel, { RefreshToken } from './models/refresh_tokens';
+import { getPasswordHash, isPasswordCorrect } from './password.helper';
 
-async function getAuthUserById(authUserId) {
+async function getAuthUserById(authUserId: string) {
     return AuthUserModel.findById(authUserId).exec();
 }
 
-async function createAuthUser(data) {
+async function createAuthUser(data: AuthUser & {password: string}) {
     const passwordHash = await getPasswordHash(data.password);
     return AuthUserModel.create({
         ...data,
@@ -15,7 +15,10 @@ async function createAuthUser(data) {
     });
 }
 
-async function getAuthUserByEmailPassword(email, password) {
+async function getAuthUserByEmailPassword(
+    email: string,
+    password: string,
+) {
     const authUser = await AuthUserModel.findOne({ email }).select('+passwordHash').exec();
     if (
         authUser === null
@@ -27,15 +30,15 @@ async function getAuthUserByEmailPassword(email, password) {
     return authUser;
 }
 
-async function createAccessTokenForAuthUser(authUser) {
-    return jwtFacade.getAuthJWT(authUser);
+async function createAccessTokenForAuthUser(authUserId: string) {
+    return jwtFacade.getAuthJWT(authUserId);
 }
 
-async function createRefreshTokenForAuthUser(authUser) {
-    const token = await jwtFacade.getAuthRefreshJWT(authUser);
+async function createRefreshTokenForAuthUser(authUserId: string) {
+    const token = await jwtFacade.getAuthRefreshJWT(authUserId);
 
     const refreshTokenData = {
-        authUserId: authUser.id,
+        authUserId,
         token,
     };
     await RefreshTokenModel.create(refreshTokenData);
@@ -43,13 +46,16 @@ async function createRefreshTokenForAuthUser(authUser) {
     return token;
 }
 
-async function getAuthUserUsingRefreshToken(authUserId, token) {
+async function getAuthUserUsingRefreshToken(
+    authUserId: string,
+    token: string,
+) {
     const payload = await jwtFacade.getPayloadFromJWT(token);
 
     if (
         payload === null
         || payload.authUserId !== authUserId
-        || payload.tokenType !== jwtFacade.tokenTypes.refresh
+        || payload.tokenType !== jwtFacade.TokenType.refresh
     ) {
         return null;
     }
@@ -67,13 +73,13 @@ async function getAuthUserUsingRefreshToken(authUserId, token) {
     return AuthUserModel.findById(refreshToken.authUserId).exec();
 }
 
-async function removeAllRefreshTokensForAuthUser(authUser) {
-    return RefreshTokenModel.deleteMany({
-        authUserId: authUser.id,
+async function removeAllRefreshTokensForAuthUser(authUserId: string): Promise<void> {
+    RefreshTokenModel.deleteMany({
+        authUserId,
     }).exec();
 }
 
-module.exports = {
+export {
     createAuthUser,
     getAuthUserById,
     getAuthUserByEmailPassword,

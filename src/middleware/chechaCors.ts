@@ -1,4 +1,6 @@
-module.exports = (_req, res, next) => {
+import { Request, Response, NextFunction } from 'express';
+
+const chechaCors = (_req: Request, res: Response, next: NextFunction) => {
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS ');
     res.header(
         'Access-Control-Allow-Headers',
@@ -10,3 +12,5 @@ module.exports = (_req, res, next) => {
     res.header('Access-Control-Allow-Credentials', 'true');
     next();
 };
+
+export default chechaCors;

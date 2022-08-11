@@ -1,7 +1,15 @@
-const logger = require('../../helpers/logger');
+import { Request, Response, NextFunction } from 'express';
+import logger from '../../helpers/logger';
 
-module.exports = (error, _req, _res, next) => {
+const logErrors = (
+    error: Error,
+    _req: Request,
+    _res: Response,
+    next: NextFunction,
+) => {
     logger(error, 'logErrors middleware', 'error');
 
     next(error);
 };
+
+export default logErrors;

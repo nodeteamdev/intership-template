@@ -1,4 +1,4 @@
-const Validation = require('../validation');
+import Validation, { DataToValidate } from '../validation';
 
 /**
  * @exports
@@ -12,7 +12,7 @@ class AuthValidation extends Validation {
      * @returns
      * @memberof AuthValidation
      */
-    create(data) {
+    create(data: DataToValidate) {
         return this.Joi
             .object({
                 email: this.Joi
@@ -33,7 +33,7 @@ class AuthValidation extends Validation {
      * @returns
      * @memberof AuthValidation
      */
-    refreshToken(data) {
+    refreshToken(data: DataToValidate) {
         return this.Joi
             .object({
                 id: this.Joi
@@ -46,4 +46,4 @@ class AuthValidation extends Validation {
     }
 }
 
-module.exports = new AuthValidation();
+export default new AuthValidation();

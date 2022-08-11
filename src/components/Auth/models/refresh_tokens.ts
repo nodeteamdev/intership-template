@@ -1,5 +1,5 @@
-const { Schema } = require('mongoose');
-const mongooseConnection = require('../../../config/connection');
+import { Schema, InferSchemaType } from 'mongoose';
+import mongooseConnection from '../../../config/connection';
 
 const COLLECTION_NAME = 'refresh_tokens';
 const MODEL_NAME = 'RefreshTokenModel';
@@ -26,4 +26,6 @@ const schema = new Schema(
     },
 );
 
-module.exports = mongooseConnection.model(MODEL_NAME, schema);
+export type RefreshToken = InferSchemaType<typeof schema> & {id: string};
+
+export default mongooseConnection.model(MODEL_NAME, schema);

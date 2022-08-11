@@ -1,11 +1,21 @@
-const Joi = require('joi');
-const { Types } = require('mongoose');
+import Joi from 'joi';
+import { Types } from 'mongoose';
+
+interface JoiRootExtended extends Joi.Root {
+    objectId: () => Joi.AnySchema;
+}
+
+export type DataToValidate = any;
 
 /**
  * @exports
  * @class Validation
  */
 class Validation {
+    messageObjectId: string;
+
+    Joi: JoiRootExtended;
+
     /**
      * Creates an instance of Schema.
      * @constructor
@@ -38,4 +48,4 @@ class Validation {
     }
 }
 
-module.exports = Validation;
+export default Validation;

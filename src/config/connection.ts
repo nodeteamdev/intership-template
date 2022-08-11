@@ -1,25 +1,25 @@
-const mongoose = require('mongoose');
-const logger = require('../helpers/logger');
+import mongoose from 'mongoose';
+import logger from '../helpers/logger';
 
 const connectOptions = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 2000,
+    serverSelectionTimeoutMS: 5000,
 };
+
+if (process.env.MONGODB_URI === undefined) {
+    logger('process.env.MONGODB_URI is not specified', 'mongooseConnection error', 'error');
+    process.exit(1);
+}
 
 const mongooseConnection = mongoose.createConnection(
     process.env.MONGODB_URI,
     connectOptions,
-    (error) => {
-        if (error) {
-            logger(error.message, 'mongooseConnection error', 'error');
-            process.exit(1);
-        }
-    },
 );
 
-mongooseConnection.on('error', (error) => {
-    logger(error, 'mongooseConnection.onError event', 'error');
+mongooseConnection.on('error', (error: Error) => {
+    logger(error.message, 'mongooseConnection error', 'error');
+    process.exit(1);
 });
 
-module.exports = mongooseConnection;
+export default mongooseConnection;

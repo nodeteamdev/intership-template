@@ -1,12 +1,12 @@
-const { Router } = require('express');
-const asyncErrorCatcher = require('../../middleware/errorHandlers/asyncErrorCatcher');
-const AuthComponent = require('.');
-const AuthValidation = require('./validation');
-const { validateBody } = require('../../middleware/validationHandler');
+import { Router } from 'express';
+import asyncErrorCatcher from '../../middleware/errorHandlers/asyncErrorCatcher';
+import * as AuthComponent from '.';
+import AuthValidation from './validation';
+import { validateBody } from '../../middleware/validationHandler';
 
 /**
  * Express router to mount auth related functions on.
- * @type {Express.Router}
+ * @type {express.Router}
  * @const
  */
 const router = Router();
@@ -56,4 +56,4 @@ router.post(
     asyncErrorCatcher(AuthComponent.removeAllRefreshTokens),
 );
 
-module.exports = router;
+export default router;

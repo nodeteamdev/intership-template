@@ -1,22 +1,33 @@
-const { createSecretKey } = require('crypto');
-const jose = require('jose');
+import { createSecretKey } from 'crypto';
+import jose from 'jose';
+import logger from '../../helpers/logger';
 
-const tokenTypes = {
-    access: 'access',
-    refresh: 'refresh',
-};
+enum TokenType {
+    access = 'access',
+    refresh = 'refresh',
+}
+
+if (process.env.JWT_SECRET === undefined) {
+    logger('process.env.JWT_SECRET is not specified', 'jwt.facade', 'error');
+    process.exit(1);
+}
 
 const alg = 'HS256';
 const secretKey = createSecretKey(process.env.JWT_SECRET, 'utf-8');
 
-function getPayloadFromAuthUser(authUser, tokenType) {
+type PayloadAuth = {
+    authUserId: string,
+    tokenType: TokenType,
+};
+
+function getPayloadFromAuthUser(authUserId: string, tokenType: TokenType): PayloadAuth {
     return {
-        authUserId: authUser.id,
+        authUserId,
         tokenType,
     };
 }
 
-async function getJWT(payload, expiresIn = '') {
+async function getJWT(payload: PayloadAuth & jose.JWTPayload, expiresIn = '') {
     return new jose.SignJWT(payload)
         .setProtectedHeader({ alg })
         .setIssuedAt()
@@ -24,35 +35,31 @@ async function getJWT(payload, expiresIn = '') {
         .sign(secretKey);
 }
 
-async function getAuthJWT(authUser) {
+async function getAuthJWT(authUserId: string) {
     return getJWT(
-        getPayloadFromAuthUser(authUser, tokenTypes.access),
+        getPayloadFromAuthUser(authUserId, TokenType.access),
         process.env.JWT_AUTH_TOKEN_EXPIRES_IN,
     );
 }
 
-async function getAuthRefreshJWT(authUser) {
+async function getAuthRefreshJWT(authUserId: string) {
     return getJWT(
-        getPayloadFromAuthUser(authUser, tokenTypes.refresh),
+        getPayloadFromAuthUser(authUserId, TokenType.refresh),
         process.env.JWT_AUTH_REFRESH_TOKEN_EXPIRES_IN,
     );
 }
 
-async function getPayloadFromJWT(jwt) {
+async function getPayloadFromJWT(jwt: string): Promise<PayloadAuth | null> {
     try {
-        const { payload, protectedHeader } = await jose.jwtVerify(jwt, secretKey);
-        if (protectedHeader.alg !== alg) {
-            // NOTE: is this useful?
-            return null;
-        }
-        return payload;
+        const { payload } = await jose.jwtVerify(jwt, secretKey);
+        return payload as PayloadAuth;
     } catch {
         return null;
     }
 }
 
-module.exports = {
-    tokenTypes,
+export {
+    TokenType,
     getAuthJWT,
     getAuthRefreshJWT,
     getPayloadFromJWT,

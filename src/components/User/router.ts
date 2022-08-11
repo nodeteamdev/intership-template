@@ -1,12 +1,12 @@
-const { Router } = require('express');
-const { validateParams, validateBody } = require('../../middleware/validationHandler');
-const asyncErrorCatcher = require('../../middleware/errorHandlers/asyncErrorCatcher');
-const UserComponent = require('.');
-const UserValidation = require('./validation');
+import { Router } from 'express';
+import { validateParams, validateBody } from '../../middleware/validationHandler';
+import asyncErrorCatcher from '../../middleware/errorHandlers/asyncErrorCatcher';
+import * as UserComponent from '.';
+import UserValidation from './validation';
 
 /**
  * Express router to mount user related functions on.
- * @type {Express.Router}
+ * @type {express.Router}
  * @const
  */
 const router = Router();
@@ -80,4 +80,4 @@ router.delete(
     asyncErrorCatcher(UserComponent.deleteById),
 );
 
-module.exports = router;
+export default router;

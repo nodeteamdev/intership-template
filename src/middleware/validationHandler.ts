@@ -1,6 +1,14 @@
-const ValidationError = require('../error/ValidationError');
+import { Request, Response, NextFunction } from 'express';
+import Joi from 'joi';
+import ValidationError from '../error/ValidationError';
 
-const validateData = (data) => (validationMethod) => (_req, _res, next) => {
+type JoiValidateFunction = (data: any) => Joi.ValidationResult;
+
+const validateData = (data: any) => (validationMethod: JoiValidateFunction) => (
+    _req: Request,
+    _res:Response,
+    next: NextFunction,
+) => {
     const { error } = validationMethod(data);
     const valid = error === null || error === undefined;
 
@@ -10,27 +18,37 @@ const validateData = (data) => (validationMethod) => (_req, _res, next) => {
     next();
 };
 
-const validateAny = (validationMethod) => (req, res, next) => {
+const validateAny = (validationMethod: JoiValidateFunction) => (
+    req: Request,
+    res:Response,
+    next: NextFunction,
+) => {
     const data = { ...req.params, ...req.query, ...req.body };
     return validateData(data)(validationMethod)(req, res, next);
 };
 
 // eslint-disable-next-line arrow-body-style
-const validateParams = (validationMethod) => (req, res, next) => {
-    return validateData(req.params)(validationMethod)(req, res, next);
-};
+const validateParams = (validationMethod: JoiValidateFunction) => (
+    req: Request,
+    res:Response,
+    next: NextFunction,
+) => validateData(req.params)(validationMethod)(req, res, next);
 
 // eslint-disable-next-line arrow-body-style
-const validateQuery = (validationMethod) => (req, res, next) => {
-    return validateData(req.query)(validationMethod)(req, res, next);
-};
+const validateQuery = (validationMethod: JoiValidateFunction) => (
+    req: Request,
+    res:Response,
+    next: NextFunction,
+) => validateData(req.query)(validationMethod)(req, res, next);
 
 // eslint-disable-next-line arrow-body-style
-const validateBody = (validationMethod) => (req, res, next) => {
-    return validateData(req.body)(validationMethod)(req, res, next);
-};
+const validateBody = (validationMethod: JoiValidateFunction) => (
+    req: Request,
+    res:Response,
+    next: NextFunction,
+) => validateData(req.body)(validationMethod)(req, res, next);
 
-module.exports = {
+export {
     validateAny,
     validateParams,
     validateQuery,

@@ -1,11 +1,13 @@
-const ResourceNotFoundError = require('../error/ResourceNotFoundError');
+import mongoose from 'mongoose';
+import ResourceNotFoundError from '../error/ResourceNotFoundError';
 
-function checkResourceIsFound(resource) {
+function checkResourceIsFound(resource: mongoose.Document | null) {
     if (resource === null) {
         throw new ResourceNotFoundError();
     }
 }
 
-module.exports = {
+export {
+    // eslint-disable-next-line import/prefer-default-export
     checkResourceIsFound,
 };

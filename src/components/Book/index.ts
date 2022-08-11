@@ -1,6 +1,7 @@
-const BookService = require('./service');
+import { Request, Response } from 'express';
+import * as BookService from './service';
 
-async function getCountPerCountry(_req, res) {
+async function getCountPerCountry(_req: Request, res: Response) {
     const resources = await BookService.getAllBooksCountPerCountry();
 
     res.status(200).json({
@@ -8,7 +9,7 @@ async function getCountPerCountry(_req, res) {
     });
 }
 
-async function getNewBooks(_req, res) {
+async function getNewBooks(_req: Request, res: Response) {
     const LIMIT = 15;
     const resources = await BookService.getNewBooks(LIMIT);
 
@@ -17,7 +18,7 @@ async function getNewBooks(_req, res) {
     });
 }
 
-module.exports = {
+export {
     getCountPerCountry,
     getNewBooks,
 };

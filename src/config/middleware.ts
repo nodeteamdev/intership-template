@@ -1,22 +1,23 @@
-const bodyParser = require('body-parser');
-const compression = require('compression');
-const cookieParser = require('cookie-parser');
-const cors = require('cors');
-const helmet = require('helmet');
-const chechaCors = require('../middleware/chechaCors');
-const clientErrorHandler = require('../middleware/errorHandlers/clientErrorHandler');
-const logErrors = require('../middleware/errorHandlers/logErrors');
-const errorHandler = require('../middleware/errorHandlers/errorHandler');
-const contentTypeChecker = require('../middleware/contentTypeChecker');
+import express from 'express';
+import bodyParser from 'body-parser';
+import compression from 'compression';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import helmet from 'helmet';
+import chechaCors from '../middleware/chechaCors';
+import clientErrorHandler from '../middleware/errorHandlers/clientErrorHandler';
+import logErrors from '../middleware/errorHandlers/logErrors';
+import errorHandler from '../middleware/errorHandlers/errorHandler';
+import contentTypeChecker from '../middleware/contentTypeChecker';
 
-module.exports = {
+export default {
     /**
      * @function
      * @description express middleware
      * @param {express.Application} app
      * @returns void
      */
-    init(app) {
+    init(app: express.Application) {
         app.use(bodyParser.urlencoded({
             extended: false,
         }));
@@ -43,7 +44,7 @@ module.exports = {
      * @param {express.Application} app
      * @returns void
      */
-    errors(app) {
+    errors(app: express.Application) {
         // displays api friendly error for the clients
         app.use(clientErrorHandler);
 

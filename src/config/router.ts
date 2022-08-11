@@ -1,19 +1,19 @@
-const express = require('express');
-const http = require('http');
-const AuthRouter = require('../components/Auth/router');
-const UserRouter = require('../components/User/router');
-const ProductRouter = require('../components/Product/router');
-const BookRouter = require('../components/Book/router');
-const isAuthUser = require('../middleware/isAuthUser');
+import express from 'express';
+import http from 'http';
+import AuthRouter from '../components/Auth/router';
+import UserRouter from '../components/User/router';
+import ProductRouter from '../components/Product/router';
+import BookRouter from '../components/Book/router';
+import isAuthUser from '../middleware/isAuthUser';
 
-module.exports = {
+export default {
     /**
      * @function
      * @param {express.Application} app
      * @summary init Application router
      * @returns void
      */
-    init(app) {
+    init(app: express.Application) {
         const router = express.Router();
 
         /**

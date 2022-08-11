@@ -1,26 +1,26 @@
-const ProductModel = require('./model');
+import ProductModel, { Product } from './model';
 
 async function findAll() {
     return ProductModel.find({}).exec();
 }
 
-async function findById(id) {
+async function findById(id: string) {
     return ProductModel.findById(id).exec();
 }
 
-async function create(data) {
+async function create(data: Product) {
     return ProductModel.create(data);
 }
 
-async function updateById(_id, data) {
-    return ProductModel.findOneAndUpdate({ _id }, data, { new: true }).exec();
+async function updateById(id: string, data: Product) {
+    return ProductModel.findOneAndUpdate({ _id: id }, data, { new: true }).exec();
 }
 
-async function deleteById(_id) {
-    return ProductModel.findOneAndDelete({ _id }).exec();
+async function deleteById(id: string) {
+    return ProductModel.findOneAndDelete({ _id: id }).exec();
 }
 
-module.exports = {
+export {
     findAll,
     findById,
     create,
