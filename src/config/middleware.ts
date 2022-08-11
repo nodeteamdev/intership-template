@@ -1,11 +1,11 @@
-const bodyParser = require('body-parser');
-const compression = require('compression');
-const cookieParser = require('cookie-parser');
-const cors = require('cors');
-const express = require('express');
-const helmet = require('helmet');
+import express from 'express';
+import bodyParser from 'body-parser';
+import compression from 'compression';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import helmet from 'helmet';
 
-module.exports = {
+export default {
     /**
      * @function
      * @description express middleware

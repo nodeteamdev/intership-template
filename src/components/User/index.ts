@@ -1,18 +1,15 @@
-const UserService = require('./service');
-const UserValidation = require('./validation');
-const ValidationError = require('../../error/ValidationError');
+import express from 'express';
+import UserService from './service';
+import UserValidation from './validation';
+import ValidationError from '../../error/ValidationError';
 
-/**
- * @function
- * @param {express.Request} req
- * @param {express.Response} res
- * @param {express.NextFunction} next
- * @returns {Promise < void >}
- */
-async function findAll(req, res, next) {
+async function findAll(
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+): Promise < void > {
     try {
         const users = await UserService.findAll();
-
         res.status(200).json({
             data: users,
         });
@@ -33,7 +30,11 @@ async function findAll(req, res, next) {
  * @param {express.NextFunction} next
  * @returns {Promise < void >}
  */
-async function findById(req, res, next) {
+async function findById(
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+): Promise < void | express.Response > {
     try {
         const { error } = UserValidation.findById(req.params);
 
@@ -70,7 +71,11 @@ async function findById(req, res, next) {
  * @param {express.NextFunction} next
  * @returns {Promise < void >}
  */
-async function create(req, res, next) {
+async function create(
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+): Promise < void | express.Response > {
     try {
         const { error } = UserValidation.create(req.body);
 
@@ -107,7 +112,11 @@ async function create(req, res, next) {
  * @param {express.NextFunction} next
  * @returns {Promise<void>}
  */
-async function updateById(req, res, next) {
+async function updateById(
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+): Promise < void | express.Response > {
     try {
         const { error } = UserValidation.updateById(req.body);
 
@@ -144,7 +153,11 @@ async function updateById(req, res, next) {
  * @param {express.NextFunction} next
  * @returns {Promise<void>}
  */
-async function deleteById(req, res, next) {
+async function deleteById(
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+): Promise < void | express.Response > {
     try {
         const { error } = UserValidation.deleteById(req.body);
 
@@ -174,7 +187,7 @@ async function deleteById(req, res, next) {
     }
 }
 
-module.exports = {
+export default {
     findAll,
     findById,
     create,
