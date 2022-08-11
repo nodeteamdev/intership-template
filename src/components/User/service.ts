@@ -1,4 +1,4 @@
-const UserModel = require('./model');
+import UserModel, { IUser } from './model';
 
 /**
  * @exports
@@ -8,7 +8,7 @@ const UserModel = require('./model');
  * @returns Promise<UserModel[]>
  */
 function findAll() {
-    return UserModel.find({}).exec();
+  return UserModel.find({}).exec();
 }
 
 /**
@@ -18,10 +18,10 @@ function findAll() {
  * @summary get a user
  * @returns {Promise<UserModel>}
  */
-function findById(id) {
-    return UserModel.findById(id).exec();
-}
 
+function findById(id: string): Promise<IUser> {
+  return UserModel.findById(id).exec();
+}
 /**
  * @exports
  * @method create
@@ -29,8 +29,9 @@ function findById(id) {
  * @summary create a new user
  * @returns {Promise<UserModel>}
  */
-function create(profile) {
-    return UserModel.create(profile);
+
+function create(profile: IUser): Promise<IUser> {
+  return UserModel.create(profile);
 }
 
 /**
@@ -42,8 +43,9 @@ function create(profile) {
  * @summary update a user's profile
  * @returns {Promise<void>}
  */
-function updateById(_id, newProfile) {
-    return UserModel.updateOne({ _id }, newProfile).exec();
+
+function updateById(_id: string, newProfile: {}): Promise<void> {
+  return UserModel.updateOne({ _id }, newProfile).exec();
 }
 
 /**
@@ -53,14 +55,15 @@ function updateById(_id, newProfile) {
  * @summary delete a user from database
  * @returns {Promise<void>}
  */
-function deleteById(_id) {
-    return UserModel.deleteOne({ _id }).exec();
+
+function deleteById(_id: string): Promise<void> {
+  return UserModel.deleteOne({ _id }).exec();
 }
 
-module.exports = {
-    findAll,
-    findById,
-    create,
-    updateById,
-    deleteById,
+export default {
+  findAll,
+  findById,
+  create,
+  updateById,
+  deleteById,
 };
