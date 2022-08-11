@@ -1,21 +1,23 @@
-const bodyParser = require('body-parser');
-const compression = require('compression');
-const cookieParser = require('cookie-parser');
-const cors = require('cors');
-const express = require('express');
-const helmet = require('helmet');
+import bodyParser from 'body-parser';
+import compression from 'compression';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import express from 'express';
+import helmet from 'helmet';
 
-module.exports = {
+export default {
     /**
      * @function
      * @description express middleware
      * @param {express.Application} app
      * @returns void
      */
-    init(app) {
-        app.use(bodyParser.urlencoded({
+    init(app: express.Application) {
+        app.use(
+            bodyParser.urlencoded({
             extended: false,
-        }));
+        }),
+        );
         app.use(bodyParser.json());
         // parse Cookie header and populate req.cookies with an object keyed by the cookie names.
         app.use(cookieParser());
