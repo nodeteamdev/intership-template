@@ -6,7 +6,7 @@ import routes from '../config/router';
  * @type {express}
  * @constant {express.Application}
  */
-const app = express();
+const app: express.Application = express();
 
 /**
  * @description express.Application Middleware
