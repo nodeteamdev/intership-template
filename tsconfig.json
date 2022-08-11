@@ -1,9 +1,9 @@
 {
+    "include": ["src/**/*"],
     "compilerOptions": {
         /* Visit https://aka.ms/tsconfig to read more about this file */
 
         "outDir": "dist",
-        "include": ["src/**/*"],
 
         /* Projects */
         // "incremental": true,                              /* Save .tsbuildinfo files to allow for incremental compilation of projects. */
