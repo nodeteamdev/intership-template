@@ -1,43 +1,40 @@
-const bodyParser = require('body-parser');
-const compression = require('compression');
-const cookieParser = require('cookie-parser');
-const cors = require('cors');
-const helmet = require('helmet');
-const { clientErrorHandler, logErrors, errorHandler } = require('../error/errorHandlers');
-
-module.exports = {
+"use strict";
+exports.__esModule = true;
+var body_parser_1 = require("body-parser");
+var compression_1 = require("compression");
+var cookie_parser_1 = require("cookie-parser");
+var cors = require("cors");
+var helmet = require("helmet");
+var errorHandlers_1 = require("../error/errorHandlers");
+exports["default"] = {
     /**
-     * @function
-     * @description express middleware
-     * @param {express.Application} app
-     * @returns void
-     */
-    init(app) {
-        app.use(bodyParser.urlencoded({
-            extended: false,
+       * @function
+       * @description express middleware
+       * @param {express.Application} app
+       * @returns void
+       */
+    init: function (app) {
+        app.use(body_parser_1["default"].urlencoded({
+            extended: false
         }));
-        app.use(bodyParser.json());
-        app.use(cookieParser());
-        app.use(compression());
+        app.use(body_parser_1["default"].json());
+        app.use((0, cookie_parser_1["default"])());
+        app.use((0, compression_1["default"])());
         app.use(helmet());
         app.use(cors());
-        app.use((req, res, next) => {
+        app.use(function (req, res, next) {
             res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS ');
-            res.header(
-                'Access-Control-Allow-Headers',
-                'Origin, X-Requested-With,'
+            res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With,'
                 + ' Content-Type, Accept,'
                 + ' Authorization,'
-                + ' Access-Control-Allow-Credentials',
-            );
+                + ' Access-Control-Allow-Credentials');
             res.header('Access-Control-Allow-Credentials', 'true');
             next();
         });
     },
-    errors(app) {
-        app.use(logErrors);
-        app.use(clientErrorHandler);
-        app.use(errorHandler);
-    },
-
+    errors: function (app) {
+        app.use(errorHandlers_1.logErrors);
+        app.use(errorHandlers_1.clientErrorHandler);
+        app.use(errorHandlers_1.errorHandler);
+    }
 };

@@ -1,13 +1,13 @@
-"use strict";
-exports.__esModule = true;
-var express_1 = require("express");
-var _1 = require(".");
+import { Router } from 'express';
+import UserComponent from '.';
+
 /**
  * Express router to mount user related functions on.
  * @type {Express.Router}
  * @const
  */
-var router = (0, express_1.Router)();
+const router = Router();
+
 /**
  * Route serving list of users.
  * @name /v1/users
@@ -16,7 +16,8 @@ var router = (0, express_1.Router)();
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/', _1["default"].findAll);
+router.get('/', UserComponent.findAll);
+
 /**
  * Route serving a user
  * @name /v1/users/:id
@@ -25,7 +26,8 @@ router.get('/', _1["default"].findAll);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/find', _1["default"].findByEmail);
+router.get('/find', UserComponent.findByEmail);
+
 /**
  * Route serving a new user
  * @name /v1/users
@@ -34,7 +36,8 @@ router.get('/find', _1["default"].findByEmail);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.post('/create', _1["default"].create);
+router.post('/create', UserComponent.create);
+
 /**
  * Route serving a new user
  * @name /v1/users
@@ -43,7 +46,8 @@ router.post('/create', _1["default"].create);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware
  */
-router.put('/update', _1["default"].updateByEmail);
+router.put('/update', UserComponent.updateByEmail);
+
 /**
  * Route serving a new user
  * @name /v1/users
@@ -52,5 +56,6 @@ router.put('/update', _1["default"].updateByEmail);
  * @param {string} path -Express path
  * @param {callback} middleware - Express middleware
  */
-router["delete"]('/delete', _1["default"].deleteByEmail);
-exports["default"] = router;
+router.delete('/delete', UserComponent.deleteByEmail);
+
+export default router;

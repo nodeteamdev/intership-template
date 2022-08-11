@@ -1,27 +1,31 @@
-"use strict";
-exports.__esModule = true;
-var express_1 = require("express");
-var middleware_1 = require("../config/middleware");
-var router_1 = require("../config/router");
+import express from 'express';
+import middleware from '../config/middleware';
+import routes from '../config/router';
+
 /**
  * @type {express}
  * @constant {express.Application}
  */
-var app = (0, express_1["default"])();
+const app = express();
+
 /**
  * @description express.Application Middleware
  */
-middleware_1["default"].init(app);
+middleware.init(app);
+
 /**
  * @description express.Application Routes
  */
-router_1["default"].init(app);
+routes.init(app);
+
 /**
  * @description express.Application Middleware
  */
-middleware_1["default"].errors(app);
+middleware.errors(app);
+
 /**
  * @description sets port 3000 to default or unless otherwise specified in the environment
  */
 app.set('port', process.env.PORT || 3000);
-exports["default"] = app;
+
+export default app;

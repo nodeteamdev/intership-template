@@ -1,6 +1,5 @@
-"use strict";
-exports.__esModule = true;
-var model_1 = require("./model");
+import UserModel from './model';
+
 /**
  * @exports
  * @method findAll
@@ -9,8 +8,9 @@ var model_1 = require("./model");
  * @returns Promise<UserModel[]>
  */
 function findAll() {
-    return model_1["default"].find({}).exec();
+  return UserModel.find({}).exec();
 }
+
 /**
  * @exports
  * @method findByEmail
@@ -18,9 +18,10 @@ function findAll() {
  * @summary get a user
  * @returns {Promise<UserModel>}
  */
-function findByEmail(email) {
-    return model_1["default"].findOne({ email: email }).exec();
+function findByEmail(email: string) {
+  return UserModel.findOne({ email }).exec();
 }
+
 /**
  * @exports
  * @method create
@@ -29,8 +30,9 @@ function findByEmail(email) {
  * @returns {Promise<UserModel>}
  */
 function create(profile) {
-    return model_1["default"].create(profile);
+  return UserModel.create(profile);
 }
+
 /**
  * Find a user by id and update his profile
  * @exports
@@ -41,8 +43,9 @@ function create(profile) {
  * @returns {Promise<void>}
  */
 function updateByEmail(email, newProfile) {
-    return model_1["default"].updateOne({ email: email }, newProfile).exec();
+  return UserModel.updateOne({ email }, newProfile).exec();
 }
+
 /**
  * @exports
  * @method deleteByEmail
@@ -51,12 +54,13 @@ function updateByEmail(email, newProfile) {
  * @returns {Promise<void>}
  */
 function deleteByEmail(email) {
-    return model_1["default"].deleteOne({ email: email }).exec();
+  return UserModel.deleteOne({ email }).exec();
 }
-exports["default"] = {
-    findAll: findAll,
-    findByEmail: findByEmail,
-    create: create,
-    updateByEmail: updateByEmail,
-    deleteByEmail: deleteByEmail
+
+export default {
+  findAll,
+  findByEmail,
+  create,
+  updateByEmail,
+  deleteByEmail,
 };
