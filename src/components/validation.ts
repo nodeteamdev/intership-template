@@ -1,11 +1,13 @@
-const Joi = require('@hapi/joi');
-const { Types } = require('mongoose');
+import Joi from 'joi';
+import { Types } from 'mongoose';
 
 /**
  * @exports
  * @class Validation
  */
 class Validation {
+    messageObjectId: string;
+    Joi: any;
     /**
      * Creates an instance of Schema.
      * @constructor
@@ -38,4 +40,4 @@ class Validation {
     }
 }
 
-module.exports = Validation;
+export default Validation;

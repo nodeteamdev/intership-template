@@ -1,4 +1,4 @@
-const Validation = require('../validation');
+import Validation from '../validation';
 
 /**
  * @exports
@@ -71,4 +71,4 @@ class UserValidation extends Validation {
     }
 }
 
-module.exports = new UserValidation();
+export default new UserValidation();

@@ -1,9 +1,11 @@
+import { Server } from 'node:http';
+
 /**
  * @function
  * @param  {NodeJS.ErrnoException} error
  * @returns throw error
  */
-function onError(error) {
+ function onError(error: NodeJS.ErrnoException): void {
     if (error.syscall !== 'listen') {
         throw error;
     }
@@ -24,9 +26,9 @@ function onError(error) {
  * @inner
  * @description log port to console
  */
-function onListening() {
+function onListening(): void {
     const addr = this.address();
-    const bind = (typeof addr === 'string') ? `pipe ${addr}` : `port ${addr.port}`;
+    const bind: string = (typeof addr === 'string') ? `pipe ${addr}` : `port ${addr.port}`;
 
     console.log(`Listening on ${bind}`);
 }
@@ -36,12 +38,12 @@ function onListening() {
  * @inner
  * @param {http.Server} server
  */
-function bind(server) {
+function bind(server: Server) : void {
     server.on('error', (error) => this.onError.bind(server)(error));
     server.on('listening', this.onListening.bind(server));
 }
 
-module.exports = {
+export default {
     onError,
     onListening,
     bind,
