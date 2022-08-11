@@ -1,15 +1,16 @@
-const UserService = require('./service');
-const UserValidation = require('./validation');
-const ValidationError = require('../../error/ValidationError');
+import { Request, Response, NextFunction } from 'express';
+import UserService from './service';
+import UserValidation from './validation';
+import ValidationError from '../../error/ValidationError';
 
-async function newUser(req, res, next) {
+async function newUser(req: Request, res: Response, next: NextFunction) {
   try {
     const { error } = UserValidation.newUser(req.body);
     if (error) {
       throw new ValidationError(error.details);
     }
 
-    const data = await UserService.newUser(req.body);
+    const data: object = await UserService.newUser(req.body);
     res.status(201).send({
       data,
     });
@@ -18,14 +19,14 @@ async function newUser(req, res, next) {
   }
 }
 
-async function getUser(req, res, next) {
+async function getUser(req: Request, res: Response, next: NextFunction) {
   try {
     const { error } = UserValidation.getUser(req.params);
     if (error) {
       throw new ValidationError(error.details);
     }
 
-    const id = req.params.id;
+    const { id } = req.params;
     const user = await UserService.getUser(id);
 
     if (!user) {
@@ -40,9 +41,9 @@ async function getUser(req, res, next) {
   }
 }
 
-async function getUsers(req, res, next) {
+async function getUsers(req: Request, res: Response, next: NextFunction) {
   try {
-    const users = await UserService.getUsers();
+    const users: object[] = await UserService.getUsers();
 
     if (!users) {
       throw new Error('Users not found');
@@ -56,16 +57,16 @@ async function getUsers(req, res, next) {
   }
 }
 
-async function updateUser(req, res, next) {
+async function updateUser(req: Request, res: Response, next: NextFunction) {
   try {
     const { error } = UserValidation.updateUser(req.body);
     if (error) {
       throw new ValidationError(error.details);
     }
 
-    const id = req.params.id;
-    const updates = Object.keys(req.body);
-    const user = await UserService.updateUser(id, updates, req.body);
+    const { id } = req.params;
+    const updates: string[] = Object.keys(req.body);
+    const user: object = await UserService.updateUser(id, updates, req.body);
     if (!user) {
       throw new Error('User not found');
     }
@@ -77,15 +78,15 @@ async function updateUser(req, res, next) {
   }
 }
 
-async function deleteUser(req, res, next) {
+async function deleteUser(req: Request, res: Response, next: NextFunction) {
   try {
     const { error } = UserValidation.deleteUser(req.params);
     if (error) {
       throw new ValidationError(error.details);
     }
 
-    const id = req.params.id;
-    const result = await UserService.deleteUser(id);
+    const { id } = req.params;
+    const result: string = await UserService.deleteUser(id);
     res.status(200).send({
       message: result,
     });
@@ -94,14 +95,14 @@ async function deleteUser(req, res, next) {
   }
 }
 
-async function loginUser(req, res, next) {
+async function loginUser(req: Request, res: Response, next: NextFunction) {
   try {
     const { error } = UserValidation.loginUser(req.body);
     if (error) {
       throw new ValidationError(error.details);
     }
 
-    const result = await UserService.loginUser(req.body);
+    const result: object = await UserService.loginUser(req.body);
     res.status(200).send({
       ...result,
       message: 'login successful',
@@ -111,15 +112,15 @@ async function loginUser(req, res, next) {
   }
 }
 
-async function refreshTokenUser(req, res, next) {
+async function refreshTokenUser(req: Request, res: Response, next: NextFunction) {
   try {
     const { error } = UserValidation.refreshTokenUser(req.params);
     if (error) {
       throw new ValidationError(error.details);
     }
 
-    const id = req.params.id;
-    const tokens = await UserService.refreshTokenUser(id);
+    const { id } = req.params;
+    const tokens: object = await UserService.refreshTokenUser(id);
     res.status(200).send({
       data: tokens,
       message: 'Refresh token successful',
@@ -129,15 +130,15 @@ async function refreshTokenUser(req, res, next) {
   }
 }
 
-async function logoutUser(req, res, next) {
+async function logoutUser(req: Request, res: Response, next: NextFunction) {
   try {
     const { error } = UserValidation.logoutUser(req.params);
     if (error) {
       throw new ValidationError(error.details);
     }
 
-    const id = req.params.id;
-    const result = await UserService.logoutUser(id);
+    const { id } = req.params;
+    const result: string = await UserService.logoutUser(id);
     res.status(200).send({
       message: result,
     });
@@ -146,7 +147,7 @@ async function logoutUser(req, res, next) {
   }
 }
 
-module.exports = {
+export default {
   newUser,
   getUser,
   getUsers,

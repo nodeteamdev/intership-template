@@ -1,22 +1,26 @@
+import * as http from 'http';
+
 /**
  * @function
  * @param  {NodeJS.ErrnoException} error
  * @returns throw error
  */
-function onError(error) {
+function onError(error: NodeJS.ErrnoException): Error {
   if (error.syscall !== 'listen') {
     throw error;
   }
 
   switch (error.code) {
-  case 'EACCES':
-    console.error('Port requires elevated privileges');
-    process.exit(1);
-  case 'EADDRINUSE':
-    console.error('Port is already in use');
-    process.exit(1);
-  default:
-    throw error;
+    case 'EACCES':
+      console.error('Port requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error('Port is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
   }
 }
 /**
@@ -24,7 +28,7 @@ function onError(error) {
  * @inner
  * @description log port to console
  */
-function onListening() {
+function onListening(): void {
   const addr = this.address();
   const bind = (typeof addr === 'string') ? `pipe ${addr}` : `port ${addr.port}`;
 
@@ -36,12 +40,12 @@ function onListening() {
  * @inner
  * @param {http.Server} server
  */
-function bind(server) {
-  server.on('error', (error) => this.onError.bind(server)(error));
+function bind(server: http.Server): void {
+  server.on('error', (error: Error) => this.onError.bind(server)(error));
   server.on('listening', this.onListening.bind(server));
 }
 
-module.exports = {
+export default {
   onError,
   onListening,
   bind,

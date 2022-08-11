@@ -1,5 +1,5 @@
-const Joi = require('joi');
-const { Types } = require('mongoose');
+import Joi from 'joi';
+import { Types } from 'mongoose';
 
 /**
  * @exports
@@ -38,4 +38,4 @@ class Validation {
   }
 }
 
-module.exports = Validation;
+export default Validation;

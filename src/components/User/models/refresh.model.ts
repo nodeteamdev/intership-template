@@ -1,12 +1,13 @@
-const jwt = require('jsonwebtoken');
-const { Schema } = require('mongoose');
-const connections = require('../../../config/connection');
+import jwt from 'jsonwebtoken';
+import { Schema } from 'mongoose';
+import connections from '../../../config/connection';
+import { refreshSchemaInterface, refreshModelInterface } from '../interfaces/user.interfaces';
 
 const { JWT_SECRET } = process.env;
 
 const { REFRESH_TOKEN_SECRET } = process.env;
 
-const RefreshSchema = new Schema({
+const RefreshSchema = new Schema<refreshSchemaInterface>({
   accessToken: {
     type: String,
   },
@@ -46,7 +47,7 @@ RefreshSchema.methods.generateRefreshToken = function () {
   obj.refreshToken = refreshToken;
 };
 
-const refresh = connections.model('refresh', RefreshSchema);
-module.exports = {
+const refresh: refreshModelInterface = connections.model<refreshSchemaInterface, refreshModelInterface>('refresh', RefreshSchema);
+export default {
   refresh,
 };

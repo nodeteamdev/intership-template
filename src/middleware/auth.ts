@@ -1,17 +1,17 @@
-const jwt = require('jsonwebtoken');
-const RefreshModel = require('../components/User/models/refreshModel');
+import jwt from 'jsonwebtoken';
+import { RequestHandler } from 'express';
+import RefreshModel from '../components/User/models/refresh.model';
 
 const { JWT_SECRET } = process.env;
-
-exports.auth = async (req, res, next) => {
+const auth: RequestHandler = async (req, res, next) => {
   try {
-    const id = req.params.id;
+    const id: string = req.params.id;
     const token = await RefreshModel.refresh.findById({ _id: id }).exec();
     if (!token.accessToken) {
       throw new Error('A token is required for authentication');
     }
     try {
-      const decoded = jwt.verify(token.accessToken, JWT_SECRET);
+      const decoded: jwt.Jwt & jwt.JwtPayload & void = jwt.verify(token.accessToken, JWT_SECRET);
       req.user = decoded;
     } catch (err) {
       next(err);
@@ -23,3 +23,5 @@ exports.auth = async (req, res, next) => {
     //  message: 'User session expired, Log in to continue'
   }
 };
+
+export default auth;

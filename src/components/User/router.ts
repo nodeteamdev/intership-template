@@ -1,8 +1,9 @@
-const express = require('express');
+import express, { Router } from 'express';
+import userController from './index';
+import auth from '../../middleware/auth';
 
-const router = express.Router();
-const userController = require('./index');
-const { auth } = require('../../middleware/auth');
+const router: Router = express.Router();
+// const { auth } = require('../../middleware/auth');
 
 router.post('/register', userController.newUser);
 
@@ -20,4 +21,4 @@ router.post('/refresh/:id', userController.refreshTokenUser);
 
 router.get('/logout/:id', userController.logoutUser);
 
-module.exports = router;
+export default router;

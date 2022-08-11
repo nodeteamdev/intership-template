@@ -1,8 +1,9 @@
-const bcryptjs = require('bcryptjs');
-const { Schema } = require('mongoose');
-const connections = require('../../../config/connection');
+import bcryptjs from 'bcryptjs';
+import { Schema } from 'mongoose';
+import connections from '../../../config/connection';
+import { userSchemaInterface, userModelInterface } from '../interfaces/user.interfaces';
 
-const UserSchema = new Schema({
+const UserSchema = new Schema<userSchemaInterface>({
   firstname: {
     type: String,
     required: true,
@@ -35,7 +36,7 @@ UserSchema.pre('save', async function (next) {
   next();
 });
 
-const user = connections.model('user', UserSchema);
-module.exports = {
+const user: userModelInterface = connections.model<userSchemaInterface, userModelInterface>('user', UserSchema);
+export default {
   user,
 };

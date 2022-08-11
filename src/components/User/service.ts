@@ -1,25 +1,28 @@
-const jwt = require('jsonwebtoken');
-const bcryptjs = require('bcryptjs');
-const UserModel = require('./models/userModel');
-const RefreshModel = require('./models/refreshModel');
+import jwt from 'jsonwebtoken';
+import bcryptjs from 'bcryptjs';
+import UserModel from './models/user.model';
+import RefreshModel from './models/refresh.model';
+import {
+  newUserInterface, loginUserInterface, payloadInterface, userModelInterface,
+} from './interfaces/user.interfaces';
 
-async function newUser(userInfo) {
+async function newUser(userInfo: newUserInterface): Promise<userModelInterface> {
   const {
     firstname, lastname, email, password,
   } = userInfo;
-  const user = await UserModel.user.findOne({ email });
+  const user: userModelInterface = await UserModel.user.findOne({ email });
 
   if (user) {
     throw new Error('User already exists');
   }
 
-  const newUser = new UserModel.user({
+  const newUser: userModelInterface = new UserModel.user({
     firstname, lastname, email, password,
   });
 
   await newUser.save();
 
-  const payload = {
+  const payload: payloadInterface = {
     accessToken: '',
     refreshToken: '',
     _id: newUser._id,
@@ -29,27 +32,25 @@ async function newUser(userInfo) {
     ...payload,
   });
   await refresh.save();
-  console.log(newUser);
-  const data = {
+
+  return {
     data: newUser,
     tokens: refresh,
   };
-
-  return data;
 }
 
-async function getUser(id) {
-  const user = await UserModel.user.findById({ _id: id });
+async function getUser(id: string): Promise<userModelInterface> {
+  const user: userModelInterface = await UserModel.user.findById({ _id: id });
   return user;
 }
 
-async function getUsers() {
-  const users = await UserModel.user.find({});
+async function getUsers(): Promise<userModelInterface[]> {
+  const users: Array<userModelInterface> = await UserModel.user.find({});
   return users;
 }
 
-async function updateUser(id, updates, body) {
-  const user = await UserModel.user.findById({ _id: id }).exec();
+async function updateUser(id: string, updates: object, body: object): Promise<userModelInterface> {
+  const user: userModelInterface = await UserModel.user.findById({ _id: id }).exec();
   const refresh = await RefreshModel.refresh.findById({ _id: id }).exec();
   refresh.firstname = body.firstname;
   updates.forEach((update) => {
@@ -60,8 +61,8 @@ async function updateUser(id, updates, body) {
   return user;
 }
 
-async function deleteUser(id) {
-  const user = await UserModel.user.findById({ _id: id }).exec();
+async function deleteUser(id: string): Promise<string> {
+  const user: userModelInterface = await UserModel.user.findById({ _id: id }).exec();
   const refresh = await RefreshModel.refresh.findById({ _id: id }).exec();
   if (!user) {
     throw new Error('User not found');
@@ -71,13 +72,13 @@ async function deleteUser(id) {
   return 'User deleted';
 }
 
-async function loginUser(body) {
+async function loginUser(body: loginUserInterface): Promise<object> {
   const { email, password } = body;
-  const user = await UserModel.user.findOne({ email }).exec();
+  const user: userModelInterface = await UserModel.user.findOne({ email }).exec();
   if (!user) {
     throw new Error('User not found');
   }
-  const isMatch = await bcryptjs.compare(password, user.password);
+  const isMatch: boolean = await bcryptjs.compare(password, user.password);
   if (!isMatch) {
     throw new Error('Incorrect Password, Try again!');
   }
@@ -88,7 +89,7 @@ async function loginUser(body) {
   return { data: user, tokens: refresh };
 }
 
-async function refreshTokenUser(id) {
+async function refreshTokenUser(id: string) {
   const tokens = await RefreshModel.refresh.findById({ _id: id }).exec();
   if (!tokens.refreshToken) {
     throw new Error('No refresh token provided');
@@ -99,8 +100,8 @@ async function refreshTokenUser(id) {
   return tokens;
 }
 
-async function logoutUser(id) {
-  const user = await UserModel.user.findOne({ _id: id }).exec();
+async function logoutUser(id: string): Promise<string> {
+  const user: userModelInterface = await UserModel.user.findOne({ _id: id }).exec();
   const tokens = await RefreshModel.refresh.findById({ _id: id }).exec();
   if (!user) {
     throw new Error('User not found');
@@ -111,7 +112,7 @@ async function logoutUser(id) {
   return 'Logout successful';
 }
 
-module.exports = {
+export default {
   newUser,
   getUser,
   getUsers,

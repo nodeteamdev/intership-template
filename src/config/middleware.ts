@@ -1,20 +1,23 @@
-const bodyParser = require('body-parser');
-const compression = require('compression');
-const cookieParser = require('cookie-parser');
-const cors = require('cors');
-const helmet = require('helmet');
-const clientErrorHandler = require('../middleware/clientErrorHandler');
-const logErrors = require('../middleware/logErrors');
-const errorHandler = require('../middleware/errorHandler');
+import {
+  Express, Request, Response, NextFunction,
+} from 'express';
+import bodyParser from 'body-parser';
+import compression from 'compression';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import helmet from 'helmet';
+import clientErrorHandler from '../middleware/clientErrorHandler';
+import logErrors from '../middleware/logErrors';
+import errorHandler from '../middleware/errorHandler';
 
-module.exports = {
+export default {
   /**
      * @function
      * @description express middleware
      * @param {express.Application} app
      * @returns void
      */
-  init(app) {
+  init(app: Express): void {
     app.use(bodyParser.urlencoded({
       extended: false,
     }));
@@ -28,7 +31,7 @@ module.exports = {
     // providing a Connect/Express middleware that can be used to enable CORS with various options
     app.use(cors());
     // cors
-    app.use((req, res, next) => {
+    app.use((req: Request, res: Response, next: NextFunction) => {
       res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS ');
       res.header(
         'Access-Control-Allow-Headers',
@@ -41,7 +44,7 @@ module.exports = {
       next();
     });
   },
-  after(app) {
+  after(app: Express): void {
     app.use(logErrors);
     app.use(clientErrorHandler);
     app.use(errorHandler);
