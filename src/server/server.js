@@ -1,13 +1,13 @@
 "use strict";
 exports.__esModule = true;
-var express_1 = require("express");
+var express = require("express");
 var middleware_1 = require("../config/middleware");
 var router_1 = require("../config/router");
 /**
  * @type {express}
  * @constant {express.Application}
  */
-var app = (0, express_1["default"])();
+var app = express();
 /**
  * @description express.Application Middleware
  */

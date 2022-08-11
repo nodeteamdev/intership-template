@@ -1,8 +1,8 @@
 "use strict";
 exports.__esModule = true;
-var body_parser_1 = require("body-parser");
-var compression_1 = require("compression");
-var cookie_parser_1 = require("cookie-parser");
+var bodyParser = require("body-parser");
+var compression = require("compression");
+var cookieParser = require("cookie-parser");
 var cors = require("cors");
 var helmet = require("helmet");
 var errorHandlers_1 = require("../error/errorHandlers");
@@ -14,12 +14,12 @@ exports["default"] = {
        * @returns void
        */
     init: function (app) {
-        app.use(body_parser_1["default"].urlencoded({
+        app.use(bodyParser.urlencoded({
             extended: false
         }));
-        app.use(body_parser_1["default"].json());
-        app.use((0, cookie_parser_1["default"])());
-        app.use((0, compression_1["default"])());
+        app.use(bodyParser.json());
+        app.use(cookieParser());
+        app.use(compression());
         app.use(helmet());
         app.use(cors());
         app.use(function (req, res, next) {

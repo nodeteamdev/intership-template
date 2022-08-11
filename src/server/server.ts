@@ -1,4 +1,4 @@
-import express from 'express';
+import * as express from 'express';
 import middleware from '../config/middleware';
 import routes from '../config/router';
 
