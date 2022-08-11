@@ -1,4 +1,4 @@
 {
-    "watch": ["src"],
-    "exec": "node ./src/server/index.js"
+    "watch": ["dist"],
+    "exec": "node ./dist/server/index.js"
 }
