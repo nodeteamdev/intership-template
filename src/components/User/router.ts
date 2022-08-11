@@ -1,12 +1,12 @@
-const { Router } = require('express');
-const UserComponent = require('.');
+import { Router } from 'express';
+import UserComponent from '.';
 
 /**
  * Express router to mount user related functions on.
  * @type {Express.Router}
  * @const
  */
-const router = Router();
+const router: Router = Router();
 
 /**
  * Route serving list of users.
@@ -16,7 +16,7 @@ const router = Router();
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get('/', UserComponent.findAll);
+ router.get('/', UserComponent.findAll);
 
 /**
  * Route serving a user
@@ -27,7 +27,7 @@ router.get('/', UserComponent.findAll);
  * @param {callback} middleware - Express middleware.
  */
 router.get('/:id', UserComponent.findById);
-
+ 
 /**
  * Route serving a new user
  * @name /v1/users
@@ -37,7 +37,7 @@ router.get('/:id', UserComponent.findById);
  * @param {callback} middleware - Express middleware
  */
 router.post('/', UserComponent.create);
-
+ 
 /**
  * Route serving a new user
  * @name /v1/users
@@ -58,4 +58,4 @@ router.put('/', UserComponent.updateById);
  */
 router.delete('/', UserComponent.deleteById);
 
-module.exports = router;
+export default router;

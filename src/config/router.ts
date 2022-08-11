@@ -1,15 +1,15 @@
-const express = require('express');
-const http = require('http');
-const UserRouter = require('../components/User/router');
+import express from 'express';
+import http from 'http';
+import UserRouter from '../components/User/router';
 
-module.exports = {
+export default {
     /**
      * @function
      * @param {express.Application} app
      * @summary init Application router
      * @returns void
      */
-    init(app) {
+    init(app: express.Application) {
         const router = express.Router();
 
         /**

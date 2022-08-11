@@ -17,17 +17,29 @@
   },
   "homepage": "https://github.com/ChechaValerii/intership-template#readme",
   "dependencies": {
-    "@hapi/joi": "^17.1.1",
     "compression": "1.7.4",
     "cookie-parser": "1.4.6",
     "cors": "2.8.5",
     "express": "4.17.1",
     "helmet": "4.6.0",
-    "mongoose": "6.0.14"
+    "joi": "17.6.0",
+    "mongoose": "6.1.6"
   },
   "devDependencies": {
-    "eslint": "^8.3.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.25.3"
+    "@types/compression": "1.7.2",
+    "@types/cookie-parser": "1.4.2",
+    "@types/cors": "2.8.12",
+    "@types/express": "4.17.13",
+    "@types/joi": "17.2.3",
+    "@types/node": "17.0.16",
+    "@typescript-eslint/eslint-plugin": "5.33.0",
+    "@typescript-eslint/parser": "5.33.0",
+    "commitizen": "4.2.5",
+    "eslint": "8.21.0",
+    "eslint-config-airbnb-base": "15.0.0",
+    "eslint-config-airbnb-typescript": "16.1.0",
+    "eslint-plugin-import": "2.26.0",
+    "ts-node": "10.9.1",
+    "typescript": "4.7.4"
   }
 }
