@@ -33,8 +33,8 @@ exports["default"] = {
         });
     },
     errors: function (app) {
-        app.use(errorHandlers_1.logErrors);
-        app.use(errorHandlers_1.clientErrorHandler);
-        app.use(errorHandlers_1.errorHandler);
+        app.use(errorHandlers_1["default"].logErrors);
+        app.use(errorHandlers_1["default"].clientErrorHandler);
+        app.use(errorHandlers_1["default"].errorHandler);
     }
 };

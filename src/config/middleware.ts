@@ -3,7 +3,7 @@ import * as compression from 'compression';
 import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 import * as helmet from 'helmet';
-import { clientErrorHandler, logErrors, errorHandler } from '../error/errorHandlers';
+import errorHandlers from '../error/errorHandlers';
 
 export default {
   /**
@@ -35,9 +35,9 @@ export default {
     });
   },
   errors(app) {
-    app.use(logErrors);
-    app.use(clientErrorHandler);
-    app.use(errorHandler);
+    app.use(errorHandlers.logErrors);
+    app.use(errorHandlers.clientErrorHandler);
+    app.use(errorHandlers.errorHandler);
   },
 
 };

@@ -19,7 +19,7 @@ const UserSchema: Schema = new Schema(
   },
 );
 
-// interface UserModel extends Document {
+// export interface IUserModel extends Document {
 //   fullName: string,
 //   email: string,
 // }
