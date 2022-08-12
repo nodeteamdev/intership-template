@@ -1,5 +1,5 @@
 import { createSecretKey } from 'crypto';
-import jose from 'jose';
+import { SignJWT, jwtVerify, JWTPayload } from 'jose';
 import logger from '../../helpers/logger';
 
 enum TokenType {
@@ -27,8 +27,8 @@ function getPayloadFromAuthUser(authUserId: string, tokenType: TokenType): Paylo
     };
 }
 
-async function getJWT(payload: PayloadAuth & jose.JWTPayload, expiresIn = '') {
-    return new jose.SignJWT(payload)
+async function getJWT(payload: PayloadAuth & JWTPayload, expiresIn = '') {
+    return new SignJWT(payload)
         .setProtectedHeader({ alg })
         .setIssuedAt()
         .setExpirationTime(expiresIn)
@@ -51,7 +51,7 @@ async function getAuthRefreshJWT(authUserId: string) {
 
 async function getPayloadFromJWT(jwt: string): Promise<PayloadAuth | null> {
     try {
-        const { payload } = await jose.jwtVerify(jwt, secretKey);
+        const { payload } = await jwtVerify(jwt, secretKey);
         return payload as PayloadAuth;
     } catch {
         return null;

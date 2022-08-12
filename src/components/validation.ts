@@ -5,7 +5,7 @@ interface JoiRootExtended extends Joi.Root {
     objectId: () => Joi.AnySchema;
 }
 
-export type DataToValidate = any;
+export type DataToValidate = object;
 
 /**
  * @exports

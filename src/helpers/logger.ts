@@ -30,8 +30,9 @@ function trimError(error: Error) {
         .join('\n');
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function logger(dataToLog: any, context = '', logLevel: LogLevel = 'log') {
+type DataToLog = string | object | Error;
+
+function logger(dataToLog: DataToLog, context = '', logLevel: LogLevel = 'log') {
     const timeStr = (new Date()).toJSON();
 
     let logStr = `[${timeStr}]:`;
