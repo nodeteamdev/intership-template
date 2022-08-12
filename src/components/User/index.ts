@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-
+import { UpdateWriteOpResult } from 'mongoose';
 import UserService from './service';
 import UserValidation from './validation';
 import ValidationError from '../../error/ValidationError';
@@ -7,7 +7,8 @@ import { IFindById } from './interfaces/find-by-id.interface';
 import { ICreate } from './interfaces/create.interface';
 import { IDeleteById } from './interfaces/delete-by-id.interface';
 import { IUpdateById } from './interfaces/update-by-id.interface';
-
+import { IUser } from './model';
+import DeleteResult from '../../common/interfaces/delete-result.interface';
 /**
  * @function
  * @param {express.Request} req
@@ -17,7 +18,7 @@ import { IUpdateById } from './interfaces/update-by-id.interface';
  */
 async function findAll(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const users = await UserService.findAll();
+    const users: IUser[] = await UserService.findAll();
 
     res.status(200).json({
       data: users,
@@ -53,7 +54,7 @@ async function findById(
       throw new ValidationError(error.details[0].message);
     }
 
-    const user = await UserService.findById(req.params.id);
+    const user: IUser | null = await UserService.findById(req.params.id);
 
     res.status(200).json({
       data: user,
@@ -98,7 +99,7 @@ async function create(
       throw new ValidationError(error.details[0].message);
     }
 
-    const user = await UserService.create(req.body);
+    const user: IUser | undefined = await UserService.create(req.body);
 
     res.status(200).json({
       data: user,
@@ -143,7 +144,7 @@ async function updateById(
       throw new ValidationError(error.details[0].message);
     }
 
-    const updatedUser = await UserService.updateById(req.body.id, req.body);
+    const updatedUser: UpdateWriteOpResult = await UserService.updateById(req.body.id, req.body);
 
     res.status(200).json({
       data: updatedUser,
@@ -180,7 +181,7 @@ async function deleteById(
   req: Request<any, any, IDeleteById>,
   res: Response,
   next: NextFunction,
-): Promise<object | void> {
+): Promise<void> {
   try {
     const { error } = UserValidation.deleteById(req.body);
 
@@ -188,7 +189,7 @@ async function deleteById(
       throw new ValidationError(error.details[0].message);
     }
 
-    const deletedUser = await UserService.deleteById(req.body.id);
+    const deletedUser: DeleteResult = await UserService.deleteById(req.body.id);
 
     res.status(200).json({
       data: deletedUser,

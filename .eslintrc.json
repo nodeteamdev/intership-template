@@ -15,21 +15,31 @@
         "@typescript-eslint"
     ],
     "rules": {
-        "max-len": ["error",150],
+        "@typescript-eslint/typedef": [
+            "error",
+            {
+                "arrowParameter": true,
+                "variableDeclaration": true
+            }
+        ],
+        "max-len": [
+            "error",
+            150
+        ],
         "no-underscore-dangle": "off",
         "import/extensions": [
             "error",
             "ignorePackages",
             {
-              "js": "never",
-              "jsx": "never",
-              "ts": "never",
-              "tsx": "never"
+                "js": "never",
+                "jsx": "never",
+                "ts": "never",
+                "tsx": "never"
             }
-         ]
+        ]
     },
     "globals": {
-        "NodeJS":"readonly"
+        "NodeJS": "readonly"
     },
     "settings": {
         "import/resolver": {

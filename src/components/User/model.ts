@@ -1,14 +1,12 @@
 import { Schema, Document } from 'mongoose';
 import connections from '../../config/connection';
 
-export interface IUser {
+export interface IUser extends Document {
     fullName: string,
     email: string
 }
 
-export type IUserDocument = IUser & Document
-
-const UserSchema = new Schema<IUser>(
+const UserSchema: Schema = new Schema<IUser>(
   {
     fullName: {
       type: String,
@@ -25,4 +23,4 @@ const UserSchema = new Schema<IUser>(
   },
 );
 
-export default connections.model('UserModel', UserSchema);
+export default connections.model<IUser>('UserModel', UserSchema);

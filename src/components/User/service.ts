@@ -1,4 +1,6 @@
-import UserModel, { IUser, IUserDocument } from './model';
+import { UpdateWriteOpResult } from 'mongoose';
+import DeleteResult from '../../common/interfaces/delete-result.interface';
+import UserModel, { IUser } from './model';
 
 /**
  * @exports
@@ -7,7 +9,7 @@ import UserModel, { IUser, IUserDocument } from './model';
  * @summary get list of all users
  * @returns Promise<UserModel[]>
  */
-function findAll() {
+function findAll(): Promise<IUser[]> {
   return UserModel.find({}).exec();
 }
 
@@ -18,7 +20,7 @@ function findAll() {
  * @summary get a user
  * @returns {Promise<UserModel>}
  */
-function findById(id: string): Promise<IUserDocument> {
+function findById(id: string): Promise<IUser | null> {
   return UserModel.findById(id).exec();
 }
 
@@ -29,7 +31,7 @@ function findById(id: string): Promise<IUserDocument> {
  * @summary create a new user
  * @returns {Promise<UserModel>}
  */
-function create(profile: IUser): Promise<typeof UserModel> {
+function create(profile: IUser): Promise<IUser | undefined> {
   return UserModel.create(profile);
 }
 
@@ -40,9 +42,9 @@ function create(profile: IUser): Promise<typeof UserModel> {
  * @param {string} _id
  * @param {object} newProfile
  * @summary update a user's profile
- * @returns {Promise<void>}
+ * @returns {Promise<UpdateWriteOpResult>}
  */
-function updateById(_id: string, newProfile: object): Promise<void> {
+function updateById(_id: string, newProfile: object): Promise<UpdateWriteOpResult> {
   return UserModel.updateOne({ _id }, newProfile).exec();
 }
 
@@ -53,7 +55,7 @@ function updateById(_id: string, newProfile: object): Promise<void> {
  * @summary delete a user from database
  * @returns {Promise<void>}
  */
-function deleteById(_id: string): Promise<void> {
+function deleteById(_id: string): Promise<DeleteResult> {
   return UserModel.deleteOne({ _id }).exec();
 }
 
