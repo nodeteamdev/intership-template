@@ -1,17 +1,17 @@
-const Validation = require('../validation');
+import Validation, { DataToValidate } from '../validation';
 
 /**
  * @exports
  * @class
  * @extends Validation
  */
-class UserValidation extends Validation {
+class ProductValidation extends Validation {
     /**
      * @param {String} data.id - objectId
      * @returns
-     * @memberof UserValidation
+     * @memberof ProductValidation
      */
-    findById(data) {
+    findById(data: DataToValidate) {
         return this.Joi
             .object({
                 id: this.Joi.objectId(),
@@ -20,38 +20,40 @@ class UserValidation extends Validation {
     }
 
     /**
-     * @param {String} profile.email
-     * @param {String} profile.fullName
+     * @param {String} data.name
+     * @param {Number} data.price
      * @returns
-     * @memberof UserValidation
+     * @memberof ProductValidation
      */
-    create(profile) {
+    create(data: DataToValidate) {
         return this.Joi
             .object({
-                email: this.Joi.string().email(),
-                fullName: this.Joi
+                name: this.Joi
                     .string()
-                    .min(1)
-                    .max(30)
+                    .required(),
+                price: this.Joi
+                    .number()
                     .required(),
             })
-            .validate(profile);
+            .validate(data);
     }
 
     /**
      * @param {String} data.id - objectId
-     * @param {String} data.fullName
+     * @param {String} data.name
+     * @param {Number} data.price
      * @returns
-     * @memberof UserValidation
+     * @memberof ProductValidation
      */
-    updateById(data) {
+    updateById(data: DataToValidate) {
         return this.Joi
             .object({
                 id: this.Joi.objectId(),
-                fullName: this.Joi
+                name: this.Joi
                     .string()
-                    .min(1)
-                    .max(30)
+                    .required(),
+                price: this.Joi
+                    .number()
                     .required(),
             })
             .validate(data);
@@ -60,9 +62,9 @@ class UserValidation extends Validation {
     /**
      * @param {String} data.id - objectId
      * @returns
-     * @memberof UserValidation
+     * @memberof ProductValidation
      */
-    deleteById(data) {
+    deleteById(data: DataToValidate) {
         return this.Joi
             .object({
                 id: this.Joi.objectId(),
@@ -71,4 +73,4 @@ class UserValidation extends Validation {
     }
 }
 
-module.exports = new UserValidation();
+export default new ProductValidation();

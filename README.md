@@ -1,41 +1,43 @@
-### Validation
-```
-    https://hapi.dev/family/joi/
+# Lesson8 TypeScript
+
+CommonJS to TypeScript migration of source files of Lesson4 project.
+
+## Quick start
+
+Install dependencies
+
+```bash
+npm install
 ```
 
-### Find User
-```
-    curl --location --request GET 'localhost:3000/v1/users/find' \
-    --header 'Content-Type: application/json' \
-    --data-raw '{
-        "email": "test@gmail.com"
-    }'
+Start your MongoDB server and run migrations
+
+```bash
+npm run migrateUp
 ```
 
-### Create User
-```
-    curl --location --request POST 'localhost:3000/v1/users/create' \
-    --header 'Content-Type: application/json' \
-    --data-raw '{
-        "email": "test@gmail.com",
-        "fullName": "Test User"
-    }'
+Build the TS sources to JS dist
+
+```bash
+npm run build
 ```
 
-### Update User
-```
-    curl --location --request PUT 'localhost:3000/v1/users/update' \
-    --header 'Content-Type: application/json' \
-    --data-raw '{
-        "fullName": "Update User"
-    }'
+Start the server from the build distributions
+
+```bash
+npm run start
 ```
 
-### Delete User
+Open [http://localhost:3000/](http://localhost:3000/) in Postman or CURL it as you wish. For example:
+
+```bash
+curl -X POST http://localhost:3000/v1/auth/register -H "Content-Type: application/json" -d '{"email":"test@test.com", "password":"123456"}'
 ```
-    curl --location --request DELETE 'localhost:3000/v1/users/delete' \
-    --header 'Content-Type: application/json' \
-    --data-raw '{
-        "email": "test@gmail.com"
-    }'
+
+## Development
+
+To start a server that compiles TS on fly run
+
+```bash
+npm run dev   # see nodemon.json for details
 ```
