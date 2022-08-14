@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import UserService from './service';
 import UserValidation, { FindById } from './validation';
 import ValidationError from '../../error/ValidationError';
+import { IUser } from './model';
 
 /**
  * @function
@@ -12,7 +13,7 @@ import ValidationError from '../../error/ValidationError';
  */
 async function findAll(req: Request, res: Response, next: NextFunction) {
   try {
-    const users = await UserService.findAll();
+    const users: IUser[] = await UserService.findAll();
 
     res.status(200).json({
       data: users,
@@ -44,7 +45,7 @@ async function findById(req: Request<FindById>, res: Response, next: NextFunctio
       throw new ValidationError(error.details);
     }
 
-    const user = await UserService.findById(req.params.id);
+    const user: IUser | undefined = await UserService.findById(req.params.id);
 
     return res.status(200).json({
       data: user,
@@ -83,7 +84,7 @@ async function create(req: Request, res: Response, next: NextFunction) {
       throw new ValidationError(error.details);
     }
 
-    const user = await UserService.create(req.body);
+    const user: IUser | undefined = await UserService.create(req.body);
 
     return res.status(200).json({
       data: user,

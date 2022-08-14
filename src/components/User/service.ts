@@ -44,7 +44,7 @@ function create(profile: IUser): Promise<IUser> {
  * @returns {Promise<void>}
  */
 
-function updateById(_id: string, newProfile: {}): Promise<void> {
+function updateById(_id: string, newProfile: {}): Promise<IUser> {
   return UserModel.updateOne({ _id }, newProfile).exec();
 }
 
@@ -56,7 +56,7 @@ function updateById(_id: string, newProfile: {}): Promise<void> {
  * @returns {Promise<void>}
  */
 
-function deleteById(_id: string): Promise<void> {
+function deleteById(_id: string): Promise<IUser> {
   return UserModel.deleteOne({ _id }).exec();
 }
 
