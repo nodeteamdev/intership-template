@@ -27,7 +27,8 @@
     curl --location --request PUT 'localhost:3000/v1/users/update' \
     --header 'Content-Type: application/json' \
     --data-raw '{
-        "fullName": "Update User"
+        "fullName": "Update User",
+        "email": "test@gmail.com"
     }'
 ```
 
@@ -38,4 +39,32 @@
     --data-raw '{
         "email": "test@gmail.com"
     }'
+```
+### SignUp User
+```
+    curl --location --request POST 'localhost:3000/v1/auth/signup' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+        "email": "test@gmail.com",
+        "fullName": "Test User"
+    }'
+```
+### LogIn User
+```
+    curl --location --request POST 'localhost:3000/v1/auth/login' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+        "email": "test@gmail.com",
+        "fullName": "Test User"
+    }'
+```
+### CountPerCountry Books
+```
+    curl --location --request GET 'localhost:3000/v1/books/count-per-country' \
+    --header 'Content-Type: application/json'
+```
+### GetNew Books
+```
+    curl --location --request GET 'localhost:3000/v1/books/new-books' \
+    --header 'Content-Type: application/json'
 ```

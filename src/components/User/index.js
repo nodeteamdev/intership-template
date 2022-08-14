@@ -1,7 +1,20 @@
-const UserService = require('./service');
-const UserValidation = require('./validation');
-const ValidationError = require('../../error/ValidationError');
-
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const service_1 = __importDefault(require("./service"));
+const validation_1 = __importDefault(require("./validation"));
+const ValidationError_1 = __importDefault(require("../../error/ValidationError"));
 /**
  * @function
  * @param {express.Request} req
@@ -9,60 +22,19 @@ const ValidationError = require('../../error/ValidationError');
  * @param {express.NextFunction} next
  * @returns {Promise < void >}
  */
-async function findAll(req, res, next) {
-    try {
-        const users = await UserService.findAll();
-
-        res.status(200).json({
-            data: users,
-        });
-    } catch (error) {
-        res.status(500).json({
-            error: error.message,
-            details: null,
-        });
-
-        next(error);
-    }
-}
-
-/**
- * @function
- * @param {express.Request} req
- * @param {express.Response} res
- * @param {express.NextFunction} next
- * @returns {Promise < void >}
- */
-async function findById(req, res, next) {
-    try {
-        const { error } = UserValidation.findById(req.params);
-
-        if (error) {
-            throw new ValidationError(error.details);
-        }
-
-        const user = await UserService.findById(req.params.id);
-
-        return res.status(200).json({
-            data: user,
-        });
-    } catch (error) {
-        if (error instanceof ValidationError) {
-            return res.status(422).json({
-                error: error.name,
-                details: error.message,
+function findAll(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const users = yield service_1.default.findAll();
+            res.status(200).json({
+                data: users,
             });
         }
-
-        res.status(500).json({
-            message: error.name,
-            details: error.message,
-        });
-
-        return next(error);
-    }
+        catch (error) {
+            next(error);
+        }
+    });
 }
-
 /**
  * @function
  * @param {express.Request} req
@@ -70,36 +42,47 @@ async function findById(req, res, next) {
  * @param {express.NextFunction} next
  * @returns {Promise < void >}
  */
-async function create(req, res, next) {
-    try {
-        const { error } = UserValidation.create(req.body);
-
-        if (error) {
-            throw new ValidationError(error.details);
-        }
-
-        const user = await UserService.create(req.body);
-
-        return res.status(200).json({
-            data: user,
-        });
-    } catch (error) {
-        if (error instanceof ValidationError) {
-            return res.status(422).json({
-                message: error.name,
-                details: error.message,
+function findByEmail(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const { error } = validation_1.default.findByEmail(req.body);
+            if (error) {
+                throw new ValidationError_1.default(error.details);
+            }
+            const user = yield service_1.default.findByEmail(req.body.email);
+            res.status(200).json({
+                data: user,
             });
         }
-
-        res.status(500).json({
-            message: error.name,
-            details: error.message,
-        });
-
-        return next(error);
-    }
+        catch (error) {
+            next(error);
+        }
+    });
 }
-
+/**
+ * @function
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
+ * @returns {Promise < void >}
+ */
+function create(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const { error } = validation_1.default.create(req.body);
+            if (error) {
+                throw new ValidationError_1.default(error.details);
+            }
+            const user = yield service_1.default.create(req.body);
+            res.status(200).json({
+                data: user,
+            });
+        }
+        catch (error) {
+            next(error);
+        }
+    });
+}
 /**
  * @function
  * @param {express.Request} req
@@ -107,36 +90,23 @@ async function create(req, res, next) {
  * @param {express.NextFunction} next
  * @returns {Promise<void>}
  */
-async function updateById(req, res, next) {
-    try {
-        const { error } = UserValidation.updateById(req.body);
-
-        if (error) {
-            throw new ValidationError(error.details);
-        }
-
-        const updatedUser = await UserService.updateById(req.body.id, req.body);
-
-        return res.status(200).json({
-            data: updatedUser,
-        });
-    } catch (error) {
-        if (error instanceof ValidationError) {
-            return res.status(422).json({
-                message: error.name,
-                details: error.message,
+function updateByEmail(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const { error } = validation_1.default.updateByEmail(req.body);
+            if (error) {
+                throw new ValidationError_1.default(error.details);
+            }
+            const updatedUser = yield service_1.default.updateByEmail(req.body.email, req.body);
+            res.status(200).json({
+                data: updatedUser,
             });
         }
-
-        res.status(500).json({
-            message: error.name,
-            details: error.message,
-        });
-
-        return next(error);
-    }
+        catch (error) {
+            next(error);
+        }
+    });
 }
-
 /**
  * @function
  * @param {express.Request} req
@@ -144,40 +114,27 @@ async function updateById(req, res, next) {
  * @param {express.NextFunction} next
  * @returns {Promise<void>}
  */
-async function deleteById(req, res, next) {
-    try {
-        const { error } = UserValidation.deleteById(req.body);
-
-        if (error) {
-            throw new ValidationError(error.details);
-        }
-
-        const deletedUser = await UserService.deleteById(req.body.id);
-
-        return res.status(200).json({
-            data: deletedUser,
-        });
-    } catch (error) {
-        if (error instanceof ValidationError) {
-            return res.status(422).json({
-                message: error.name,
-                details: error.message,
+function deleteByEmail(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const { error } = validation_1.default.deleteByEmail(req.body);
+            if (error) {
+                throw new ValidationError_1.default(error.details);
+            }
+            const deletedUser = yield service_1.default.deleteByEmail(req.body.email);
+            res.status(200).json({
+                data: deletedUser,
             });
         }
-
-        res.status(500).json({
-            message: error.name,
-            details: error.message,
-        });
-
-        return next(error);
-    }
+        catch (error) {
+            next(error);
+        }
+    });
 }
-
-module.exports = {
+exports.default = {
     findAll,
-    findById,
+    findByEmail,
     create,
-    updateById,
-    deleteById,
+    updateByEmail,
+    deleteByEmail,
 };

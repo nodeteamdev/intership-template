@@ -1,66 +1,65 @@
-const UserModel = require('./model');
-
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const model_1 = __importDefault(require("./model"));
 /**
  * @exports
  * @method findAll
  * @param {}
  * @summary get list of all users
- * @returns Promise<UserModel[]>
+ * @returns Promise<User[]>
  */
 function findAll() {
-    return UserModel.find({}).exec();
+    return model_1.default.find({}).exec();
 }
-
 /**
  * @exports
- * @method findById
- * @param {string} id
+ * @method findOne
+ * @param {string} email
  * @summary get a user
- * @returns {Promise<UserModel>}
+ * @returns {Promise<User>}
  */
-function findById(id) {
-    return UserModel.findById(id).exec();
+function findByEmail(email) {
+    return model_1.default.findOne({ email }).exec();
 }
-
 /**
  * @exports
  * @method create
- * @param {object} profile
+ * @param {User} profile
  * @summary create a new user
- * @returns {Promise<UserModel>}
+ * @returns {Promise<User>}
  */
 function create(profile) {
-    return UserModel.create(profile);
+    return model_1.default.create(profile);
 }
-
 /**
  * Find a user by id and update his profile
  * @exports
- * @method updateById
- * @param {string} _id
+ * @method updateByEmail
+ * @param {string} email
  * @param {object} newProfile
  * @summary update a user's profile
  * @returns {Promise<void>}
  */
-function updateById(_id, newProfile) {
-    return UserModel.updateOne({ _id }, newProfile).exec();
+function updateByEmail(email, newProfile) {
+    return model_1.default.updateOne({ email }, newProfile).exec();
 }
-
 /**
  * @exports
- * @method deleteById
- * @param {string} _id
+ * @method deleteOne
+ * @param {string} email
  * @summary delete a user from database
  * @returns {Promise<void>}
  */
-function deleteById(_id) {
-    return UserModel.deleteOne({ _id }).exec();
+function deleteByEmail(email) {
+    return model_1.default.deleteOne({ email }).exec();
 }
-
-module.exports = {
+exports.default = {
     findAll,
-    findById,
+    findByEmail,
     create,
-    updateById,
-    deleteById,
+    updateByEmail,
+    deleteByEmail,
 };
