@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * @function
  * @param  {NodeJS.ErrnoException} error
@@ -28,9 +28,9 @@ function onError(error) {
  * @description log port to console
  */
 function onListening() {
-    var addr = this.address();
-    var port = (typeof addr === 'string') ? "pipe ".concat(addr) : "port ".concat(addr.port);
-    console.log("Listening on ".concat(port));
+    const addr = this.address();
+    const port = (typeof addr === 'string') ? `pipe ${addr}` : `port ${addr.port}`;
+    console.log(`Listening on ${port}`);
 }
 /**
  * @function
@@ -38,12 +38,11 @@ function onListening() {
  * @param {http.Server} server
  */
 function bind(server) {
-    var _this = this;
-    server.on('error', function (error) { return _this.onError.bind(server)(error); });
+    server.on('error', (error) => this.onError.bind(server)(error));
     server.on('listening', this.onListening.bind(server));
 }
-exports["default"] = {
-    onError: onError,
-    onListening: onListening,
-    bind: bind
+exports.default = {
+    onError,
+    onListening,
+    bind,
 };

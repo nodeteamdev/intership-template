@@ -8,7 +8,7 @@ import { Types } from 'mongoose';
 class Validation {
   messageObjectId: string;
 
-  Joi: Joi.JoiSchema;
+  Joi: any;
 
   /**
      * Creates an instance of Schema.

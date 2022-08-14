@@ -1,4 +1,4 @@
-import { Schema } from 'mongoose';
+import { Schema, Document } from 'mongoose';
 import connections from '../../config/connection';
 
 const UserSchema: Schema = new Schema(
@@ -19,8 +19,8 @@ const UserSchema: Schema = new Schema(
   },
 );
 
-// export interface IUserModel extends Document {
-//   fullName: string,
-//   email: string,
-// }
-export default connections.model('UserModel', UserSchema);
+export interface User extends Document {
+  fullName: string,
+  email: string,
+}
+export default connections.model<User>('UserModel', UserSchema);

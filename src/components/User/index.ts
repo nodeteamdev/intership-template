@@ -1,3 +1,6 @@
+import { Request, Response, NextFunction } from 'express';
+import { UpdateResult, DeleteResult } from 'mongodb';
+import { User } from './model';
 import UserService from './service';
 import UserValidation from './validation';
 import ValidationError from '../../error/ValidationError';
@@ -9,9 +12,9 @@ import ValidationError from '../../error/ValidationError';
  * @param {express.NextFunction} next
  * @returns {Promise < void >}
  */
-async function findAll(req, res, next) {
+async function findAll(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const users = await UserService.findAll();
+    const users: User[] = await UserService.findAll();
 
     res.status(200).json({
       data: users,
@@ -28,7 +31,7 @@ async function findAll(req, res, next) {
  * @param {express.NextFunction} next
  * @returns {Promise < void >}
  */
-async function findByEmail(req, res, next) {
+async function findByEmail(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const { error } = UserValidation.findByEmail(req.body);
 
@@ -36,13 +39,13 @@ async function findByEmail(req, res, next) {
       throw new ValidationError(error.details);
     }
 
-    const user = await UserService.findByEmail(req.body.email);
+    const user: User | null = await UserService.findByEmail(req.body.email);
 
-    return res.status(200).json({
+    res.status(200).json({
       data: user,
     });
   } catch (error) {
-    return next(error);
+    next(error);
   }
 }
 
@@ -53,7 +56,7 @@ async function findByEmail(req, res, next) {
  * @param {express.NextFunction} next
  * @returns {Promise < void >}
  */
-async function create(req, res, next) {
+async function create(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const { error } = UserValidation.create(req.body);
 
@@ -61,13 +64,13 @@ async function create(req, res, next) {
       throw new ValidationError(error.details);
     }
 
-    const user = await UserService.create(req.body);
+    const user: User = await UserService.create(req.body);
 
-    return res.status(200).json({
+    res.status(200).json({
       data: user,
     });
   } catch (error) {
-    return next(error);
+    next(error);
   }
 }
 
@@ -78,7 +81,7 @@ async function create(req, res, next) {
  * @param {express.NextFunction} next
  * @returns {Promise<void>}
  */
-async function updateByEmail(req, res, next) {
+async function updateByEmail(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const { error } = UserValidation.updateByEmail(req.body);
 
@@ -86,13 +89,13 @@ async function updateByEmail(req, res, next) {
       throw new ValidationError(error.details);
     }
 
-    const updatedUser = await UserService.updateByEmail(req.body.email, req.body);
+    const updatedUser: UpdateResult = await UserService.updateByEmail(req.body.email, req.body);
 
-    return res.status(200).json({
+    res.status(200).json({
       data: updatedUser,
     });
   } catch (error) {
-    return next(error);
+    next(error);
   }
 }
 
@@ -103,7 +106,7 @@ async function updateByEmail(req, res, next) {
  * @param {express.NextFunction} next
  * @returns {Promise<void>}
  */
-async function deleteByEmail(req, res, next) {
+async function deleteByEmail(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const { error } = UserValidation.deleteByEmail(req.body);
 
@@ -111,13 +114,13 @@ async function deleteByEmail(req, res, next) {
       throw new ValidationError(error.details);
     }
 
-    const deletedUser = await UserService.deleteByEmail(req.body.email);
+    const deletedUser: DeleteResult = await UserService.deleteByEmail(req.body.email);
 
-    return res.status(200).json({
+    res.status(200).json({
       data: deletedUser,
     });
   } catch (error) {
-    return next(error);
+    next(error);
   }
 }
 

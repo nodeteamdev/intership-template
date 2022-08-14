@@ -1,7 +1,7 @@
-import * as express from 'express';
+import express from 'express';
 import * as http from 'http';
 import UserRouter from '../components/User/router';
-// const AuthRouter = require('../components/Auth/router');
+import AuthRouter from '../components/Auth/router';
 // const BooksRouter = require('../components/Books/router');
 // const AuthComponent = require('../components/Auth/index');
 
@@ -12,8 +12,8 @@ export default {
      * @summary init Application router
      * @returns void
      */
-  init(app) {
-    const router = express.Router();
+  init(app: express.Application) {
+    const router: express.Router = express.Router();
 
     /**
          * Forwards any requests to the /v1/users URI to UserRouter.
@@ -25,7 +25,7 @@ export default {
          */
     // app.use('/v1/users', AuthComponent.verifyAccessToken, UserRouter);
     app.use('/v1/users', UserRouter);
-    // app.use('/v1/auth', AuthRouter);
+    app.use('/v1/auth', AuthRouter);
     // app.use('/v1/books', BooksRouter);
 
     /**
@@ -34,7 +34,7 @@ export default {
          * @inner
          * @param {callback} middleware - Express middleware.
          */
-    app.use((req, res) => {
+    app.use((req: express.Request, res: express.Response) => {
       res.status(404).send(http.STATUS_CODES[404]);
     });
 

@@ -1,4 +1,4 @@
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
 
 const MONGODB_URI: string = 'mongodb://localhost:27017/';
 const MONGODB_DB_MAIN: string = 'users_db';

@@ -1,8 +1,11 @@
-import * as bodyParser from 'body-parser';
-import * as compression from 'compression';
-import * as cookieParser from 'cookie-parser';
-import * as cors from 'cors';
-import * as helmet from 'helmet';
+import {
+  Request, Response, NextFunction, Application,
+} from 'express';
+import bodyParser from 'body-parser';
+import compression from 'compression';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import helmet from 'helmet';
 import errorHandlers from '../error/errorHandlers';
 
 export default {
@@ -12,7 +15,7 @@ export default {
      * @param {express.Application} app
      * @returns void
      */
-  init(app) {
+  init(app: Application): void {
     app.use(bodyParser.urlencoded({
       extended: false,
     }));
@@ -21,7 +24,7 @@ export default {
     app.use(compression());
     app.use(helmet());
     app.use(cors());
-    app.use((req, res, next) => {
+    app.use((req: Request, res: Response, next: NextFunction) => {
       res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS ');
       res.header(
         'Access-Control-Allow-Headers',
@@ -34,7 +37,7 @@ export default {
       next();
     });
   },
-  errors(app) {
+  errors(app: Application): void {
     app.use(errorHandlers.logErrors);
     app.use(errorHandlers.clientErrorHandler);
     app.use(errorHandlers.errorHandler);

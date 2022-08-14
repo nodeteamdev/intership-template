@@ -15,5 +15,12 @@ module.exports = {
     '@typescript-eslint',
   ],
   rules: {
+    '@typescript-eslint/typedef': [
+      'error',
+      {
+        arrowParameter: true,
+        variableDeclaration: true,
+      },
+    ],
   },
 };

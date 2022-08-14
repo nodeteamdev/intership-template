@@ -6,7 +6,7 @@ import UserComponent from '.';
  * @type {Express.Router}
  * @const
  */
-const router = Router();
+const router: Router = Router();
 
 /**
  * Route serving list of users.

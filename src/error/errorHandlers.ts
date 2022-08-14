@@ -1,11 +1,12 @@
+import { Request, Response, NextFunction } from 'express';
 import ValidationError from './ValidationError';
 
-function logErrors(err, req, res, next) {
+function logErrors(err: any, req: Request, res: Response, next: NextFunction) {
   console.error('logErrors', err.toString());
   next(err);
 }
 
-function clientErrorHandler(err, req, res, next) {
+function clientErrorHandler(err: any, req: Request, res: Response, next: NextFunction) {
   console.error('clientError', err.toString());
 
   if (err instanceof ValidationError) {
@@ -18,7 +19,7 @@ function clientErrorHandler(err, req, res, next) {
   }
 }
 
-function errorHandler(err, req, res) {
+function errorHandler(err: any, req: Request, res: Response) {
   console.error('lastErrors', err.toString());
 
   res.status(500).json({
